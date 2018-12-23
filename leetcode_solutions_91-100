@@ -1,0 +1,687 @@
+81. Search in Rotated Sorted Array II
+
+class Solution:
+    def search(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: bool
+        """
+        nums.sort()
+        begin = 0
+        end = len(nums) - 1
+        res = False
+        while begin <= end and not res:
+            mid = (begin + end) // 2
+            if nums[mid] == target:
+                res = True
+            elif nums[mid] < target:
+                begin = mid + 1
+            else:
+                end = mid - 1
+        return res
+        
+class Solution:
+    def search(self, nums, target):
+        return  (target in nums)
+        
+82. Remove Duplicates from Sorted List II
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def deleteDuplicates(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if head == None:
+            return head
+        returnHead = ListNode(None)
+        returnHead.next = head
+        
+        p1 = returnHead
+        p2 = head
+        
+        while p2 != None and p2.next != None:
+            count = 1
+            while p2.next != None and p2.val == p2.next.val:
+                p2 = p2.next
+                count += 1
+            
+            if count == 1:
+                p1 = p2
+                p2 = p2.next
+            else:
+                p2 = p2.next
+                p1.next = p2
+        return returnHead.next
+        
+ class Solution:
+    def deleteDuplicates(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        res = []
+        if head == None:
+            return res
+        value = head.val
+        p = head.next
+        
+        while True:
+            if p == None:
+                res.append(value)
+                break
+            loop = 0
+            while p:
+                if p.val != value:
+                    break
+                loop += 1
+                p = p.next
+            if loop == 0:
+                res.append(value)
+            if p == None:
+                break
+            value = p.val
+            p = p.next
+        return res
+        
+83. Remove Duplicates from Sorted List
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def deleteDuplicates(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if head == None or head.next == None:
+            return head
+        
+        
+        p = start = head
+        c = head.next
+        while c != None:
+            if p.val != c.val:
+                p = c
+                c = c.next
+            else:
+                c = c.next
+                p.next = c
+        return start
+        
+84. Largest Rectangle in Histogram
+
+class Solution:
+    def largestRectangleArea(self, heights):
+        """
+        :type heights: List[int]
+        :rtype: int
+        """
+        s = []
+        ans = 0
+        heights.append(0)
+        for i in range(len(heights)):
+            left_index = i
+            while len(s) > 0 and s[-1][0] >= heights[i]:
+                last = s.pop()
+                left_index = last[1]
+                ans = max(ans, heights[i]*(i+1-last[1]))
+                ans = max(ans, last[0]*(i-last[1]))
+            s.append((heights[i], left_index))
+        return ans
+        
+class Solution:
+    def largestRectangleArea(self, heights):
+        """
+        :type heights: List[int]
+        :rtype: int
+        """
+        stack = []
+        maxarea = 0
+        prevheight = 0
+        for i in range(len(heights)):
+            height = heights[i]
+            if(height > prevheight):
+                stack.append((prevheight+1,height,i))
+            elif(height < prevheight):
+                (low,high,firstseen) = stack.pop()
+                while(low>height):
+                    maxarea = max(maxarea,high*(i-firstseen))
+                    if(len(stack) == 0): break
+                    low,high,firstseen = stack.pop()
+                maxarea = max(maxarea,high*(i-firstseen))
+                stack.append((low,height,firstseen))
+            prevheight = height
+        while(len(stack)>0):
+            low,high,firstseen = stack.pop()
+            maxarea = max(maxarea,high*(len(heights)-firstseen))
+        return maxarea
+        
+85. Maximal Rectangle
+
+class Solution:
+    def maximalRectangle(self, matrix):
+        """
+        :type matrix: List[List[str]]
+        :rtype: int
+        """
+        if not matrix: return 0
+        heights = [int(x) for x in matrix[0]]
+        current_max = self.f(heights)
+        for i in range(1, len(matrix)):
+            for j in range(len(matrix[0])):
+                if matrix[i][j]== '0':
+                    heights[j] = 0
+                else:
+                    heights[j] += 1
+            current_max = max(current_max, self.f(heights))
+        return current_max
+        
+        
+        
+    def f(self, heights):
+        """
+        :type heights: List[int]
+        :rtype: int
+        """
+        stack = []
+        maxarea = 0
+        prevheight = 0
+        for i in range(len(heights)):
+            height = heights[i]
+            if(height > prevheight):
+                stack.append((prevheight+1,height,i))
+            elif(height < prevheight):
+                (low,high,firstseen) = stack.pop()
+                while(low>height):
+                    maxarea = max(maxarea,high*(i-firstseen))
+                    if(len(stack) == 0): break
+                    low,high,firstseen = stack.pop()
+                maxarea = max(maxarea,high*(i-firstseen))
+                stack.append((low,height,firstseen))
+            prevheight = height
+        while(len(stack)>0):
+            low,high,firstseen = stack.pop()
+            maxarea = max(maxarea,high*(len(heights)-firstseen))
+        return maxarea
+        
+86. Partition List
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def partition(self, head, x):
+        """
+        :type head: ListNode
+        :type x: int
+        :rtype: ListNode
+        """
+        if head is None:
+            return None
+        less = lesshead = None
+        last = pos = head
+        while pos is not None:
+            if pos.val < x:
+                if lesshead is None:
+                    lesshead = pos
+                else:
+                    less.next = pos
+                less = pos
+                if head == pos:
+                    last = head = pos.next
+                else:
+                    last.next = pos.next
+            else:
+                last = pos
+            pos = pos.next
+        if lesshead is not None:
+            less.next = head
+        else:
+            lesshead = head
+        return lesshead
+        
+88. Merge Sorted Array
+
+class Solution(object):
+    def merge(self, nums1, m, nums2, n):
+        """
+        :type nums1: List[int]
+        :type m: int
+        :type nums2: List[int]
+        :type n: int
+        :rtype: void Do not return anything, modify nums1 in-place instead.
+        """
+        p1, p2 = m - 1, n - 1
+        pos = m + n - 1
+        while p1 >= 0 and p2 >= 0:
+            if nums1[p1] >= nums2[p2]:
+                nums1[pos] = nums1[p1]
+                p1 -= 1
+            else:
+                nums1[pos] = nums2[p2]
+                p2 -= 1
+            pos -= 1
+        while p2 >= 0:
+            nums1[pos] = nums2[p2]
+            p2 -= 1
+            pos -= 1
+            
+90. Subsets II
+
+class Solution(object):
+    
+    def subsetsWithDup(self, nums):
+        nums.sort()
+        res = [[]]
+        begin = 0
+        for index in range(len(nums)):
+            if index == 0 or nums[index] != nums[index - 1]:
+                # generate all
+                begin = 0
+            size = len(res)
+            # use existing subsets to generate new subsets
+            for j in range(begin, size):
+                curr = list(res[j])
+                curr.append(nums[index])
+                res.append(curr)
+            # avoid duplicate subsets
+            begin = size
+        return res
+        
+ 91. Decode Ways
+ 
+ class Solution:
+    def numDecodings(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        ls = len(s)
+        dp = [0]*ls
+        if s[-1] == '0':
+            dp[-1] = 0
+        else:
+            dp[-1] = 1
+        if ls > 1:
+            if s[-2] == '0':
+                dp[-2] = 0
+            else:
+                if int(s[-2:]) < 27:
+                    if s[-1] == '0':
+                        dp[-2] = 1
+                    else:
+                        dp[-2] = 2
+                else:
+                    dp[-2] = dp[-1]
+        if ls > 2:
+            for i in range(ls-3, -1, -1):
+                if s[i] == '0':
+                    dp[i] = 0
+                else:
+                    if int(s[i:i+2]) < 27:
+                        dp[i] = dp[i+1] + dp[i+2]
+                    else:
+                        dp[i] = dp[i+1]
+        return dp[0]
+        
+class Solution:
+    def numDecodings(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        ls = len(s)
+        dp = [0]*ls
+        if s[-1] == '0':
+            dp[-1] = 0
+        else:
+            dp[-1] = 1
+        if ls > 1:
+            if s[-2] == '0':
+                dp[-2] = 0
+            else:
+                if int(s[-2:]) < 27:
+                    if s[-1] == '0':
+                        dp[-2] = 1
+                    else:
+                        dp[-2] = 2
+                else:
+                    dp[-2] = dp[-1]
+        if ls > 2:
+            for i in range(ls-3, -1, -1):
+                if s[i] == '0':
+                    dp[i] = 0
+                else:
+                    if int(s[i:i+2]) < 27:
+                        dp[i] = dp[i+1] + dp[i+2]
+                    else:
+                        dp[i] = dp[i+1]
+        return dp[0]
+        
+92. Reverse Linked List II
+
+class Solution:
+    def reverseBetween(self, head, m, n):
+        """
+        :type head: ListNode
+        :type m: int
+        :type n: int
+        :rtype: ListNode
+        """
+        if m == n:
+            return head
+        dummy = l1 = ListNode(0)
+        flag = 0
+        k = 1
+        while head:
+            # print(head.val,k)
+            if k < m or k > n:
+                cu = ListNode(head.val)
+                l1.next = cu
+                l1 = cu
+            else:
+                if flag == 0:
+                    d = e = ListNode(head.val)
+                    flag = 1
+                else:
+                    cur = ListNode(head.val)
+                    cur.next = e
+                    e = cur
+            if k == n: 
+                l1.next = e
+                l1 = d
+            k += 1
+            head = head.next
+
+        return dummy.next
+        
+94. Binary Tree Inorder Traversal
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+
+class Solution:
+    def inorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        stack,res = [None],[]
+        while stack:
+            while root:
+                stack.append(root)
+                root = root.left
+            tos = stack.pop()
+            if tos != None:
+                res.append(tos.val)
+                root = tos.right
+        return res
+        
+95. Unique Binary Search Trees II
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def generateTrees(self, n):
+        """
+        :type n: int
+        :rtype: List[TreeNode]
+        """
+        def generate(i, j):
+            if j - i < 0:
+                return [None]
+            elif j - i == 0:
+                return [TreeNode(i)]
+            else:
+                res = []
+                for k in range(i, j+1):
+                    left = generate(i, k-1)
+                    right = generate(k+1, j)
+                    for l in left:
+                        for r in right:
+                            root = TreeNode(k)
+                            root.left = l
+                            root.right = r
+                            res.append(root)
+                return res
+        if n == 0:
+            return []
+        else:
+            return generate(1, n)
+            
+96. Unique Binary Search Trees
+
+class Solution:
+    def numTrees(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n == 0:
+            return 1
+        elif n == 1:
+            return 1
+        elif n == 2:
+            return 2
+        arr = [0]*(n+1)
+        arr[0] = 1
+        arr[1] = 1
+        arr[2] = 2
+        for i in range(3,n+1):
+            for j in range(i):
+                arr[i] += arr[j]*arr[i-1-j]
+        return arr[-1]
+        
+  class Solution:
+    def numTrees(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n == 0:
+            return 1
+        if n == 1:
+            return 1
+        if n == 2:
+            return 2
+        res = [0]*(n+1)
+        res[0] = 1
+        res[1] = 1
+        res[2] = 2
+        
+        for j in range(3, n+1):
+            for k in range(j):
+                res[j] += res[k]*res[j-1-k]
+        return res[n]
+        
+ 97. Interleaving String
+ 
+ class Solution:
+    def isInterleave(self, s1, s2, s3):
+        """
+        :type s1: str
+        :type s2: str
+        :type s3: str
+        :rtype: bool
+        """
+        if s1 == '': return s2 == s3
+        if s2 == '': return s1 == s3
+        if s3 == '': return s1 == s2 == ''
+        len1, len2, len3 = len(s1), len(s2), len(s3)
+        if len1 + len2 != len3: return False
+        dp = [[0]*(len2+1) for _ in range(len1+1)]
+        for j in range(1, len2+1):
+            dp[0][j] = (s2[:j] == s3[:j])
+        for i in range(1, len1+1):
+            dp[i][0] = (s1[:i] == s3[:i])
+        for i in range(1, len1+1):
+            for j in range(1, len2+1):
+                dp[i][j] = (dp[i-1][j] and s1[i-1] == s3[i+j-1]) or (dp[i][j-1] and s2[j-1]==s3[i+j-1])
+        return dp[-1][-1]
+        
+class Solution:
+    def isInterleave(self, s1, s2, s3):
+        """
+        :type s1: str
+        :type s2: str
+        :type s3: str
+        :rtype: bool
+        """
+        if s1 == '': return s2 == s3
+        if s2 == '': return s1 == s3
+        if s3 == '': return s1 == s2 == ''
+        len1, len2, len3 = len(s1), len(s2), len(s3)
+        if len1 + len2 != len3: return False
+        dp = [[0]*(len2+1) for _ in range(len1+1)]
+        for j in range(1, len2+1):
+            dp[0][j] = (s2[:j] == s3[:j])
+        for i in range(1, len1+1):
+            dp[i][0] = (s1[:i] == s3[:i])
+        for i in range(1, len1+1):
+            for j in range(1, len2+1):
+                dp[i][j] = (dp[i-1][j] and s1[i-1] == s3[i+j-1]) or (dp[i][j-1] and s2[j-1]==s3[i+j-1])
+        return dp[-1][-1]
+            
+98. Validate Binary Search Tree
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+import sys
+
+class Solution:
+    def isValidBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        return self.isValid_helper(root, -sys.maxint-1, sys.maxint)
+    
+    def isValid_helper(self, root, minVal, maxVal):
+        if root is None:
+            return True
+        if root.val >= maxVal or root.val <= minVal:
+            return False
+        return self.isValid_helper(root.left, minVal, root.val) and self.isValid_helper(root.right, root.val, maxVal)
+        
+ class Solution:
+    def isValidBST(self, root, s = -float('inf'), la = float('inf')):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        if root == None:
+            return True
+        if (root.val > s and root.val < la) and self.isValidBST(root.left, s, root.val) and self.isValidBST(root.right, root.val, la):
+            return True
+        else:
+            return False
+            
+99. Recover Binary Search Tree
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    
+    def __init__(self):
+        self.first = self.second = None
+        self.pre = TreeNode(-sys.maxint - 1)
+    
+    def recoverTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: void Do not return anything, modify root in-place instead.
+        """
+        self.traverse(root)
+        self.first.val, self.second.val = self.second.val, self.first.val
+    
+    def traverse(self, root):
+        if root is None:
+            return
+        self.traverse(root.left)
+        if self.pre.val >= root.val:
+            if self.first is None:
+                self.first = self.pre
+            if self.first is not None:
+                self.second = root
+        self.pre = root
+        self.traverse(root.right)
+        
+100. Same Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def isSameTree(self, p, q):
+        """
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: bool
+        """
+        if p == q:
+            return True
+        try:
+            left = right = True
+            if p.val == q.val:
+                left = self.isSameTree(p.left, q.left)
+                right = self.isSameTree(p.right, q.right)
+                return (left and right)
+        except:
+            return False
+        return False
+        
+# DFS with queue ADT
+class Solution:
+    def isSameTree(self, p, q):
+        """
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: bool
+        """
+        return self.t(p) == self.t(q)
+          
+    def t(self, n):
+        return n and (n.val, self.t(n.left), self.t(n.right))
+        
+        
