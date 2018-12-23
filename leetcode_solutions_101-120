@@ -1,0 +1,780 @@
+101. Symmetric Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def isSymmetric(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        # tl: left tree; tr: right tree 
+        def judge(tl, tr):
+            if not tl and not tr:
+                return True
+            elif not tl or not tr:
+                return False
+            return judge(tl.left, tr.right) and judge(tl.right, tr.left) if tl.val == tr.val else False
+        
+        return judge(root.left, root.right) if root else True
+        
+102. Binary Tree Level Order Traversal
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def levelOrder(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        if root == None:
+            return []
+        res = []
+        frontier = [root]
+        while frontier:
+            res.append([])
+            nextLevel = []
+            for u in frontier:
+                res[-1].append(u.val)
+                for v in [u.left, u.right]:
+                    if v:
+                        nextLevel.append(v)
+            frontier = nextLevel
+        return res
+        
+class Solution:
+    def levelOrder(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        if not root:
+            return []
+        res = []
+        queue = []
+        queue.append((root, 0))
+        while queue:
+            node, level = queue.pop(0)
+            if not node:
+                continue
+            if len(res) == level:
+                res.append([node.val])
+            else:
+                res[level].append(node.val)
+            queue.append((node.left, level+1))
+            queue.append((node.right, level+1))
+        return res
+        
+103. Binary Tree Zigzag Level Order Traversal
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def zigzagLevelOrder(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        q = [root] if root else []
+        ans = []; d = True
+        
+        while q:
+            level = []
+            next_q = []
+            for node in q:
+                level.append(node.val)
+                if node.left:
+                    next_q.append(node.left)
+                if node.right:
+                    next_q.append(node.right)
+                    
+            ans.append(level if d else level[::-1])
+            d = (not d)
+            q = next_q
+        return ans
+        
+class Solution:
+    def zigzagLevelOrder(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        if not root:
+            return []
+        
+        traversal_q = [root]; i=1; res=[]
+        
+        while traversal_q:
+            level_len = len(traversal_q)
+            level_values = []
+            while level_len > 0:
+                node = traversal_q.pop(0)
+                level_values.append(node.val)
+                if node.left:
+                    traversal_q.append(node.left)
+                if node.right:
+                    traversal_q.append(node.right)
+                level_len -= 1
+            if i%2 == 0:
+                res.append(level_values[::-1])
+            else:
+                res.append(level_values)
+            i += 1
+        return res
+        
+104. Maximum Depth of Binary Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def maxDepth(self, root):
+        def depth(root,dp):
+            return max(depth(root.left,1 + dp),depth(root.right,1 + dp)) if root else dp
+        return depth(root,0)
+        
+class Solution:
+    def maxDepth(self, root):
+        if not root:
+            return 0
+        l = self.maxDepth(root.left)
+        r = self.maxDepth(root.right)
+        return max(l, r) + 1
+        
+105. Construct Binary Tree from Preorder and Inorder Traversal
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def buildTree(self, preorder, inorder):
+        """
+        :type preorder: List[int]
+        :type inorder: List[int]
+        :rtype: TreeNode
+        """
+        if inorder:
+            ind = inorder.index(preorder.pop(0))
+            root = TreeNode(inorder[ind])
+            root.left = self.buildTree(preorder, inorder[:ind])
+            root.right = self.buildTree(preorder, inorder[ind+1:])
+            return root
+            
+ class Solution:
+    def buildTree(self, preorder, inorder):
+        """
+        :type preorder: List[int]
+        :type inorder: List[int]
+        :rtype: TreeNode
+        """
+        inorder_dict = dict()
+        for i, num in enumerate(inorder):
+            inorder_dict[num] = i
+        pre_iter = iter(preorder)
+        
+        def helper(start, end):
+            if start > end:
+                return None
+            root_val = next(pre_iter)
+            root = TreeNode(root_val)
+            idx = inorder_dict[root_val]
+            root.left = helper(start, idx-1)
+            root.right = helper(idx+1, end)
+            
+            return root
+        
+        return helper(0, len(inorder)-1)
+        
+106. Construct Binary Tree from Inorder and Postorder Traversal
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def buildTree(self, inorder, postorder):
+        """
+        :type inorder: List[int]
+        :type postorder: List[int]
+        :rtype: TreeNode
+        """
+        if inorder:
+            ind = inorder.index(postorder.pop())
+            root = TreeNode(inorder[ind])
+            root.right = self.buildTree(inorder[ind+1:], postorder)
+            root.left = self.buildTree(inorder[:ind], postorder)
+            return root
+            
+107. Binary Tree Level Order Traversal II
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def levelOrderBottom(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        openset = [[root, 0]]
+        record = {}
+        layer = 0
+        
+        while openset != []:
+            [cur, layer] = openset.pop(0)
+            if cur != None:
+                if layer not in record:
+                    record[layer] = [cur.val]
+                else:
+                    record[layer] += [cur.val]
+                    
+                openset += [[cur.left, layer + 1], [cur.right, layer + 1]]
+                
+        r = [[None]]*len(record)
+        for key, value in record.items():
+            r[len(record)-key-1] = value
+        
+        return r
+        
+class Solution(object):
+    def levelOrderBottom(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        res = []
+        stack = [(root, 0)]
+        
+        while stack:
+            node, level = stack.pop()
+            if node:
+                if len(res) < level + 1:
+                    res.insert(0, [])
+                res[-(level+1)].append(node.val)
+                stack.append((node.right, level+1))
+                stack.append((node.left, level+1))
+        return res
+        
+ 108. Convert Sorted Array to Binary Search Tree
+ 
+ # Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def sortedArrayToBST(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: TreeNode
+        """
+        if not nums:
+            return
+        
+        root = TreeNode(nums[len(nums)//2])
+        root.left = self.sortedArrayToBST(nums[:len(nums)//2])
+        root.right = self.sortedArrayToBST(nums[len(nums)//2 +1:])
+        
+        return root
+        
+109. Convert Sorted List to Binary Search Tree
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def sortedListToBST(self, head):
+        """
+        :type head: ListNode
+        :rtype: TreeNode
+        """
+        nums = []
+        cur = head
+        while cur:
+            nums.append(cur.val)
+            cur = cur.next
+        return self.helper(nums)
+        
+    def helper(self, nums):
+        if not nums:
+            return
+        root = TreeNode(nums[len(nums)//2])
+        root.left = self.helper(nums[:len(nums)//2])
+        root.right = self.helper(nums[len(nums)//2 + 1:])
+        return root
+        
+class Solution:
+    def sortedListToBST(self, head):
+        """
+        :type head: ListNode
+        :rtype: TreeNode
+        """
+        nums = []
+        cur = head
+        while cur:
+            nums.append(cur.val)
+            cur = cur.next
+        return self.helper(nums)
+        
+    def helper(self, nums):
+        if not nums:
+            return
+        root = TreeNode(nums[len(nums)//2])
+        root.left = self.helper(nums[:len(nums)//2])
+        root.right = self.helper(nums[len(nums)//2 + 1:])
+        return root
+        
+ 110. Balanced Binary Tree
+ 
+ # Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    
+    
+    def isBalanced(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        if not root:
+            return True
+        if self.Dep(root):
+            return True
+        return False
+    
+    def Dep(self, root):
+        if not root:
+            return 0
+        a, b = self.Dep(root.left), self.Dep(root.right)
+        if abs(a-b) > 1 or (a is False) or (b is False):
+            return False
+        depth = max(a, b) + 1
+        return depth
+        
+111. Minimum Depth of Binary Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def minDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return 0
+        l = self.minDepth(root.left)
+        r = self.minDepth(root.right)
+        if l == 0 or r == 0:
+            return l + r + 1
+        else:
+            return min(l, r) + 1
+            
+class Solution:
+    def minDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return 0
+        List = [[root]]
+        for i, v in enumerate(List):
+            B = []
+            for j in v:
+                if not j.left and not j.right:
+                    return i+1
+                if j.left:
+                    B.append(j.left)
+                if j.right:
+                    B.append(j.right)
+            List.append(B)
+            
+class Solution:
+    def minDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return 0
+        stack = [[root]]
+        ans = []
+        res = 0
+        while stack:
+            level = stack.pop(0)
+            res += 1
+            new_level = []
+            for node in level:
+                if node.left == node.right == None:
+                    ans.append(res)
+                if node.left:
+                    new_level.append(node.left)
+                if node.right:
+                    new_level.append(node.right)
+            if len(new_level) > 0:
+                stack.append(new_level)
+        return min(ans)
+        
+112. Path Sum
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def hasPathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: bool
+        """
+        if not root:
+            return False
+        if not root.left and not root.right and root.val == sum:
+            return True
+        sum -= root.val
+        return self.hasPathSum(root.left, sum) or self.hasPathSum(root.right, sum)
+        
+class Solution(object):
+    ANS = False
+    def hasPathSum(self, root, sum):
+        if root == None:
+            return False
+        if not root.left and not root.right:
+            return True if root.val==sum else False
+        if root.left:
+            self.mod_dfs(root.left, root.val, sum)
+        if root.right:
+            self.mod_dfs(root.right, root.val, sum)
+        return self.ANS
+    
+    def mod_dfs(self, root, total, sum):
+        if self.ANS:
+            return
+        total += root.val
+        if total == sum and not root.left and not root.right:
+            self.ANS = True
+        if root.left:
+            self.mod_dfs(root.left, total, sum)
+        if root.right:
+            self.mod_dfs(root.right, total, sum)
+        if not root.left and not root.right:
+            return
+            
+113. Path Sum II
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    ANS = []
+    def pathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: bool
+        """
+        # need to reset ans variables due to way func is run
+        self.ANS = [] 
+        if root == None: return []
+        vals = [root.val]
+        if not root.left and not root.right:
+            return [[root.val]] if root.val == sum else []
+        # dfs to the leaf node, and bring the total from that point to leaf nodes, and check
+        if root.left:
+            self.mod_dfs(root.left,root.val,vals,sum)
+        if root.right:
+            self.mod_dfs(root.right,root.val,vals,sum)
+        return self.ANS 
+            
+    def mod_dfs(self,root,total,vals,sum):
+        total += root.val
+        if total == sum and not root.left and not root.right:
+            vals_root = vals + [root.val]
+            self.ANS.append(vals_root)
+        if root.left:
+            vals_l = vals + [root.val]
+            self.mod_dfs(root.left,total,vals_l,sum)
+        if root.right:
+            vals_r = vals + [root.val]
+            self.mod_dfs(root.right,total,vals_r,sum)
+        if not root.left and not root.right:
+            return
+            
+14. Flatten Binary Tree to Linked List
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def flatten(self, root):
+        """
+        :type root: TreeNode
+        :rtype: void Do not return anything, modify root in-place instead.
+        """
+        if not root:
+            return root
+        tags = []
+        
+        def find(root):
+            if not root:
+                return
+            tags.append(root)
+            if root.left:
+                find(root.left)
+            if root.right:
+                find(root.right)
+        find(root)
+        root.left = None
+        root.right = None
+        tag = root
+        for node in tags[1:]:
+            
+            tag.right = node
+            tag.left = None
+            tag = node
+            
+class Solution:
+    def flatten(self, root):
+        """
+        :type root: TreeNode
+        :rtype: void Do not return anything, modify root in-place instead.
+        """
+        if not root:
+            return
+        self.flatten(root.left)
+        self.flatten(root.right)
+        if root.left:
+            left, right = root.left, root.right
+            root.right, root.left = root.left, None
+            while left.right:
+                left = left.right
+            left.right = right
+            
+115. Distinct Subsequences
+
+class Solution:
+    def numDistinct(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: int
+        """
+        m = len(s) + 1; n = len(t) + 1
+        dp = [[1]*n for _ in range(m)]
+        for j in range(1, n):
+            dp[0][j] = 0
+        for i in range(1, m):
+            for j in range(1, n):
+                dp[i][j] = dp[i-1][j] + dp[i-1][j-1]*(s[i-1]==t[j-1])
+        return dp[-1][-1]
+        
+class Solution:
+    def numDistinct(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: int
+        """
+        if t == "":
+            return 1
+        m = len(s)+1
+        n = len(t)+1
+        if n > m:
+            return 0
+        
+        D = [[0 for _ in range(m)] for _ in range(n)]
+        D[0] = [1 for _ in range(m)]
+        for i in range(1, n):
+            for j in range(i, m):
+                D[i][j] = D[i][j-1] + D[i-1][j-1]*(s[j-1]==t[i-1])
+        return D[-1][-1]
+        
+118. Pascal's Triangle
+
+class Solution:
+    def generate(self, numRows):
+        """
+        :type numRows: int
+        :rtype: List[List[int]]
+        """
+        n = numRows
+        if n == 0:
+            return []
+        elif n == 1:
+            return [[1]]
+        elif n == 2:
+            return [[1], [1, 1]]
+        
+        pascal = [[1], [1, 1]]
+        for count in range(2, n):
+            row = [1] + [0]*(count-1) +[1]
+            for i in range(count-1):
+                row[i+1] = pascal[-1][i] + pascal[-1][i+1]
+            pascal.append(row)
+        return pascal
+        
+ class Solution:
+    def generate(self, numRows):
+        """
+        :type numRows: int
+        :rtype: List[List[int]]
+        """
+        n = numRows
+        if n == 0:
+            return []
+        
+        if n == 1:
+            return [[1]]
+        
+        pascal = [[1]]
+        for i in range(2, n+1):
+            tmp1 = [0] + pascal[-1]
+            tmp2 = pascal[-1] + [0]
+            tmp = [a+b for a, b in zip(tmp1, tmp2)]
+            pascal.append(tmp)
+        return pascal
+        
+119. Pascal's Triangle II
+
+class Solution(object):
+    def getRow(self, rowIndex):
+        """
+        :type rowIndex: int
+        :rtype: List[int]
+        """
+        if rowIndex == 0: return [1]
+        dp = [0]*(rowIndex+1)
+        dp[0] = [1]
+        for i in range(1, rowIndex+1):
+            L = [0] + dp[i-1]
+            R = dp[i-1] + [0]
+            S = [x+y for x, y in zip(L, R)]
+            dp[i] = S
+        return dp[-1]
+        
+class Solution(object):
+    def getRow(self, rowIndex):
+        """
+        :type rowIndex: int
+        :rtype: List[int]
+        """
+        if rowIndex == 0:
+            return [1]
+        dp = [0]*(rowIndex+1)
+        dp[0] = [1]
+        for i in range(1, rowIndex+1):
+            L = [0] + dp[i-1]
+            R = dp[i-1] + [0]
+            S = [x+y for x, y in zip(L, R)]
+            dp[i] = S
+        return dp[-1]
+        
+120. Triangle
+
+class Solution:
+    def minimumTotal(self, triangle):
+        """
+        :type triangle: List[List[int]]
+        :rtype: int
+        """
+        if not triangle:
+            return
+        n = len(triangle)
+        for i in range(1, n):
+            for j in range(i+1):
+                if j == 0:
+                    triangle[i][j] = triangle[i-1][j] + triangle[i][j]
+                elif j < i:
+                    triangle[i][j] = min(triangle[i-1][j-1], triangle[i-1][j]) + triangle[i][j]
+                else:
+                    triangle[i][j] = triangle[i-1][j-1] + triangle[i][j]
+        return min(triangle[-1])
+        
+class Solution:
+    def minimumTotal(self, triangle):
+        """
+        :type triangle: List[List[int]]
+        :rtype: int
+        """
+        if not triangle:
+            return
+        n = len(triangle)
+        for i in range(1, n):
+            for j in range(i+1):
+                if j == 0:
+                    tmp = triangle[i-1][j]
+                elif j < i:
+                    tmp = min(triangle[i-1][j-1], triangle[i-1][j])
+                else:
+                    tmp = triangle[i-1][j-1]
+                triangle[i][j] +=  tmp
+        return min(triangle[-1])
+        
+        
+            
