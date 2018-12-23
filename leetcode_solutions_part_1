@@ -288,3 +288,938 @@ if __name__ == '__main__':
     # begin
     s = Solution()
     print(s.isMatch("", ".*"))
+    
+11. Container With Most Water
+
+class Solution:
+    def maxArea(self, height):
+        """
+        :type height: List[int]
+        :rtype: int
+        """
+        L, R, width, res = 0, len(height) - 1, len(height) - 1, 0
+        for w in range(width, 0, -1):
+            if height[L] < height[R]:
+                res, L = max(res, height[L] * w), L + 1
+            else:
+                res, R = max(res, height[R] * w), R - 1
+        return res
+  
+  class Solution:
+    def maxArea(self, height):
+        """
+        :type height: List[int]
+        :rtype: int
+        """
+        ls = len(height)
+        
+        start = 0
+        end = ls - 1
+        bound = min(height[start], height[end])
+        area = bound * (end - start)
+        while start < end:
+            if height[start] <= height[end]:
+                start += 1
+                temp1 = min(height[start], height[end])
+                temp2 = temp1 * (end - start)
+                if temp2 >= area:
+                    area = temp2
+            else:
+                end -= 1
+                temp1 = min(height[start], height[end])
+                temp2 = temp1 * (end - start)
+                if temp2 >= area:
+                    area = temp2
+        return area
+        
+12. Integer to Roman
+
+class Solution:
+    def intToRoman(self, num):
+        """
+        :type num: int
+        :rtype: str
+        """
+        M = ["", "M", "MM", "MMM"]
+        C = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"]
+        X = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"]
+        I = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
+        return M[num//1000] + C[(num%1000)//100] + X[(num%100)//10] + I[num%10]
+        
+ 13. Roman to Integer
+ 
+ class Solution:
+    def romanToInt(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        aux_dict = {"I":1, "V":5, "X":10, "L":50, "C":100, "D":500, "M":1000}
+        
+        s = [item for item in s]
+        ls = len(s)
+        
+        res = aux_dict[s[0]]
+        for i in range(1, ls):
+            if aux_dict[s[i]] <= aux_dict[s[i-1]]:
+                res += aux_dict[s[i]]
+            else:
+                res += aux_dict[s[i]]
+                res -= 2*aux_dict[s[i-1]]
+        return res
+        
+14. Longest Common Prefix
+
+class Solution(object):
+    def longestCommonPrefix(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: str
+        """
+        if len(strs) == 0:
+            return ""
+        if len(strs) == 1:
+            return strs[0]
+        
+        minimum = min([len(x) for x in strs])
+        i = minimum
+        while i > 0 :
+            aux_set = set([x[:i] for x in strs])
+            if len(aux_set) == 1:
+                return strs[0][:i]
+            else:
+                i -= 1
+        return ""
+        
+class Solution(object):
+    def longestCommonPrefix(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: str
+        """
+        if not strs:
+            return ""
+        min_len = 2**31
+        for s in strs:
+            if len(s) < min_len:
+                min_len = len(s)
+        res = ""
+        if min_len == 0:
+            return res
+        for i in range(min_len):
+            temp_lett = strs[0][i]
+            for s in strs[1:]:
+                if s[i] != temp_lett:
+                    return res
+            res += temp_lett
+        return res
+        
+15. 3Sum
+
+class Solution:
+    def threeSum(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+    
+        res = []
+        nums.sort()
+        for i in range(len(nums)-2):
+            if i > 0 and nums[i] == nums[i-1]:
+                continue
+            l, r = i+1, len(nums)-1
+            while l < r:
+                s = nums[i] + nums[l] + nums[r]
+                if s < 0:
+                    l +=1 
+                elif s > 0:
+                    r -= 1
+                else:
+                    res.append((nums[i], nums[l], nums[r]))
+                    while l < r and nums[l] == nums[l+1]:
+                        l += 1
+                    while l < r and nums[r] == nums[r-1]:
+                        r -= 1
+                    l += 1; r -= 1
+        return res
+        
+  16. 3Sum Closest
+  
+  class Solution:
+    def threeSumClosest(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        ls = len(nums)
+        nums_sort = sorted(nums)
+        res = nums_sort[0] + nums_sort[1] + nums_sort[2]
+        for i in range(0, ls-2):
+            j, k = i+1, ls-1
+            while j < k:
+                temp = nums_sort[i] + nums_sort[j] + nums_sort[k]
+                if abs(temp - target) < abs(res - target):
+                    res = temp
+                if temp < target:
+                    j += 1
+                else:
+                    k -= 1
+        return res
+        
+17. Letter Combinations of a Phone Number
+
+dmap = {'2': 'abc',
+        '3': 'def',
+        '4': 'ghi',
+        '5': 'jkl',
+        '6': 'mno',
+        '7': 'pqrs',
+        '8': 'tuv',
+        '9': 'wxyz',
+        '0': ' ',
+        None: None}
+
+class Solution(object):
+    def letterCombinations(self, digits):
+        # DFS
+        result = []
+        ls = len(digits)
+        if ls == 0:
+            return result
+        current = digits[0]
+        posfix = self.letterCombinations(digits[1:])
+        for t in dmap[current]:
+            if len(posfix) > 0:
+                for p in posfix:
+                    temp = t + p
+                    result.append(temp)
+            else:
+                result.append(t)
+        return result
+        
+ 18. 4Sum
+ 
+ class Solution:
+    def fourSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        
+        nums.sort()
+        results = []
+        self.findNsum(nums, target, 4, [], results)
+        return results
+    
+    def findNsum(self, nums, target, N, result, results):
+        if len(nums) < N or N < 2:
+            return
+        if N == 2:
+            l, r = 0, len(nums)-1
+            while l < r:
+                if nums[l] + nums[r] == target:
+                    results.append(result+[nums[l], nums[r]])
+                    l += 1
+                    r -= 1
+                    while l < r and nums[l] == nums[l-1]:
+                        l += 1
+                    while r > l and nums[r] == nums[r+1]:
+                        r -= 1
+                elif nums[l] + nums[r] < target:
+                    l += 1
+                else:
+                    r -= 1
+        else:
+            for i in range(len(nums)-N + 1):
+                if target < sum(nums[:N]) or target > sum(nums[-N:]):
+                    break
+                if i == 0 or (i >0 and nums[i-1]!=nums[i]):
+                    self.findNsum(nums[i+1:], target-nums[i], N-1, result+[nums[i]], results)
+        return
+        
+19. Remove Nth Node From End of List
+
+class Solution:
+    def removeNthFromEnd(self, head, n):
+        """
+        :type head: ListNode
+        :type n: int
+        :rtype: ListNode
+        """
+        ls = self.find_length(head)
+        stop_index = ls - n
+        if stop_index == 0:
+            return head.next
+        p = None
+        c = head
+        count = 0
+        while count < stop_index:
+            p = c
+            c = c.next
+            count += 1
+        p.next = c.next
+        return head
+        
+        
+    
+    def find_length(self, head):
+        count = 0
+        while head:
+            count += 1
+            head = head.next
+        return count
+        
+20. Valid Parentheses
+
+class Solution:
+    # @return a boolean
+    def isValid(self, s):
+        stack = []
+        dict = {"]":"[", "}":"{", ")":"("}
+        for char in s:
+            if char in dict.values():
+                stack.append(char)
+            elif char in dict.keys():
+                if stack == [] or dict[char] != stack.pop():
+                    return False
+            else:
+                return False
+        return stack == []
+        
+21. Merge Two Sorted Lists
+
+class Solution:
+    
+    def mergeTwoLists(self, l1, l2):
+        # dummy head
+        pos = dummyHead = ListNode(-1)
+        while l1 is not None and l2 is not None:
+            if l1.val <= l2.val:
+                pos.next = l1
+                l1 = l1.next
+            else:
+                pos.next = l2
+                l2 = l2.next
+            pos = pos.next
+        # merge residual l1
+        if l1 is not None:
+            pos.next = l1
+        # merge residual l2
+        if l2 is not None:
+            pos.next = l2
+        return dummyHead.next
+        
+class Solution:
+    def mergeTwoLists(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        dh = res = ListNode('head')
+     
+        while l1 is not None and l2 is not None:
+            if l1.val <= l2.val:
+                res.next = l1
+                l1 = l1.next
+            else:
+                res.next = l2
+                l2 = l2.next
+            res = res.next
+        if l1 is not None:
+            res.next = l1
+            
+        if l2 is not None:
+            res.next = l2
+        return dh.next
+        
+        
+ 22. Generate Parentheses
+ 
+ class Solution:
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        ans = []
+        def nextLevel(left, right, S):# left = S.count("(") and right = S.count(")")
+            if left == right == n:
+                ans.append("".join(S))
+                return
+            if left < n:
+                S.append('(')
+                nextLevel(left+1, right, S)
+                S.pop()
+            if right < left:
+                S.append(")")
+                nextLevel(left, right+1, S)
+                S.pop()
+                
+        nextLevel(0, 0, [])
+        return ans
+        
+ class Solution:
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        result, path = [], ''
+        self.backtrack(n, 0, 0, result, path)
+        return result
+    
+    def backtrack(self, n, num_open, num_closed, result, path):
+        if num_closed == n:
+            result.append(path)
+        else:
+            if num_open < n:
+                path += "("
+                num_open += 1
+                self.backtrack(n, num_open, num_closed, result, path)
+                path = path[:-1]
+                num_open -=1
+                
+            if num_open > num_closed:
+                path += ')'
+                num_closed += 1
+                self.backtrack(n, num_open, num_closed, result, path)
+                path = path[:-1]
+                num_closed -= 1
+        return
+        
+class Solution:
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        results = []
+        
+        def dfs(path="", left=n, right=n):
+            if left == right == 0:
+                results.append(path)
+            elif left == right:
+                dfs(path+"(", left-1, right)
+            elif left < right:
+                if left > 0:
+                    dfs(path+"(", left-1, right)
+                if right > 0:
+                    dfs(path+")", left, right-1)
+        dfs()
+        return results
+        
+23. Merge k Sorted Lists
+
+class Solution(object):
+    
+    def mergeKLists(self, lists):
+        # recursive
+        if lists is None:
+            return None
+        elif len(lists) == 0:
+            return None
+        return self.mergeK(lists, 0, len(lists) - 1)
+
+    def mergeK(self, lists, low, high):
+        if low == high:
+            return lists[low]
+        elif low + 1 == high:
+            return self.mergeTwolists(lists[low], lists[high])
+        mid = (low + high) // 2
+        return self.mergeTwolists(self.mergeK(lists, low, mid), self.mergeK(lists, mid + 1, high))
+
+    def mergeTwolists(self, l1, l2):
+        if l1 is None:
+            return l2
+        if l2 is None:
+            return l1
+        head = curr = ListNode(-1)
+        while l1 is not None and l2 is not None:
+            if l1.val <= l2.val:
+                curr.next = l1
+                l1 = l1.next
+            else:
+                curr.next = l2
+                l2 = l2.next
+            curr = curr.next
+        if l1 is not None:
+            curr.next = l1
+        if l2 is not None:
+            curr.next = l2
+        return head.next
+        
+        
+24. Swap Nodes in Pairs
+
+class Solution(object):
+    def swapPairs(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if head and head.next:
+            tmp = head.next
+            head.next = self.swapPairs(tmp.next)
+            tmp.next = head
+            return tmp
+        return head
+        
+class Solution(object):
+    def swapPairs(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        # base case
+        if head == None or head.next == None:
+            return head
+        
+        # actual computation - works when there are two or more nodes        
+        # 1. make relevant node pointer initializations
+        temp = ListNode(sys.maxsize)
+        temp.next = head
+        odd = head
+        even = head.next
+        # 2. swapping of nodes
+        odd.next = even.next
+        even.next = odd
+        temp.next = even
+        # 3. recurrsion
+        odd.next = self.swapPairs(head.next)
+        
+        return temp.next
+        
+ class Solution(object):
+    def swapPairs(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        prev = None
+        node = head
+        while node and node.next:
+            if prev is None:
+                head = node.next
+            self.swap(node, node.next, prev)
+            prev = node
+            node = node.next
+        return head
+    
+    def swap(self, node1, node2, prev):
+        node1.next = node2.next
+        node2.next = node1
+        if prev != None:
+            prev.next = node2
+            
+            
+  25. Reverse Nodes in k-Group
+  
+  class Solution:
+    def reverseKGroup(self, head, k):
+        """
+        :type head: ListNode
+        :type k: int
+        :rtype: ListNode
+        """
+        dummy = jump = ListNode(0)
+        dummy.next = l = r = head
+        while True:
+            count = 0
+            while r and count < k:
+                r = r.next
+                count += 1
+            if count == k:
+                pre, cur = r, l
+                for _ in range(k):
+                    cur.next, cur, pre = pre, cur.next, cur
+                jump.next, jump, l = pre, l, r
+            else:
+                return dummy.next
+                
+  class Solution:
+    def reverseKGroup(self, head, k):
+        """
+        :type head: ListNode
+        :type k: int
+        :rtype: ListNode
+        """
+        n = self.find_length(head)
+        if n < k or k == 1:
+            return head
+        pre = cur = head
+        last = None
+        count = 0
+        while count < k:
+            count += 1
+            temp = cur.next
+            cur.next = last
+            last = cur
+            cur = temp
+        pre.next = self.reverseKGroup(cur, k)
+        return last
+    
+    def find_length(self, head):
+        if not head:
+            return 0
+        cur = head
+        n = 0
+        while cur:
+            n += 1
+            cur = cur.next
+        return n
+        
+ 26. Remove Duplicates from Sorted Array
+ 
+ class Solution(object):
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        newTail = 0
+        
+        for i in range(1, len(nums)):
+            if nums[i] != nums[newTail]:
+                newTail += 1
+                nums[newTail] = nums[i]
+        return newTail + 1
+        
+        
+27. Remove Element
+
+class Solution(object):
+    def removeElement(self, nums, val):
+        """
+        :type nums: List[int]
+        :type val: int
+        :rtype: int
+        """
+        ls = len(nums)
+        if ls == 0:
+            return ls
+        
+        count = 0
+        index = 0
+        while index < ls - count:
+            if nums[index] == val:
+                nums[index] = nums[ls - 1 - count]
+                count += 1
+            else:
+                index += 1
+        return ls - count
+    
+if __name__ == "__main__":
+    s = Solution()
+    print s.removeElement([3, 2, 2, 3], 3)
+    
+28. Implement strStr()
+
+class Solution(object):
+    def strStr(self, haystack, needle):
+        """
+        :type haystack: str
+        :type needle: str
+        :rtype: int
+        """
+        for i in range(len(haystack) - len(needle) + 1):
+            if haystack[i:i+len(needle)] == needle:
+                return i
+        return -1
+        
+29. Divide Two Integers
+
+class Solution:
+# @return an integer
+    def divide(self, dividend, divisor):
+        positive = (dividend < 0) is (divisor < 0)
+        dividend, divisor = abs(dividend), abs(divisor)
+        res = 0
+        while dividend >= divisor:
+            temp, i = divisor, 1
+            while dividend >= temp:
+                dividend -= temp
+                res += i
+                i <<= 1
+                temp <<= 1
+        if not positive:
+            res = -res
+        return min(max(-2147483648, res), 2147483647)
+        
+32. Longest Valid Parentheses
+
+import pdb
+class Solution(object):
+
+    def longestValidParentheses(self, s):
+        # https://leetcode.com/discuss/87988/my-easy-o-n-java-solution-with-explanation
+        ls = len(s)
+        stack = []
+        data = [0] * ls
+        for i in range(ls):
+            curr = s[i]
+            if curr == '(':
+                stack.append(i)
+            else:
+                if len(stack) > 0:
+                    data[i] = 1
+                    data[stack.pop(-1)] = 1
+        tep, res = 0, 0
+        for t in data:
+            if t == 1:
+                tep += 1
+            else:
+                res = max(tep, res)
+                tep = 0
+        return max(tep, res)
+        
+34. Find First and Last Position of Element in Sorted Array
+
+class Solution(object):
+    def searchRange(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        length = len(nums)
+        if length == 0:
+            return [-1, -1]
+        
+        min = 0
+        max = length - 1
+        while min <= max:
+            pos = (min + max) // 2
+            if nums[pos] > target:
+                max = pos - 1
+            elif nums[pos] < target:
+                min = pos + 1
+            else:
+                
+                for i in range(min, max + 1):
+                    if nums[i] == target:
+                        if min < i and nums[min] != nums[i]:
+                            min = i
+                        max = i
+                return [min, max]
+        return [-1, -1]
+        
+35. Search Insert Position
+
+class Solution(object):
+    def searchInsert(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+
+        l, r = 0, len(nums)-1
+        while l < r:
+            mid = (l + r) // 2
+            if nums[mid] < target:
+                l = mid + 1
+            else:
+                r = mid
+        if nums[l] < target:
+            return l + 1
+        return l
+        
+36. Valid Sudoku
+
+class Solution(object):
+    def isValidSudoku(self, board):
+        vset = [0] * 9
+        hset = [0] * 9
+        bset = [0] * 9
+        for i in range(9):
+            for j in range(9):
+                curr = board[i][j]
+                if curr != '.':
+                    index = 1 << (ord(curr) - ord('0'))
+                    if (hset[i] & index) > 0 or\
+                                    (vset[j] & index) > 0 or\
+                                    (bset[(i / 3) * 3 + j / 3] & index) > 0:
+                        return False
+                    hset[i] |= index
+                    vset[j] |= index
+                    bset[(i / 3) * 3 + j / 3] |= index
+        return True
+        
+ 37. Sudoku Solver
+ 
+ class Solution(object):
+    def solveSudoku(self, board):
+        """
+        :type board: List[List[str]]
+        :rtype: void Do not return anything, modify board in-place instead.
+        """
+        #https://leetcode.com/discuss/84831/java-backtracking-stack-20ms
+        empty = []
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] == '.':
+                    empty.append(9 * i + j)
+        self.solve(board, empty)
+
+    def solve(self, board, empty):
+        if len(empty) == 0:
+            return True
+        first_value = empty[-1]
+        row, col = first_value / 9, first_value % 9
+        for k in range(1, 10):
+            if self.is_safe(board, row, col, str(k)):
+                board[row][col] = str(k)
+                empty.pop()
+                if self.solve(board, empty):
+                    return True
+                board[row][col] = '.'
+                empty.append(first_value)
+        return False
+
+    def is_safe(self, board, row, col, ch):
+        for k in range(9):
+            if board[k][col] == ch:
+                return False
+            if board[row][k] == ch:
+                return False
+        start_row, start_col = 3 * (row / 3), 3 * (col / 3)
+        for i in range(start_row, start_row + 3):
+            for j in range(start_col, start_col + 3):
+                if board[i][j] == ch:
+                    return False
+        return True
+        
+38. Count and Say
+
+class Solution(object):
+    def countAndSay(self, n):
+        """
+        :type n: int
+        :rtype: str
+        """
+        s = "1"
+        for _ in range(n-1):
+            s = "".join(str(len(group)) + digit for group, digit in re.findall(r'((.)\2*)', s))
+        return s
+        
+class Solution:
+    def countAndSay(self, n):
+        """
+        :type n: int
+        :rtype: str
+        """
+        if n == 1:
+            return '1'
+        x = '1'
+        while n > 1:
+            # each round, read itself
+            x = self.count(x)
+            n -= 1
+        return x
+
+    def count(self, x):
+        m = list(x)
+        res = []
+        m.append(None)
+        i , j = 0 , 0
+        while i < len(m) - 1:
+            j += 1
+            if m[j] != m[i]:
+                # note j - i is the count of m[i]
+                res += [j - i, m[i]]
+                i = j
+        return ''.join(str(s) for s in res)
+        
+39. Combination Sum
+
+class Solution:
+    def combinationSum(self, candidates, target):
+        ans = []
+        candidates.sort()
+        def backTracking(candidates, target, res):
+            if sum(res) == target:
+                ans.append(res)
+                return
+
+            if sum(res) > target:
+                return
+
+            for index, val in enumerate(candidates):
+                if sum(res) + val > target: break
+                backTracking(candidates[index:], target, res + [val])
+
+        backTracking(candidates, target, [])
+        return ans
+        
+ class Solution(object):
+    
+    def combinationSum(self, candidates, target):
+        res = []
+        candidates.sort()
+        self.dfs(candidates, target, 0, [], res)
+        return res
+    
+    def dfs(self, nums, target, index, path, res):
+        if target < 0:
+            return  # backtracking
+        if target == 0:
+            res.append(path)
+            return 
+        for i in range(index, len(nums)):
+            self.dfs(nums, target-nums[i], i, path+[nums[i]], res)
+               
+40. Combination Sum II
+
+class Solution:
+    def combinationSum2(self, candidates, target):
+        candidates.sort()
+        table = [None] + [set() for i in range(target)]
+        for i in candidates:
+            if i > target:
+                break
+            for j in range(target - i, 0, -1):
+                table[i + j] |= {elt + (i,) for elt in table[j]}
+            table[i].add((i,))
+        return map(list, table[target])
+        
+class Solution(object):
+    def combinationSum2(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        candidates.sort()
+        dp = [[] for _ in range(target + 1)]
+        dp[0].append([])
+        for i in range(1, target + 1):
+            for j in range(len(candidates)):
+                if candidates[j] > i:
+                    break
+                for k in range(len(dp[i - candidates[j]])):
+                    temp = dp[i - candidates[j]][k][:]
+                    # check if this number is used
+                    if len(temp) > 0 and temp[-1] >= j:
+                        continue
+                    # store index
+                    temp.append(j)
+                    dp[i].append(temp)
+        res = []
+        check = {}
+        for temp in dp[target]:
+            value = [candidates[t] for t in temp]
+            try:
+                check[str(value)] += 1
+            except KeyError:
+                check[str(value)] = 1
+                res.append(value)
+        return res        
+        
+       
+   
