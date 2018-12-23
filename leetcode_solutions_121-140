@@ -1,0 +1,222 @@
+121. Best Time to Buy and Sell Stock
+
+class Solution(object):
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        c_m, f_m = 0, 0
+        for i in range(1, len(prices)):
+            c_m += prices[i] - prices[i-1]
+            c_m = max(0, c_m)
+            f_m = max(c_m, f_m)
+        return f_m
+        
+class Solution:
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        if len(prices) < 2:
+            return 0
+        m_g = 0
+        r_m = prices[0]
+        for i in range(1, len(prices)):
+            c_g = max(0, prices[i]-r_m)
+            if c_g > m_g:
+                m_g = c_g
+            r_m = min(r_m, prices[i])
+        return m_g
+      
+  122. Best Time to Buy and Sell Stock II
+  
+  class Solution:
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        ls = len(prices)
+        if ls < 2:
+            return 0
+        diff = [prices[i]-prices[i-1] for i in range(1, ls)]
+        profits = [x for x in diff if x >0]
+        return sum(profits)
+        
+ class Solution:
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        profit = 0
+        for i in range(1, len(prices)):
+            if prices[i-1] < prices[i]:
+                profit += (prices[i] - prices[i-1])
+        return profit
+        
+125. Valid Palindrome
+
+class Solution:
+    def isPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        alnum_s = [t.lower() for t in s if t.isalnum()]
+        ls = len(alnum_s)
+        mid = ls//2
+        for i in range(mid):
+            if alnum_s[i] != alnum_s[ls - 1 - i]:
+                return False
+        return True
+        
+class Solution:
+    def isPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        alpha_num = 'abcdefghijklmnopqrstuvwxyz0123456789'
+        lst = []
+        
+        for item in s.lower():
+            if item in alpha_num:
+                lst.append(item)
+                
+        return lst[::-1] == lst
+        
+131. Palindrome Partitioning
+
+class Solution:
+    
+    def partition(self, s):
+        return [[s[:i]] + rest for i in range(1, len(s)+1) if s[:i] == s[i-1::-1] for rest in self.partition(s[i:])] or [[]]
+        
+class Solution:
+    def partition(self, s):
+        """
+        :type s: str
+        :rtype: List[List[str]]
+        """
+        ls = len(s)
+        
+        if ls == 0:
+            return [[]]
+        if ls == 1:
+            return [[s]]
+        
+        
+        res = []
+        for i in range(1, ls+1):
+            if self.check(s[:i]):
+                aux = [[s[:i]] + item for item in self.partition(s[i:])]
+                res += aux
+        return res
+   
+    def check(self, s):
+        return s == s[::-1]
+        
+132. Palindrome Partitioning II
+
+class Solution(object):
+    def minCut(self, s):
+        if s == s[::-1]: return 0
+        for i in range(1, len(s)):
+            if s[:i] == s[:i][::-1] and s[i:] == s[i:][::-1]:return 1
+        dp=[0 for i in range(len(s)+1)]
+        dp[0],same_cut=-1,True
+        for i in range(2,len(s)+1):
+            if s[i-1]==s[i-2] and same_cut:dp[i]=dp[i-1];continue
+            same_cut,m,st=True,dp[i-1]+1,i-1
+            while st>=1:
+                if self.is_palindrome(s,st-1,i-1):
+                    same_cut=False
+                    if m>1+dp[st-1]:m=1+dp[st-1]
+                st-=1
+            dp[i]=m
+        return dp[-1]
+    
+    def is_palindrome(self,s,st,en):
+        while st<en:
+            if s[st]!=s[en]:return False
+            st+=1;en-=1
+        return True
+        
+134. Gas Station
+
+class Solution:
+    def canCompleteCircuit(self, gas, cost):
+        """
+        :type gas: List[int]
+        :type cost: List[int]
+        :rtype: int
+        """
+        if sum(gas) < sum(cost):
+            return -1
+        tank = 0
+        min_gas, min_gas_loc = 0, None
+        for i in range(len(gas)):
+            tank += gas[i] - cost[i]
+            if tank < min_gas:
+                min_gas = tank
+                min_gas_loc = i
+        return 0 if min_gas_loc is None else (min_gas_loc + 1) % len(gas)
+        
+class Solution:
+    def canCompleteCircuit(self, gas, cost):
+        if sum(gas) < sum(cost):
+            return -1
+        start, total, Min = 0, 0, sys.maxsize
+        for i in range(len(gas)):
+            total += gas[i] - cost[i]
+            if total < Min:
+                start = (i + 1)%len(gas)
+                Min = total
+        return start
+        
+136. Single Number
+
+class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        container = {}
+        for num in nums:
+            if num in container:
+                container[num] += 1
+            else:
+                container[num] = 1
+        for key in container:
+            if container[key] == 1:
+                return key
+                
+137. Single Number II
+
+class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        aux_dict = dict()
+        for item in nums:
+            if item not in aux_dict:
+                aux_dict[item] = 1
+            else:
+                aux_dict[item] += 1
+        res_list = [k for k, v in aux_dict.items() if v==1]
+        return res_list[0]
+        
+ class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        aux_set_list = list(set(nums))
+        return (3*sum(aux_set_list) - sum(nums)) // 2       
