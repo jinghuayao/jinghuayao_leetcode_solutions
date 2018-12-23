@@ -1,6 +1,6 @@
 # jinghuayao_leetcode_solutions
 
-My python solutions to leetcode problems. The leetcode webpage is https://leetcode.com/
+My python solutions to leetcode problems. The leetcode webpage is https://leetcode.com/.
 I made an effort to solve these problems in an easy-to-understand way, emphasize code 
 readability rather than pursuing shortest possible solutions, and emphasize fundamental data structures
 and algorithms rather than pursuing technicalities. In Chinese, we can summarize the above princiles as follows:
