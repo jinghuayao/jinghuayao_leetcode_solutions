@@ -1,0 +1,290 @@
+1. Two sum
+
+class Solution:
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        aux_list = {(k, v) for k, v in enumerate(nums)}
+        aux_list = sorted(aux_list, key=lambda x:x[1])
+        begin = 0
+        end = len(nums) - 1
+        while begin < end:
+            if aux_list[begin][1] + aux_list[end][1] == target:
+                return [aux_list[begin][0], aux_list[end][0]]
+            elif aux_list[begin][1] + aux_list[end][1] < target:
+                begin += 1
+            else:
+                end -= 1
+
+class Solution:
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        aux_dic = {k:v for k, v in enumerate(nums)}
+        nums.sort()
+        ls = len(nums)
+        found = False
+        i = 0
+        j = ls - 1
+        
+        while i < j and not found:
+            temp = nums[i] + nums[j]
+            if temp == target:
+                
+                
+                found = True
+            elif temp < target:
+                i += 1
+            else:
+                j -= 1
+        find_key = [k for k, v in aux_dic.items() if v == nums[i] or v ==nums[j]]
+        
+        return find_key
+        
+2. Add two numbers
+
+class Solution:
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        
+        dummy = cur = ListNode(0)
+        carry = 0
+        while l1 or l2 or carry:
+            if l1:
+                carry += l1.val
+                l1 = l1.next
+            
+            if l2:
+                carry += l2.val
+                l2 = l2.next
+            
+            cur.next = ListNode(carry%10)
+            cur = cur.next
+            carry //= 10
+        return dummy.next
+        
+ 3. Longest Substring without repeating charaters
+ 
+ class Solution:
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        ls = len(s)
+        if ls < 2:
+            return ls
+        else:
+            m = len(set(s))
+            stop = False
+            while m > 0 and not stop:
+                if self.search(s, m):
+                    stop = True
+                    return m
+                m -= 1
+            return max(m, 1)
+    
+    def search(self, s, k):
+        n = len(s) - k + 1
+        for i in range(n):
+            if len(set(s[i:i+k])) == k:
+                return True
+        return False
+        
+4. Median of two sorted arrays
+
+class Solution:
+    def findMedianSortedArrays(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: float
+        """
+        if nums1 == []:
+            nums = nums2
+        if nums2 == []:
+            nums = nums1
+        nums = []
+        i = 0
+        j = 0
+        while i < len(nums1) and j < len(nums2):
+            if nums1[i] <= nums2[j]:
+                nums.append(nums1[i])
+                i += 1
+            else:
+                nums.append(nums2[j])
+                j += 1
+        if i < len(nums1):
+            k = i
+            while k < len(nums1):
+                nums.append(nums1[k])
+                k += 1
+                
+        if j < len(nums2):
+            k = j
+            while k < len(nums2):
+                nums.append(nums2[k])
+                k += 1
+        ls = len(nums)
+        if ls % 2 == 1:
+            return nums[ls//2]
+        else:
+            return (nums[ls//2] + nums[ls//2-1])/2
+            
+5. Longest palindromic substring
+
+class Solution(object):
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        if (not s) or s == s[::-1]:
+            return s
+        p = s[0]
+        for i in range(len(s)):
+            if i+1 < len(s) and s[i] == s[i+1]:
+                tmp = self.grow(s, i, i+1)
+                p = tmp if len(tmp) > len(p) else p
+            if i+2 < len(s) and s[i] == s[i+2]:
+                tmp = self.grow(s, i, i+2)
+                p = tmp if len(tmp) > len(p) else p
+        return p
+        
+    def grow(self, s, i, j):
+        while i >=0 and j < len(s) and s[i] == s[j]:
+            p = s[i:j+1]
+            i, j = i-1, j+1
+        return p
+        
+6. ZigZag Conversion
+
+class Solution(object):
+    def convert(self, s, numRows):
+        """
+        :type s: str
+        :type numRows: int
+        :rtype: str
+        """
+        if numRows == 1:
+            return s
+        # calculate period
+        p = 2*(numRows-1)
+
+        res = [""] * numRows
+        for i in range(len(s)):
+            floor = i%p
+            if floor >= p//2:
+                floor = p - floor
+            res[floor] += s[i]
+        return "".join(res)
+        
+ 7. Reverse Integer
+ 
+ class Solution:
+    
+    def reverse(self, x):
+        # Note that in Python -1 / 10 = -1
+        res, isPos = 0, 1
+        if x < 0:
+            isPos = -1
+            x = -1 * x
+        while x != 0:
+            res = res * 10 + x % 10
+            if res > 2147483647:
+                return 0
+            x //= 10
+        return res * isPos
+        
+ 8. String to Integer (atoi)
+ 
+ class Solution:
+    def myAtoi(self, str):
+        """
+        :type str: str
+        :rtype: int
+        """
+        import re
+        
+        pattern = r"[\s]*[+-]?[\d]+"
+        match = re.match(pattern, str)
+        if match:
+            res = int(match.group(0))
+            if res > 2 ** 31 - 1:
+                res = 2 ** 31 -1
+            if res < - 2 ** 31:
+                res = - 2 ** 31
+        else:
+            res = 0
+        return res
+        
+9. Palindrome Number
+
+class Solution:
+    def isPalindrome(self, x):
+        """
+        :type x: int
+        :rtype: bool
+        """
+        if x < 0:
+            return False
+        a = list(str(x))
+        ls = len(a)
+        if ls < 2:
+            return True
+        check = ls//2
+        found = True
+        i = 0
+        while i < check and found:
+            if a[i] == a[ls-1-i]:
+                i += 1
+            else:
+                found = False
+        return found
+        
+10. Regular Expression Matching
+
+class Solution(object):
+    def isMatch(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: bool
+        """
+        # bottom up o(m*n)
+        # https://leetcode.com/discuss/93024/easy-dp-java-solution-with-detailed-explanation
+        if s == p:
+            return True
+        m, n = len(s), len(p)
+        dp = [[False] * (n + 1) for _ in range(m + 1)]
+        dp[0][0] = True
+        for j in range(1, n):
+            if p[j] == '*' and dp[0][j - 1]:
+                dp[0][j + 1] = True
+        # print dp
+        for i in range(m):
+            for j in range(n):
+                if p[j] == '.' or p[j] == s[i]:
+                    dp[i + 1][j + 1] = dp[i][j]
+                elif p[j] == '*':
+                    if p[j - 1] != s[i] and p[j - 1] != '.':
+                        dp[i + 1][j + 1] = dp[i + 1][j - 1]
+                    else:
+                        dp[i + 1][j + 1] = dp[i + 1][j] or dp[i][j + 1] or dp[i + 1][j - 1]
+        return dp[m][n]
+
+
+if __name__ == '__main__':
+    # begin
+    s = Solution()
+    print(s.isMatch("", ".*"))
