@@ -10,6 +10,7 @@ and algorithms rather than pursuing technicalities. In Chinese, we can summarize
 As I am using python to writing the solutions, I hope the above
 principles aligns to "The Zen of Python":
 
+```
 The Zen of Python, by Tim Peters
 
 Beautiful is better than ugly.
@@ -49,5 +50,6 @@ If the implementation is hard to explain, it's a bad idea.
 If the implementation is easy to explain, it may be a good idea.
 
 Namespaces are one honking great idea -- let's do more of those!
+```
 
 I also acknowlegde the contributions of the leetcode.com for problems and of the leetcode coders for their contributions.
