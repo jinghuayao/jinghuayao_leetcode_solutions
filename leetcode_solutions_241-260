@@ -1,0 +1,123 @@
+242. Valid Anagram
+
+class Solution:
+    def isAnagram(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        dict_s = {}
+        dict_t = {}
+        
+        for letter in s:
+            if letter in dict_s:
+                dict_s[letter] += 1
+            else:
+                dict_s[letter] = 1
+                
+        for letter in t:
+            if letter in dict_t:
+                dict_t[letter] += 1
+            else:
+                dict_t[letter] = 1
+        
+        return dict_s == dict_t
+        
+257. Binary Tree Paths
+  
+  # Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    
+    def helper(self,root,string):
+        if not root.left and not root.right:
+            self.lst.append(string+str(root.val))    
+        else:
+            if root.left:
+                self.helper(root.left,string+str(root.val)+'->')
+            if root.right:
+                self.helper(root.right,string+str(root.val)+'->')
+            
+            
+    def binaryTreePaths(self, root):
+        self.lst = []  
+        
+        if not root:
+            return self.lst
+        self.helper(root,"")
+        
+        return self.lst
+        
+ class Solution:
+    def binaryTreePaths(self, root):
+        if not root:
+            return []
+        return [str(root.val) + '->' + path
+                for kid in (root.left, root.right) if kid
+                for path in self.binaryTreePaths(kid)] or [str(root.val)]
+                
+  258. Add Digits
+  
+  class Solution:
+    def addDigits(self, num):
+        """
+        :type num: int
+        :rtype: int
+        """
+        if num < 10:
+            return num
+        lst = self.to_list(num)
+        length = len(lst)
+        while length > 1:
+            num = sum(lst)
+            lst = self.to_list(num)
+            length = len(lst)
+        return lst[0]
+        
+    def to_list(self, num):
+        lst = []
+        while num > 0:
+            lst.append(num % 10)
+            num //= 10
+        return lst
+        
+ 260. Single Number III
+ 
+ class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        aux_dic = dict()
+        for item in nums:
+            if item in aux_dic.keys():
+                aux_dic[item] += 1
+            else:
+                aux_dic[item] = 1
+        
+        return [k for k, v in aux_dic.items() if v == 1]
+        
+ class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        aux_set = set()
+        
+        for num in nums:
+            if num not in aux_set:
+                aux_set.add(num)
+            else:
+                aux_set.remove(num)
+                
+        return list(aux_set)
+        
+        
