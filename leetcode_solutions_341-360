@@ -1,0 +1,181 @@
+342. Power of Four
+
+class Solution:
+    def isPowerOfFour(self, num):
+        """
+        :type num: int
+        :rtype: bool
+        """
+        
+        if num <= 0:
+            return False
+        
+        while num > 1:
+            if num %4 ==0:
+                num /= 4
+            else:
+                return False
+        return True
+        
+344. Reverse String
+
+class Solution:
+    def reverseString(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        res = ""
+        for i in reversed(range(len(s))):
+            res += s[i]
+        return res
+        
+345. Reverse Vowels of a String
+
+class Solution(object):
+    def reverseVowels(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        vowels ="aoeiuAOEIU"
+        n = len(s)
+        if n < 2:
+            return s
+        
+        stack = list()
+        for char in s:
+            if char in vowels:
+                stack.append(char)
+        aux_list = list(s)
+        for i in range(n):
+            if aux_list[i] in vowels:
+                aux_list[i] = stack.pop()
+        return ''.join(aux_list)
+        
+ class Solution(object):
+    def reverseVowels(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        vowels ="aoeiuAOEIU"
+        if not s:
+            return s
+        
+        stack = list()
+        for char in s:
+            if char in vowels:
+                stack.append(char)
+        aux_list = list(s)
+        for i in range(len(s)):
+            if aux_list[i] in vowels:
+                aux_list[i] = stack.pop()
+        return ''.join(aux_list)
+        
+ 347. Top K Frequent Elements
+ 
+ class Solution:
+    def topKFrequent(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: List[int]
+        """
+        aux_dict = {}
+        for num in nums:
+            if num in aux_dict:
+                aux_dict[num] += 1
+            else:
+                aux_dict[num] = 1
+        frequencies = [(k, v) for k, v in aux_dict.items()]
+        frequencies = sorted(frequencies, key=lambda x:-x[1])
+        
+        aux_res = frequencies[:k]
+        return [x[0] for x in aux_res]
+        
+ 349. Intersection of Two Arrays
+ 
+ class Solution(object):
+    def intersection(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        res = []
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
+        for i in range(len(nums1)):
+            if nums1[i] in nums2 and nums1[i] not in res:
+                res.append(nums1[i])
+        return res
+        
+ class Solution:
+    def intersection(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        set_1 = set(nums1)
+        set_2 = set(nums2)
+        set_res = set_1.intersection(set_2)
+        res_list = []
+        for item in set_res:
+            res_list.append(item)
+        return res_list
+        
+350. Intersection of Two Arrays II
+
+class Solution(object):
+    def intersect(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
+  
+        res = []
+        
+        while nums1:
+            tmp = nums1.pop()
+            if tmp in nums2:
+                nums2.remove(tmp)
+                res.append(tmp)
+                
+        return res
+        
+354. Russian Doll Envelopes
+
+class Solution:
+    def maxEnvelopes(self, envs):
+        envs = sorted(envs, key = lambda x : -x[1])
+        envs = sorted(envs, key = lambda x : x[0])
+        tails = []
+        for i in range(0, len(envs)):
+            width = envs[i][1]
+            j = bisect.bisect_left(tails, width)
+            if j == len(tails):
+                tails.append(width)
+            else:
+                tails[j] = width
+        return len(tails)
+        
+class Solution:
+    def maxEnvelopes(self, envs):
+        envs = sorted(envs, key = lambda x : -x[1])
+        envs = sorted(envs, key = lambda x : x[0])
+        tails = []
+        for i in range(0, len(envs)):
+            height = envs[i][1]
+            j = bisect.bisect_left(tails, height)
+            if j == len(tails):
+                tails.append(height)
+            else:
+                tails[j] = height
+        return len(tails)
+        
+        
