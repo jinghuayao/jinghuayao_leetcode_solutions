@@ -422,5 +422,96 @@ class Solution:
         """
         return min(nums)
         
+154. Find Minimum in Rotated Sorted Array II
+
+class Solution(object):
+    def findMin(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        return min(nums)
         
+155. Min Stack
+
+class MinStack(object):
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.list = []
+        
+
+    def push(self, x):
+        """
+        :type x: int
+        :rtype: void
+        """
+        self.list.append(x)
+        
+
+    def pop(self):
+        """
+        :rtype: void
+        """
+        return self.list.pop()
+        
+
+    def top(self):
+        """
+        :rtype: int
+        """
+        return self.list[-1]
+        
+
+    def getMin(self):
+        """
+        :rtype: int
+        """
+        return min(self.list)
+        
+160. Intersection of Two Linked Lists
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        """
+        :type head1, head1: ListNode
+        :rtype: ListNode
+        """
+        if headA is None or headB is None:
+            return
+
+        # step 1. run until (at least) one list reach end:
+        ra, rb = headA, headB # runner pointer
+        while ra and rb:
+            ra = ra.next
+            rb = rb.next        
+        if rb: # list B not reach end yet, A already ends. switch
+            ra, rb = rb, ra
+            headA, headB = headB, headA
+        
+        # step 2. the longer list continue running until its end
+        r = ra
+        ra = headA
+        while r != None:
+            r = r.next
+            ra = ra.next # longer list does not start again from head
+        rb = headB # shorter list start again from head
+        
+        # step 3. run again from new start positions:
+        while ra and rb and ra != rb:
+            ra = ra.next
+            rb = rb.next
+
+        if ra: # rb == ra now
+            return ra
+        
+        return       
         
