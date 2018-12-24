@@ -1,0 +1,61 @@
+482. License Key Formatting
+
+class Solution:
+    def licenseKeyFormatting(self, S, K):
+        """
+        :type S: str
+        :type K: int
+        :rtype: str
+        """
+        aux_list = [item.upper() for item in S if item != '-']
+        n = len(aux_list)
+        if K >= n:
+            return "".join(aux_list)
+        count = n // K
+        rem = n % K
+        if rem == 0:
+            res = ""
+            
+        else:
+            res = "".join(aux_list[:rem])
+            aux_list = aux_list[rem:]
+        
+        for i in range(count):
+            temp = "".join(aux_list[i*K:(i+1)*K])
+            res = res + '-' + temp
+        
+        return res if res[0]!= '-' else res[1:]
+        
+class Solution:
+    def licenseKeyFormatting(self, S, K):
+        """
+        :type S: str
+        :type K: int
+        :rtype: str
+        """
+        S = S.upper()
+        listS = S.split('-')
+        full = "".join(listS)
+        full = full[::-1]
+        if K != 0:
+            newsplit = [full[i*K:(i+1)*K] for i in range(len(full)//K + 1)]
+            if newsplit[-1] == '':
+                newsplit.pop()
+            return '-'.join(newsplit)[::-1]
+        else:
+            return full[::-1]
+            
+class Solution:
+    def licenseKeyFormatting(self, S, K):
+        """
+        :type S: str
+        :type K: int
+        :rtype: str
+        """
+        res = []
+        for c in reversed(S):
+            if c != '-':
+                if len(res) % (K+1) == K:
+                    res.append('-')
+                res.append(c.upper())
+        return "".join(r for r in reversed(res))            
