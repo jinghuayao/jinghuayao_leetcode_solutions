@@ -1,0 +1,123 @@
+202. Happy Number
+
+class Solution:
+    def isHappy(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        if n == 1:
+            return True
+        lst = self.to_list(n)
+        ss = self.square_sum(lst)
+        hold = []
+        check = False
+        while ss != 1 and not check:
+            hold.append(ss)
+            lst = self.to_list(ss)
+            ss = self.square_sum(lst)
+            if ss == 1:
+                return True
+            elif ss in hold:
+                check = True
+        return not check
+
+    def to_list(self, n):
+        res = []
+        while n > 0:
+            res.append(n%10)
+            n //= 10
+        return res
+    
+    def square_sum(self, a_list):
+        
+        res = 0
+        for i in range(len(a_list)):
+            res += (a_list[i])**2
+        return res
+        
+ 203. Remove Linked List Elements
+ 
+ # Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def removeElements(self, head, val):
+        """
+        :type head: ListNode
+        :type val: int
+        :rtype: ListNode
+        """
+        while head is not None and head.val == val:
+            head = head.next
+        if head == None:
+            return head
+        
+        p = head
+        
+        while p and p.next:
+            if p.next.val == val:
+                temp = p.next.next
+                p.next = temp
+            else:
+                p = p.next
+        return head
+        
+ class Solution(object):
+    def removeElements(self, head, val):
+        """
+        :type head: ListNode
+        :type val: int
+        :rtype: ListNode
+        """
+        lnhead = ln = ListNode("YAOJINGHUA")
+        while head:
+            if head.val != val:
+                ln.next = head
+                ln = ln.next
+            head = head.next
+        ln.next = None
+        return lnhead.next
+        
+ class Solution(object):
+    def removeElements(self, head, val):
+        """
+        :type head: ListNode
+        :type val: int
+        :rtype: ListNode
+        """
+        # Easy way to trim all the target values
+        while head and head.val == val:
+            head = head.next
+        current = head
+        # After trimming the beginning of the list, we need to deal with
+        # elements throughout the rest of the list
+        while current:
+            # Simple remove operation, but the `while` loop is the key part
+            while current.next and current.next.val == val:
+                current.next = current.next.next
+            current = current.next
+        return head
+        
+        
+ 204. Count Primes
+ 
+ class Solution(object):
+    def countPrimes(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        c = 0
+        check = [0]*n
+        i=2
+        while i < n:
+                if check[i]==0:
+                    c+=1
+                    for j in range(i,n,i):
+                        check[j]=1
+                i+=1
+        return c
