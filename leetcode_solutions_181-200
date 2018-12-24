@@ -22,3 +22,205 @@ SELECT Name AS Customers
 FROM Customers
 WHERE Customers.Id NOT IN (SELECT CustomerId
                           FROM Orders);
+                          
+187. Repeated DNA Sequences
+
+class Solution:
+    def findRepeatedDnaSequences(self, s):
+        """
+        :type s: str
+        :rtype: List[str]
+        """
+        ls = len(s)
+        if ls < 10:
+            return []
+        
+        res = []
+        for i in range(ls-10+1):
+            res.append(s[i:i+10])
+        
+        aux_dict = dict()
+        
+        for item in res:
+            if item not in aux_dict:
+                aux_dict[item] = 1
+            else:
+                aux_dict[item] += 1
+        
+        return [k for k, v in aux_dict.items() if v > 1]
+        
+class Solution:
+    def findRepeatedDnaSequences(self, s):
+        """
+        :type s: str
+        :rtype: List[str]
+        """
+        s1, s2 = set(), set()
+        n = len(s)
+        for i in range(n-10+1):
+            key = s[i:i+10]
+            if key not in s1:
+                s1.add(key)
+            else:
+                s2.add(key)
+        return [key for key in s2]
+        
+ 189. Rotate Array
+ 
+ class Solution:
+    def rotate(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: void Do not return anything, modify nums in-place instead.
+        """
+        ls = len(nums)
+        
+        k = k % ls
+        for i in range(k):
+            nums.insert(0, nums.pop())
+            
+ 190. Reverse Bits
+ 
+ class Solution:
+    # @param n, an integer
+    # @return an integer
+    def reverseBits(self, n):
+        binary_list = []
+        while n > 0:
+            binary_list.append(n%2)
+            n //= 2
+        while len(binary_list) < 32:
+            binary_list.append(0)
+        binary_list = binary_list[::-1]
+        num = 0
+        for i in range(32):
+            num += binary_list[i]*2**i
+        return num
+        
+191. Number of 1 Bits
+
+class Solution(object):
+    def hammingWeight(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        hold = []
+        while n > 0:
+            tmp = n % 2
+            if tmp != 0:
+                hold.append(tmp)
+            n /= 2
+        return len(hold)
+        
+class Solution(object):
+    def hammingWeight(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        hold = 0
+        while n > 0:
+            tmp = n % 2
+            if tmp != 0:
+                hold += 1
+            n /= 2
+        return hold
+        
+197. Rising Temperature
+
+# Write your MySQL query statement below
+SELECT Weather.ID AS 'Id'
+FROM Weather JOIN Weather AS w 
+    ON DATEDIFF(weather.date, w.date) = 1
+        AND Weather.Temperature > w.Temperature;
+        
+198. House Robber
+
+class Solution:
+    def rob(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if nums == []:
+            return 0
+        if len(nums) == 1:
+            return nums[0]
+        if len(nums)>=2:
+            dp =[0]*len(nums)
+            dp[0] = nums[0]
+            dp[1] = max(nums[0], nums[1])
+            for i in range(2, len(nums)):
+                dp[i] = max(dp[i-2]+nums[i], dp[i-1])
+            return dp[-1]
+
+class Solution:
+    def rob(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        toSteal = [None]*len(nums)
+        notToSteal = [None]*len(nums)
+        toSteal[0] = nums[0]
+        notToSteal[0] = 0
+        for i in range(1, len(nums)):
+            toSteal[i] = nums[i] + notToSteal[i-1]
+            notToSteal[i] = max(toSteal[i-1], notToSteal[i-1])
+        return max(toSteal[-1], notToSteal[-1])
+
+199. Binary Tree Right Side View
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def rightSideView(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        res = []
+        aux_list = [root]
+        while aux_list:
+            res.append(aux_list[-1].val)
+            aux_list = [child for parent in aux_list for child in (parent.left, parent.right) if child]
+        return res
+        
+class Solution(object):
+    def rightSideView(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        q = collections.deque([root])
+        res = [root.val]
+        tempq = collections.deque([])
+        tempRes = []
+        while q:
+            u = q.popleft()
+            if u.right:
+                tempq.append(u.right)
+                tempRes.append(u.right.val)
+            if u.left:
+                tempq.append(u.left)
+                tempRes.append(u.left.val)
+            if not q:
+                if tempq:
+                    res.append(tempRes[0])
+                    q = tempq
+                    tempRes = []
+                    tempq = collections.deque([])
+        return res
