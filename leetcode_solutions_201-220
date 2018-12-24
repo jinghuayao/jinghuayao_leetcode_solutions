@@ -641,4 +641,109 @@ class Solution:
                 res.append(num)
                 res.sort(reverse=True)
         return res[-1]
+        
+217. Contains Duplicate
+
+class Solution:
+    def containsDuplicate(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        a_set = set(nums)
+        return not (len(a_set) == len(nums))
+        
+class Solution:
+    def containsDuplicate(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        if len(nums) < 2:
+            return False
+        check = set()
+        found = False
+        for i in range(len(nums)):
+            if nums[i] in check:
+                found = True
+            else:
+                check.add(nums[i])
+        return found
+        
+219. Contains Duplicate II
+
+class Solution:
+    def containsNearbyDuplicate(self, nums, k):
+        # check k interval
+        check = set()
+        for i in range(len(nums)):
+            if i > k:
+                check.remove(nums[i - k - 1])
+            if nums[i] in check:
+                return True
+            else:
+                check.add(nums[i])
+        return False
+        
+ 220. Contains Duplicate III
+ 
+ class Solution:
+    def containsNearbyAlmostDuplicate(self, nums, k, t):
+        """
+        :type nums: List[int]
+        :type k: int
+        :type t: int
+        :rtype: bool
+        """
+        ind = sorted(range(len(nums)), key=lambda x: nums[x])
+        for i in range(len(nums)-1):
+            j = i + 1
+            while j < len(nums) and nums[ind[j]] - nums[ind[i]] <= t:
+                if abs(ind[i] - ind[j]) <= k:
+                    return True
+                j += 1
+        return False
+        
+  class Solution:
+    def containsNearbyAlmostDuplicate(self, nums, k, t):
+        """
+        :type nums: List[int]
+        :type k: int
+        :type t: int
+        :rtype: bool
+        """
+        ls = len(nums)
+        
+        if t==0 and len(nums)== len(set(nums)): 
+            return False
+        
+        if k < 1 or t < 0:
+            return False
+        
+        if k >= ls-1:
+            small = self.smallest_gap(nums)
+            return small <= t
+        
+
+        found = False
+        i = 0
+        while i < ls - k and not found:
+            small = self.smallest_gap(nums[i:i+k+1])
+            if small <= t:
+                found = True
+            else:
+                i += 1
+        return found
+
+    def smallest_gap(self, nums):
+        ls = len(nums)
+        aux_nums = sorted(nums)
+        small = float("Inf")
+        i = 1
+        while i < ls:
+            temp = aux_nums[i] - aux_nums[i-1]
+            if temp < small:
+                small = temp
+            i += 1
+        return small      
        
