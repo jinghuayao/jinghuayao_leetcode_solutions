@@ -1,7 +1,8 @@
 # jinghuayao_leetcode_solutions
 
 My python solutions to leetcode problems. The leetcode webpage is https://leetcode.com/.
-I made an effort to solve these problems in an easy-to-understand way, emphasize code 
+At the time of this writing, I solved about of half of the total number of problems (not
+in continuous order). I made an effort to solve these problems in an easy-to-understand way, emphasize code 
 readability rather than pursuing shortest possible solutions, and emphasize fundamental data structures
 and algorithms rather than pursuing unnecessary technicalities. In Chinese, we can summarize the above princiles as follows:
 
@@ -52,4 +53,5 @@ If the implementation is easy to explain, it may be a good idea.
 Namespaces are one honking great idea -- let's do more of those!
 ```
 
-I acknowlegde the contributions of the leetcode.com for problems and of the leetcode coders for their explicit and implicit contributions.
+I acknowlegde the contributions of the leetcode.com for problems and of 
+the leetcode coders for their explicit and implicit contributions.
