@@ -1,0 +1,787 @@
+221. Maximal Square
+
+class Solution(object):
+    def maximalSquare(self, matrix):
+        """
+        :type matrix: List[List[str]]
+        :rtype: int
+        """
+        if not matrix: return 0
+        m, n = len(matrix), len(matrix[0])
+        f = [[0]*n for _ in range(m)]
+        for j in range(n):
+            f[0][j] = int(matrix[0][j])
+        for i in range(1, m):
+            f[i][0] = int(matrix[i][0])
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][j] == '1':
+                    f[i][j] = 1 + min(f[i-1][j], f[i][j-1], f[i-1][j-1])
+                    
+        dim = max(f[i][j] for i in range(m) for j in range(n))
+        return dim**2
+        
+ class Solution(object):
+    def maximalSquare(self, matrix):
+        """
+        :type matrix: List[List[str]]
+        :rtype: int
+        """
+        if not matrix: return 0
+        d = 0
+        m, n = len(matrix), len(matrix[0])
+        f = [[0]*n for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                if i == 0 or j == 0:
+                    f[i][j] = int(matrix[i][j])
+                elif matrix[i][j] == '1':
+                    f[i][j] = min(f[i-1][j], f[i][j-1], f[i-1][j-1]) + 1
+                d = max(d, f[i][j])
+        return d**2
+        
+222. Count Complete Tree Nodes
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def countNodes(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        count = 0
+        start = root
+        while start:
+            leftH = self.height(start.left)
+            rightH = self.height(start.right)
+            
+            if leftH > rightH:
+                count += 2**leftH
+                start = start.right
+            elif leftH == rightH:
+                count += 2**rightH
+                start = start.left
+        return count
+        
+class Solution:
+    def countNodes(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        # BFS
+        if not root:
+            return 0
+        res = 0
+        queue = [root]
+        while queue:
+            res += len(queue)
+            queue = [node for parent in queue for node in (parent.left, parent.right) if node]
+        return res
+        
+class Solution:
+    def countNodes(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        height = 0
+        temp = root
+        # get maxHeight of the tree
+        while temp != None:
+            height += 1
+            temp = temp.left
+        return self.count(root, height)
+            
+    def count(self, root, maxHeight):
+        if root is None:
+            return 0
+        if root.left is None:
+            return 1
+        height = 0
+        temp = root.left
+        while temp != None:
+            height += 1
+            temp = temp.right
+        if height == (maxHeight - 1): # left tree is perfect at the lowest level
+            return pow(2, height) -1 + 1 + self.count(root.right, maxHeight - 1)
+        else: # right tree must be perfect at one level shallower
+            return pow(2, height) -1 + 1 + self.count(root.left, maxHeight - 1)
+            
+class Solution:
+    def countNodes(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        height = 0
+        temp = root
+        # get maxHeight of the tree
+        while temp != None:
+            height += 1
+            temp = temp.left
+        return self.count(root, height)
+            
+    def count(self, root, maxHeight):
+        if root is None:
+            return 0
+        if root.left is None:
+            return 1
+        height = 0
+        temp = root.left
+        while temp != None:
+            height += 1
+            temp = temp.right
+        if height == (maxHeight - 1): # left tree is perfect at the lowest level
+            return pow(2, height) + self.count(root.right, maxHeight - 1)
+        else: # right tree must be perfect at one level shallower
+            return pow(2, height) + self.count(root.left, maxHeight - 1)
+            
+223. Rectangle Area
+
+class Solution:
+    def computeArea(self, A, B, C, D, E, F, G, H):
+        """
+        :type A: int
+        :type B: int
+        :type C: int
+        :type D: int
+        :type E: int
+        :type F: int
+        :type G: int
+        :type H: int
+        :rtype: int
+        """
+        w = max(min(C, G) -max(A, E), 0)
+        h = max(min(D, H)-max(B, F), 0)
+        
+        return (C-A)*(D-B) + (G-E)*(H-F) - w*h
+        
+225. Implement Stack using Queues
+
+class MyStack:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.data = []
+        self.size = 0
+        
+
+    def push(self, x):
+        """
+        Push element x onto stack.
+        :type x: int
+        :rtype: void
+        """
+        self.data.append(x)
+        self.size += 1
+        
+
+    def pop(self):
+        """
+        Removes the element on top of the stack and returns that element.
+        :rtype: int
+        """
+        if self.size == 0:
+            return False
+        tmp = self.data.pop()
+        self.size -= 1
+        return tmp
+    
+        
+
+    def top(self):
+        """
+        Get the top element.
+        :rtype: int
+        """
+        if self.size == 0:
+            return False
+        return self.data[-1]
+        
+
+    def empty(self):
+        """
+        Returns whether the stack is empty.
+        :rtype: bool
+        """
+        return self.size == 0
+        
+
+
+# Your MyStack object will be instantiated and called as such:
+# obj = MyStack()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.top()
+# param_4 = obj.empty()
+
+226. Invert Binary Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def invertTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if root:
+            root.left, root.right = root.right, root.left
+            self.invertTree(root.left)
+            self.invertTree(root.right)
+        return root
+        
+class Solution:
+    def invertTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if not root:
+            return 
+        tmp = root.left
+        root.left = self.invertTree(root.right)
+        root.right = self.invertTree(tmp)
+        
+        return root
+        
+ class Solution:
+    def invertTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if not root or (not root.left and not root.right):
+            return root
+        tmp = root.left
+        root.left = self.invertTree(root.right)
+        root.right = self.invertTree(tmp)
+        
+        return root
+        
+ 230. Kth Smallest Element in a BST
+ 
+ # Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def kthSmallest(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: int
+        """
+        def inorder(root):
+            
+            if not root:
+                return []
+            res = []
+            if root.left:
+                res.extend(inorder(root.left))
+            res.append(root.val)
+            if root.right:
+                res.extend(inorder(root.right))
+            
+            
+            return res
+        aux_list = inorder(root)
+        return aux_list[k-1]
+        
+ # Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+def iterate_tree(root):
+    # inorder tree traversal generator
+    if root.left:
+        for i in iterate_tree(root.left):
+            yield i
+    yield root
+    if root.right:
+        for i in iterate_tree(root.right):
+            yield i
+
+class Solution(object):
+    def kthSmallest(self, root, k):
+        # iterate over tree
+        for p, v in enumerate(iterate_tree(root)):
+            if p+1 == k:
+                return v.val
+                
+ class Solution:
+    def kthSmallest(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: int
+        """
+        stack = []
+        trav = root
+        count = 0
+        
+        while trav or stack:
+            if trav:
+                stack.append(trav)
+                trav = trav.left
+            else:
+                u = stack.pop()
+                count += 1
+                if count == k:
+                    return u.val
+                else:
+                    trav = u.right
+                    
+231. Power of Two
+
+class Solution:
+    def isPowerOfTwo(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        if n <= 0:
+            return False
+        while n > 1:
+            if n%2 == 0:
+                n /= 2
+            else:
+                return False
+        return True
+        
+ 232. Implement Queue using Stacks
+ 
+ class MyQueue:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.data = []
+        self.size = 0
+        
+
+    def push(self, x):
+        """
+        Push element x to the back of queue.
+        :type x: int
+        :rtype: void
+        """
+        self.data.insert(0, x)
+        self.size += 1
+        
+
+    def pop(self):
+        """
+        Removes the element from in front of queue and returns that element.
+        :rtype: int
+        """
+        if self.size == 0:
+            return False
+        tmp = self.data.pop()
+        self.size -= 1
+        return tmp
+        
+
+    def peek(self):
+        """
+        Get the front element.
+        :rtype: int
+        """
+        if self.size == 0:
+            return False
+        return self.data[-1]
+        
+
+    def empty(self):
+        """
+        Returns whether the queue is empty.
+        :rtype: bool
+        """
+        return self.size == 0
+        
+
+
+# Your MyQueue object will be instantiated and called as such:
+# obj = MyQueue()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.peek()
+# param_4 = obj.empty()
+
+233. Number of Digit One
+
+class Solution:
+    def countDigitOne(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n <= 0:
+            return 0
+        result = 0
+        length = len(str(n))
+        listN = list(str(n))
+        for i, v in enumerate(listN):
+            a = length - 1 - i 
+            if i == length - 1 and int(v) >=1:
+                result += 1
+                break
+            if int(v) > 1:
+                result += int(10**a * a/10)*int(v) + 10**a
+            if int(v) == 1:
+                result += int(10**a * a/10) + int("".join(listN[i+1:]))+1
+        return result
+        
+234. Palindrome Linked List
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def isPalindrome(self, head):
+        """
+        :type head: ListNode
+        :rtype: bool
+        """
+        if head == None:
+            return True
+        else:
+            linked_nodes = list()
+            current = head
+            while current != None:
+                linked_nodes.append(current.val)
+                current = current.next
+            return linked_nodes == linked_nodes[::-1]
+            
+ 235. Lowest Common Ancestor of a Binary Search Tree
+ 
+ # Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        
+        vp, vq, vr = p.val, q.val, root.val
+        if (vp<vr) & (vq<vr) or (vp>vr) & (vq>vr):
+            if vp<vr:
+                return self.lowestCommonAncestor(root.left, p, q)
+            else:
+                return self.lowestCommonAncestor(root.right, p, q)
+        else:
+            return root
+            
+ class Solution:
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        if root.val > max(p.val, q.val):
+            return self.lowestCommonAncestor(root.left, p, q)
+        elif root.val < min(p.val, q.val):
+            return self.lowestCommonAncestor(root.right, p, q)
+        return root
+        
+ class Solution:
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        
+        while (p.val - root.val)*(q.val - root.val) > 0:
+            root = (root.left, root.right)[p.val > root.val]
+        return root
+        
+ 236. Lowest Common Ancestor of a Binary Tree
+ 
+ # Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        if not root:
+            return False
+        if root.val in (p.val, q.val):
+            return root
+        if self.inTree(p, q):
+            return p
+        elif self.inTree(q, p):
+            return q
+        else:
+            p.left = p.right = q.left = q.right = None
+            left = self.inTree(root.left, p)
+            right = self.inTree(root.right, q)
+            if (left and right) or (not left and not right):
+                return root
+            elif left and not right:
+                return self.lowestCommonAncestor(root.left, p, q)
+            else:
+                return self.lowestCommonAncestor(root.right, p, q)
+
+    def inTree(self, root, node):
+        if not root:
+            return False
+        return (root.val==node.val) or self.inTree(root.left, node) or self.inTree(root.right, node)
+    
+class Solution:
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        if root in [p, q]:
+            return root
+        left = right = None
+        if root.left:
+            left = self.lowestCommonAncestor(root.left, p, q)
+        if root.right:
+            right = self.lowestCommonAncestor(root.right, p, q)
+        if left and right:
+            return root
+        else:
+            return left or right
+            
+  237. Delete Node in a Linked List
+  
+  # Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def deleteNode(self, node):
+        """
+        :type node: ListNode
+        :rtype: void Do not return anything, modify node in-place instead.
+        """
+        node.val = node.next.val
+        node.next = node.next.next
+        
+ 238. Product of Array Except Self
+ 
+ class Solution:
+    def productExceptSelf(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        res = [0] * len(nums)
+        
+        if 0 in nums:
+            ind = nums.index(0)
+            for i in range(len(nums)):
+                if i != ind:
+                    res[i] = 0
+                else:
+                    res[i] = self.product(nums[:ind] + nums[ind+1:])
+        else:
+            full = self.product(nums)
+            for i in range(len(nums)):
+                res[i] = full // nums[i]
+        return res
+               
+    def product(self, nums):
+        res = 1
+        for num in nums:
+            res *= num
+        return res
+        
+class Solution:
+    def productExceptSelf(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        ls = len(nums)
+        res = [1]*ls
+        
+        prod = 1
+        for i in range(ls):
+            res[i] *= prod
+            prod *= nums[i]
+            
+        prod = 1
+        for j in range(ls-1, -1, -1):
+            res[j] *= prod
+            prod *= nums[j]
+        
+        return res
+        
+239. Sliding Window Maximum
+
+class Solution:
+    def maxSlidingWindow(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: List[int]
+        """
+        if not nums:
+            return []
+        ls = len(nums)
+        
+        if ls < k:
+            return []
+        
+        ans = [0]*(ls-k+1)
+        last_max_index = -1
+        for i in range(ls-k+1):
+            if last_max_index < i:
+                last_max_index = i
+                for j in range(i, i+k):
+                    if nums[j] > nums[last_max_index]:
+                        last_max_index = j
+            else:
+                if nums[last_max_index] < nums[i+k-1]:
+                    last_max_index = i+k-1
+            ans[i] = nums[last_max_index]
+        return ans
+        
+class Solution:
+    def maxSlidingWindow(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: List[int]
+        """
+        if not nums:
+            return []
+        
+        deq = collections.deque()
+        res = []
+        
+        for i in range(k):
+            while deq:
+                if nums[i] > nums[deq[-1]]:
+                    deq.pop()
+                else:
+                    break
+            deq.append(i)
+            
+        for j in range(k, len(nums)):
+            res.append(nums[deq[0]])
+            
+            if deq[0] < j - k + 1:
+                deq.popleft()
+                    
+            while deq:
+                if nums[j] > nums[deq[-1]]:
+                    deq.pop()
+                else:
+                    break
+            deq.append(j)
+        res.append(nums[deq[0]])
+        return res
+        
+ 40. Search a 2D Matrix II
+ 
+ class Solution:
+    def searchMatrix(self, matrix, target):
+        """
+        :type matrix: List[List[int]]
+        :type target: int
+        :rtype: bool
+        """
+        
+        m = len(matrix)
+    
+        if m == 0:
+            return False
+        n = len(matrix[0])
+        if n == 0:
+            return False
+        
+        res = []
+        for i in range(m):
+            res.append(matrix[i][0])
+            
+        if self.bs(res, target, 0):
+            return True
+        else:
+            mark = self.bs(res, target, 1)
+        
+        i = 0
+        found = False
+        while i <= mark and not found:
+            decision = self.bs(matrix[i], target)
+            if decision:
+                found = True
+            else:
+                i += 1
+        return found
+        
+        
+        
+        
+    def bs(self, a_list, target, index=0):
+        
+        ls = len(a_list)
+        begin = 0
+        end = ls - 1
+        found = False
+        while begin <= end and not found:
+            mid = (begin + end)//2
+            if a_list[mid] == target:
+                found = True
+            elif a_list[mid] < target:
+                begin = mid + 1
+            else:
+                end = mid - 1
+        if index == 0:
+            return found
+        else:
+            return end
+            
+            
