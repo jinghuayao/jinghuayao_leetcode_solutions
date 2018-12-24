@@ -52,4 +52,4 @@ If the implementation is easy to explain, it may be a good idea.
 Namespaces are one honking great idea -- let's do more of those!
 ```
 
-I acknowlegde the contributions of the leetcode.com for problems and of the leetcode coders for their explicit and implicit contributions.
+I acknowlegde the contributions of the leetcode.com for problems and of the leetcode coders for their implicit contributions.
