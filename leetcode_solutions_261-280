@@ -1,0 +1,136 @@
+263. Ugly Number
+
+class Solution:
+    def isUgly(self, num):
+        """
+        :type num: int
+        :rtype: bool
+        """
+        if num <= 0:
+            return False
+        if num == 1:
+            return True
+        
+        while num > 1:
+            if num %2 == 0:
+                num /= 2
+            elif num%3 == 0:
+                num /= 3
+            elif num%5 == 0:
+                num /= 5
+            else:
+                return False
+        return True
+        
+268. Missing Number
+
+class Solution:
+    def missingNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        aux_set = set(list(range(len(nums)+1))) - set(nums)
+        for item in aux_set:
+            return item
+            
+ class Solution:
+    def missingNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        return int((len(nums)+1)*len(nums)/2 - sum(nums)) # Note: we need to pay attention to the rtype. Here the return should #be int
+        
+  class Solution:
+    def missingNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        return int((len(nums)+1)*len(nums)/2 - sum(nums))
+        
+  274. H-Index
+  
+  class Solution(object):
+    def hIndex(self, citations):
+        """
+        :type citations: List[int]
+        :rtype: int
+        """
+        if not citations: return 0
+        citations.sort(reverse=True)
+        
+        for i, v in enumerate(citations):
+            if v < i + 1:
+                return i
+            elif v == i+1:
+                return i+1
+        return len(citations)
+        
+class Solution(object):
+    def hIndex(self, citations):
+        """
+        :type citations: List[int]
+        :rtype: int
+        """
+        if not citations: return 0
+        aux_list = sorted(citations, key=lambda x:-x)
+        i = 0
+        while i < len(aux_list):
+            if aux_list[i] > i+1:
+                i += 1
+            elif aux_list[i] == i+1:
+                return i+1
+            else:
+                return i
+        return len(aux_list)
+        
+  275. H-Index II
+  
+  class Solution:
+    def hIndex(self, citations):
+        l, r, res = 0, len(citations) - 1, 0
+        while l <= r:
+            mid = (l + r) // 2
+            if len(citations) - mid <= citations[mid]: res, r = len(citations) - mid, r - 1
+            else: l = mid + 1
+        return res
+        
+class Solution:
+    def hIndex(self, citations):
+        """
+        :type citations: List[int]
+        :rtype: int
+        """
+        h_index = 0
+        for i, cit in enumerate(citations):
+            h_index = max(h_index, min(len(citations)-i, cit))
+        return h_index
+        
+278. First Bad Version   
+
+class Solution(object):
+    def firstBadVersion(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        begin = 1
+        end = n
+        mid = (begin + end)//2
+        stop = False
+        while begin < end and not stop:
+            if isBadVersion(mid):
+                if isBadVersion(mid-1):
+                    end = mid - 1
+                else:
+                    return mid
+                mid = (begin + end)//2
+                
+            else:
+                begin = mid + 1
+                mid = (begin + end)//2
+        return mid
+        
+        
