@@ -1,0 +1,17 @@
+441. Arranging Coins
+
+class Solution:
+    def arrangeCoins(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        count = -1
+        i = 1
+        while n >= 0:
+            count += 1
+            n -= i
+            i += 1
+        return count
+        
+        
