@@ -121,3 +121,268 @@ class Solution(object):
                         check[j]=1
                 i+=1
         return c
+        
+  205. Isomorphic Strings
+  
+  class Solution(object):
+    def isIsomorphic(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        
+        s_p = {}
+        t_p = {}
+        
+        for i in range(len(s)):
+            if s[i] not in s_p:
+                s_p[s[i]] = [i]
+            else:
+                s_p[s[i]].append(i)
+                
+        for i in range(len(t)):
+            if t[i] not in t_p:
+                t_p[t[i]] = [i]
+            else:
+                t_p[t[i]].append(i)
+                
+        s_s = {tuple(v):k for k, v in s_p.items()}
+        t_t = {tuple(v):k for k, v in t_p.items()}
+        return set(s_s) == set(t_t)
+        
+ class Solution(object):
+    def isIsomorphic(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        
+        s_p = {}
+        t_p = {}
+        
+        for i in range(len(s)):
+            if s[i] not in s_p:
+                s_p[s[i]] = [i]
+            else:
+                s_p[s[i]].append(i)
+                
+        for i in range(len(t)):
+            if t[i] not in t_p:
+                t_p[t[i]] = [i]
+            else:
+                t_p[t[i]].append(i)
+                
+        s_s = {str(v):k for k, v in s_p.items()}
+        t_t = {str(v):k for k, v in t_p.items()}
+        return set(s_s) == set(t_t)
+        
+ 206. Reverse Linked List
+ 
+ # Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def reverseList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        
+        if head == None: # the case that linked list has length < 1
+            return None
+        
+        else: # linked list has lenth no less than 1
+            linked_nodes = []
+            current = head
+            while current != None:
+                linked_nodes.append(current)
+                current = current.next
+            linked_nodes = linked_nodes[::-1]
+            length = len(linked_nodes)
+            
+            for node_index, node in enumerate(linked_nodes):
+                if node_index != length - 1:
+                    node.next = linked_nodes[node_index + 1]
+                else:
+                    node.next = None
+            return linked_nodes[0]
+            
+ 207. Course Schedule
+ 
+ class Solution:
+    def canFinish(self, numCourses, prerequisites):
+        """
+        :type numCourses: int
+        :type prerequisites: List[List[int]]
+        :rtype: bool
+        """
+        v, e = numCourses, prerequisites
+        graph = [[] for _ in range(v)]
+        visit = [0]*v
+        for x, y in e:
+            graph[x].append(y)
+        
+        for i in range(v):
+            if not self.dfs(i, visit, graph):
+                return False
+        return True
+                     
+            
+    def dfs(self, i, visit, graph):
+        if visit[i] == -1:
+            return False
+        if visit[i] == 1:
+            return True
+        visit[i] = -1
+        for j in graph[i]:
+            if not self.dfs(j, visit, graph):
+                return False
+        visit[i] = 1
+        return True
+        
+class Solution:
+    def canFinish(self, numCourses, prerequisites):
+        """
+        :type numCourses: int
+        :type prerequisites: List[List[int]]
+        :rtype: bool
+        """
+        v, e = numCourses, prerequisites
+        graph = collections.defaultdict(list)
+        visit = [0]*v
+        for x, y in e:
+            graph[x].append(y)
+        
+        for i in range(v):
+            if not self.dfs(i, visit, graph):
+                return False
+        return True
+                     
+            
+    def dfs(self, i, visit, graph):
+        if visit[i] == -1:
+            return False
+        if visit[i] == 1:
+            return True
+        visit[i] = -1
+        for j in graph[i]:
+            if not self.dfs(j, visit, graph):
+                return False
+        visit[i] = 1
+        return True
+        
+ 208. Implement Trie (Prefix Tree)
+ 
+ class Trie:
+
+    def __init__(self):
+        self.__root = {}
+
+    def insert(self, word):
+        current = self.__root
+        for x in word:
+            if x not in current:
+                current[x] = {}
+            current = current[x]
+        # Using True instead of {}, the time cut down 40 ms
+        current['end'] = True
+                
+    def search(self, word):
+        current = self.__root
+        for x in word:
+            if x not in current:
+                return False
+            current = current[x]
+        return 'end' in current
+
+    def startsWith(self, prefix):
+        current = self.__root
+        for x in prefix:
+            if x not in current:
+                return False
+            current = current[x]
+        return True
+        
+class TrieNode:
+# Initialize your data structure here.
+    def __init__(self):
+        self.children = collections.defaultdict(TrieNode)
+        self.is_word = False
+
+class Trie:
+
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word):
+        current = self.root
+        for letter in word:
+            current = current.children[letter]
+        current.is_word = True
+
+    def search(self, word):
+        current = self.root
+        for letter in word:
+            current = current.children.get(letter)
+            if current is None:
+                return False
+        return current.is_word
+
+    def startsWith(self, prefix):
+        current = self.root
+        for letter in prefix:
+            current = current.children.get(letter)
+            if current is None:
+                return False
+        return True
+        
+209. Minimum Size Subarray Sum
+
+class Solution:
+    def minSubArrayLen(self, s, nums):
+        """
+        :type s: int
+        :type nums: List[int]
+        :rtype: int
+        """
+        i = j = curSum = 0
+        mini = math.inf
+        
+        while j < len(nums):
+            if curSum + nums[j] < s:
+                curSum += nums[j]
+                j += 1
+            else:
+                mini = min(j - i + 1, mini)
+                curSum -= nums[i]
+                i += 1
+        if mini != math.inf:
+            return mini
+        else:
+            return 0
+            
+class Solution:
+    def minSubArrayLen(self, s, nums):
+        """
+        :type s: int
+        :type nums: List[int]
+        :rtype: int
+        """
+        ans = math.inf
+        left = a = 0
+        
+        for i in range(len(nums)):
+            a += nums[i]
+            while a >= s:
+                ans = min(i-left+1, ans)
+                a -= nums[left]
+                left += 1
+        if ans != math.inf:
+            return ans
+        else:
+            return 0            
