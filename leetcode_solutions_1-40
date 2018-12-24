@@ -1220,7 +1220,3 @@ class Solution(object):
                 check[str(value)] = 1
                 res.append(value)
         return res        
-        
-       
-   
-Acknowlegement. Thank leetcode for the problems and leetcode coders for necessary reference.
