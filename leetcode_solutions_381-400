@@ -1,0 +1,234 @@
+383. Ransom Note
+
+class Solution:
+    def canConstruct(self, ransomNote, magazine):
+        """
+        :type ransomNote: str
+        :type magazine: str
+        :rtype: bool
+        """
+        set1 = set(ransomNote)
+        set2 = set(magazine)
+        for item in set1:
+            if ransomNote.count(item) > magazine.count(item):
+                return False
+        return True
+        
+ class Solution(object):
+    def canConstruct(self, ransomNote, magazine):
+        """
+        :type ransomNote: str
+        :type magazine: str
+        :rtype: bool
+        """
+        counter1 = collections.Counter(ransomNote)
+        counter2 = collections.Counter(magazine)
+
+        for c in counter1:
+            if c not in counter2 or counter1[c] > counter2[c]:
+                return False
+        return True
+        
+ class Solution:
+    def canConstruct(self, a, bi):
+        b=list(bi)
+        for ch in a:
+            if ch in b:
+                b.remove(ch)
+            else:
+                return False
+        return True
+        
+class Solution:
+    def canConstruct(self, ransomNote, magazine):
+        """
+        :type ransomNote: str
+        :type magazine: str
+        :rtype: bool
+        """
+        set1 = set(ransomNote)
+        set2 = set(magazine)
+        for item in set1:
+            if ransomNote.count(item) > magazine.count(item):
+                return False
+        return True
+        
+387. First Unique Character in a String
+
+class Solution:
+    def firstUniqChar(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if s == '':
+            return -1
+        
+        aux_dict = {}
+        for char in s:
+            if char not in aux_dict:
+                aux_dict[char] = 1
+            else:
+                aux_dict[char] += 1
+        unique_letters = [key for key, value in aux_dict.items() if value ==1]
+        if unique_letters == []:
+            return -1
+        aux_list = []
+        for i in range(len(unique_letters)):
+            aux_list.append(s.index(unique_letters[i]))
+            
+        aux_list.sort()
+        return aux_list[0]
+        
+ 389. Find the Difference
+ 
+ class Solution(object):
+    def findTheDifference(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: str
+        """
+        s_list = [letter for letter in s]
+        s_list.sort()
+        t_list = [letter for letter in t]
+        t_list.sort()
+        
+        for i in range(len(t_list)):
+            if i == 0:
+                aux = t_list[1:]
+            elif i == len(t_list) - 1:
+                aux = t_list[:-1]
+            else:
+                aux = t_list[:i] + t_list[i+1:]
+            if aux == s_list:
+                return t_list[i]
+       
+    def is_permutation(self, a_list, b_list):
+        a_list.sort()
+        b_list.sort()
+        if len(a_list) != len(b_list):
+            return False
+        check = True
+        i = 0
+        while i < len(a_list) and check:
+            if a_list[i] == a_list[i]:
+                i += 1
+            else:
+                check = False
+        return check
+        
+class Solution(object):
+    def findTheDifference(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: str
+        """
+        s_dict = {}
+        t_dict = {}
+        
+        for item in s:
+            if item not in s_dict.keys():
+                s_dict[item] = 1
+            else:
+                s_dict[item] += 1
+        
+        for item in t:
+            if item not in t_dict.keys():
+                t_dict[item] = 1
+            else:
+                t_dict[item] += 1
+        
+        s_set = set(s_dict.keys())
+        t_set = set(t_dict.keys())
+        
+        difference = t_set - s_set
+        
+        if difference:
+            
+            for item in difference:
+                return item
+        else:
+            for key in s_set:
+                if s_dict[key] != t_dict[key]:
+                    return key
+                    
+392. Is Subsequence
+
+class Solution:
+    def isSubsequence(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        if s == '': return True
+        if t == "": return False
+        m, n = len(s) + 1, len(t) + 1
+        aux_list = list(s)
+        while aux_list:
+            char = aux_list.pop(0)
+            if char not in t:
+                return False
+            else:
+                ind = t.index(char)
+                t = t[ind+1:]
+        return True
+        
+class Solution:
+    def isSubsequence(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        if s == '': return True
+        if t == "": return False
+        i = 0
+        for x in t:
+            if x == s[i]:
+                i += 1
+            if i == len(s):
+                return True
+        return False
+        
+ class Solution:
+    def isSubsequence(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        if s == "":
+            return True
+        queue = list(s)
+        i = 0
+        while i < len(t) and queue:
+            if t[i] == queue[0]:
+                queue.pop(0)
+            i += 1
+        if not queue:
+            return True
+        return False
+        
+ class Solution:
+    def isSubsequence(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        if s == "":
+            return True
+        queue = list(s)
+        i = 0
+        while i < len(t) and queue:
+            if t[i] == queue[0]:
+                queue.pop(0)
+            i += 1
+        if not queue:
+            return True
+        return False
+        
+        
