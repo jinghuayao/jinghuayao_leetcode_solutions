@@ -1,0 +1,288 @@
+162. Find Peak Element
+
+class Solution:
+    def findPeakElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        ls = len(nums)
+        if ls == 0:
+            return None
+        if ls == 1:
+            return 0
+        
+        p = 0
+        c = 1
+        stop = False
+        while c < ls and not stop:
+            if nums[c] < nums[p]:
+                stop = True
+                return p
+            else:
+                p = c
+                c += 1
+        return c - 1
+        
+class Solution(object):
+    def findPeakElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        
+        return nums.index(max(nums))
+        
+ class Solution(object):
+    def findPeakElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        
+        start,end = 0,len(nums)-1
+        
+        while end>=start:
+            middle = (start+end)//2
+
+            if nums[middle]< (nums[middle-1] if middle-1>=0 else float('-Inf')):
+                end = middle
+            elif nums[middle]< (nums[middle+1] if middle+1<len(nums) else float('-Inf')):
+                start = middle+1
+            else:
+                return middle
+            
+        return middle 
+        
+  167. Two Sum II - Input array is sorted
+  
+  class Solution(object):
+    def twoSum(self, numbers, target):
+        """
+        :type numbers: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        start = 0
+        end = len(numbers)
+        while numbers[start] + numbers[end-1] != target:
+            if  numbers[start] + numbers[end-1] < target:
+                start += 1
+            else:
+                end -= 1
+        return [start + 1, end]
+        
+ 168. Excel Sheet Column Title
+ 
+ class Solution:
+    def convertToTitle(self,  n):
+        """
+        :type n: int
+        :rtype: str
+        """
+        
+        dic ={1:'A' , 2:'B', 3:'C', 4:'D', 5:"E", 6:'F',7: "G", 8:"H", 9:"I",10:'J', 11:'K', 12:"L", 13:"M", 14:"N", 15:'O', 16:'P', 17:'Q', 18:"R", 19:"S", 20:'T', 21:'U', 22:'V', 23:'W', 24:'X', 25:'Y', 0:"Z"}
+        
+        res =''
+        while n > 0:
+            res += dic[n % 26]
+            n = (n-1)//26
+        return res[:: -1]
+        
+169. Majority Element
+
+class Solution(object):
+    def majorityElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        aux_dic = {}
+        for item in nums:
+            if item not in aux_dic:
+                aux_dic[item] = 1
+            else:
+                aux_dic[item] += 1
+        lst = [k for k, v in aux_dic.items() if v > len(nums)//2]
+        return lst[0]
+        
+ class Solution(object):
+    def majorityElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        aux_dic = {}
+        for item in nums:
+            if item not in aux_dic:
+                aux_dic[item] = 1
+            else:
+                aux_dic[item] += 1
+        lst = [k for k, v in aux_dic.items() if v > len(nums)//2]
+        return lst[0]
+        
+  171. Excel Sheet Column Number
+  
+  class Solution(object):
+    def titleToNumber(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        s1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        s2 = list(range(1, 27))
+        iterator = zip(s1, s2)
+        dic = dict(iterator)
+        
+        ls = len(s)
+        num = 0
+        for i in range(ls):
+            num += dic[s[i]]*26**(ls-1-i)
+        return num
+        
+ class Solution:
+    def titleToNumber(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        aux_dict = dict()
+        for i in range(len(string)):
+            aux_dict[string[i]] = i + 1
+        num = 0
+        for i in range(len(s)):
+            num += aux_dict[s[i]]*26**(len(s)-1-i)
+        return num
+        
+ 172. Factorial Trailing Zeroes
+ 
+ class Solution:
+    def trailingZeroes(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n < 5:
+            return 0
+        else:
+            lim = (n//5)*5
+            ans = 0
+            i = 5
+            while i <= lim:
+                ans += n//i
+                i *= 5
+            return ans
+            
+ class Solution:
+    def trailingZeroes(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        res = 0
+        while n > 0:
+            res += n//5
+            n //=5
+        return res
+        
+ class Solution:
+    def trailingZeroes(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        res = 0
+        alpha = [5**j for j in range(1, 16)]
+        for i in range(15):
+            if n < alpha[i]:
+                break
+            else:
+                inc = n//alpha[i]
+                res += inc
+        return res
+        
+173. Binary Search Tree Iterator
+
+# Definition for a  binary tree node
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class BSTIterator(object):
+    def __init__(self, root):
+        """
+        :type root: TreeNode
+        """
+        self.root = root
+        self.stack = []
+        while root:
+            self.stack.append(root)
+            root = root.left
+        
+
+    def hasNext(self):
+        """
+        :rtype: bool
+        """
+        return not self.stack==[]
+        
+
+    def next(self):
+        """
+        :rtype: int
+        """
+        top = self.stack.pop()
+        right = top.right
+        while right:
+            self.stack.append(right)
+            right = right.left
+        return top.val
+        
+class BSTIterator(object):
+    def __init__(self, root):
+        self.curr = None
+        self.nodes = self.inorder(root)
+    def inorder(self, root):
+        if root:
+            for node in self.inorder(root.left):
+                yield node
+            yield root.val 
+            for node in self.inorder(root.right):
+                yield node
+    def hasNext(self):
+        try:
+            self.curr = next(self.nodes)
+            return True 
+        except:
+            return False
+    def next(self):
+        return self.curr
+        
+174. Dungeon Game
+
+class Solution(object):
+    def calculateMinimumHP(self, dungeon):
+        """
+        :type dungeon: List[List[int]]
+        :rtype: int
+        """
+        m = len(dungeon)
+        n = len(dungeon[0])
+        dungeon[-1][-1] = max(1, 1-dungeon[-1][-1])
+        for i in range(m-2, -1, -1):
+            dungeon[i][n-1] = max(1, dungeon[i+1][n-1]-dungeon[i][n-1])
+        for j in range(n-2, -1, -1):
+            dungeon[m-1][j] = max(1, dungeon[m-1][j+1]-dungeon[m-1][j])
+        for i in range(m-2, -1, -1):
+            for j in range(n-2, -1, -1):
+                dungeon[i][j] = max(1, min(dungeon[i+1][j], dungeon[i][j+1])-dungeon[i][j])
+        return dungeon[0][0]
+ 
+ 175. Combine Two Tables
+ 
+SELECT FirstName, LastName, City, State
+FROM Person LEFT OUTER JOIN Address
+  ON Person.PersonId = Address.PersonId
