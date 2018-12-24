@@ -1,0 +1,75 @@
+367. Valid Perfect Square
+
+class Solution(object):
+    def isPerfectSquare(self, num):
+        """
+        :type num: int
+        :rtype: bool
+        """
+        if num == 1:
+            return True
+        
+        test = 1
+        while test <= num//2 +1:
+            if test **2 == num:
+                return True
+            elif test**2 < num:
+                test += 1
+            else:
+                return False
+                
+class Solution:
+    def isPerfectSquare(self, num):
+        """
+        :type num: int
+        :rtype: bool
+        """
+        if num == 1:
+            return True
+        if num in [2, 3]:
+            return False
+        
+        test = 2
+        stop = False
+        while test <= num//2 + 1 and not stop:
+            if test**2 < num:
+                test += 1
+                
+            elif test**2 == num:
+                stop = True
+                return True
+            else:
+                stop = True
+                return False
+                
+ 371. Sum of Two Integers
+ 
+ class Solution:
+    def getSum(self, a, b):
+        """
+        :type a: int
+        :type b: int
+        :rtype: int
+        """
+
+        return sum([a, b])
+        
+class Solution:
+    def getSum(self, a, b):
+        """
+        :type a: int
+        :type b: int
+        :rtype: int
+        """
+
+        if a == -b:
+            return 0
+        if abs(a) > abs(b):
+            a, b = b, a
+        if a < 0:
+            return -self.getSum(-a, -b)
+        while b:
+            c = a & b
+            a ^= b
+            b = c << 1
+        return a        
