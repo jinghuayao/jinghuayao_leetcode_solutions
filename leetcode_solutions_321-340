@@ -1,0 +1,185 @@
+322. Coin Change
+
+class Solution:
+    def coinChange(self, coins, amount):
+        """
+        :type coins: List[int]
+        :type amount: int
+        :rtype: int
+        """
+        if (not coins) or amount == 0:
+            return 0
+        dp = [amount+1 for _ in range(amount+1)]
+        dp[0] = 0
+        for i in range(1, amount+1):
+            for coin in coins:
+                if i >= coin:
+                    dp[i] = min(dp[i], 1+dp[i-coin])
+        return dp[-1] if dp[-1] < amount+1 else -1
+        
+324. Wiggle Sort II
+
+class Solution(object):
+    def radixSort(self, nums):
+        nums = map(str, nums)
+        k = max(map(len, nums))
+        nums = ['0' * (k - len(num)) + num for num in nums]
+
+        for i in xrange(k - 1, -1, -1):
+            buckets = [[] for _ in xrange(10)]
+            for num in nums:
+                buckets[ord(num[i]) - 48].append(num)
+            nums = sum(buckets, [])
+        return map(int, nums)
+
+    def wiggleSort(self, nums):
+        sortNums, n = self.radixSort(nums), len(nums) | 1
+        for i, num in enumerate(sortNums[::-1]):
+            nums[(2*i + 1) % n] = num
+            
+326. Power of Three
+
+class Solution:
+    def isPowerOfThree(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        if n <= 0:
+#            n = -n
+#        if n == 0:
+            return False
+        while n > 1:
+            if n%3 == 0:
+                n /= 3
+            else:
+                return False
+        return True
+        
+336. Palindrome Pairs
+
+class Solution:
+    def palindromePairs(self, words):
+        """
+        :type words: List[str]
+        :rtype: List[List[int]]
+        """
+        wordict = {}
+        res = [] 
+        for i in range(len(words)):
+            wordict[words[i]] = i
+        for i in range(len(words)):
+            for j in range(len(words[i])+1):
+                tmp1 = words[i][:j]
+                tmp2 = words[i][j:]
+                if tmp1[::-1] in wordict and wordict[tmp1[::-1]]!=i and tmp2 == tmp2[::-1]:
+                    res.append([i,wordict[tmp1[::-1]]])
+                if j!=0 and tmp2[::-1] in wordict and wordict[tmp2[::-1]]!=i and tmp1 == tmp1[::-1]:
+                    res.append([wordict[tmp2[::-1]],i])
+                
+        return res
+        
+class Solution:
+    def palindromePairs(self, words):
+        """
+        :type words: List[str]
+        :rtype: List[List[int]]
+        """
+        d = {v:i for i, v in enumerate(words)}
+        n = len(words); res = []
+        for i in range(n):
+            for j in range(len(words[i])+1):
+                t1 = words[i][:j]
+                t2 = words[i][j:]
+                if t1[::-1] in d and d[t1[::-1]] != i and t2==t2[::-1]:
+                    res.append([i, d[t1[::-1]]])
+                if (j!=0) and (t2[::-1] in d) and (d[t2[::-1]]!= i) and (t1==t1[::-1]):
+                    res.append([d[t2[::-1]], i])
+        return res
+        
+ 337. House Robber III
+ 
+ # Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def rob(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        def dfs(node):
+            if not node:
+                return 0, 0
+            l, r = dfs(node.left), dfs(node.right)
+            return max(l) + max(r), node.val + l[0] + r[0]
+        
+        return max(dfs(root))
+        
+class Solution:
+    def rob(self, root):
+        stack = [(0, root)]
+        d = {None: (0, 0)}
+        while stack:
+            seen, node = stack.pop()
+            if node is None:
+                continue
+            if not seen:
+                stack.extend([(1, node), (0, node.right), (0, node.left)])
+            else:
+                yesrob = d[node.left][1] + d[node.right][1] + node.val
+                norob = max(d[node.left]) + max(d[node.right])
+                d[node] = (yesrob, norob)
+        return max(d[root])
+        
+338. Counting Bits
+
+class Solution:
+    def countBits(self, num):
+        """
+        :type num: int
+        :rtype: List[int]
+        """
+        if num == 0:
+            return [0]
+        
+        count = []
+        for i in range(num+1):
+            count.append(self.count_ones(i))
+        return count
+        
+    def count_ones(self, num):
+        res = 0
+        while num > 0:
+            if num % 2 == 1:
+                res += 1
+            num //= 2
+        return res
+        
+class Solution:
+    def countBits(self, num):
+        """
+        :type num: int
+        :rtype: List[int]
+        """
+        if num == 0:
+            return [0]
+        
+        count = []
+        for i in range(num+1):
+            count.append(self.count_ones(i))
+        return count
+        
+    def count_ones(self, num):
+        res = 0
+        while num > 0:
+            if num % 2 == 1:
+                res += 1
+            num //= 2
+        return res
+        
+        
