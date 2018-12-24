@@ -7,7 +7,7 @@ and algorithms rather than pursuing unnecessary technicalities. In Chinese, we c
 
                             宁拙毋巧， 宁朴勿华.
 
-As I am using python to writing the solutions, I hope the above
+As I am using python in writing these solutions, I hope the above
 principles aligns to "The Zen of Python":
 
 ```
