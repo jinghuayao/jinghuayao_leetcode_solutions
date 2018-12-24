@@ -1,0 +1,24 @@
+181. Employees Earning More Than Their Managers
+
+# Write your MySQL query statement below
+SELECT
+     a.NAME AS Employee
+FROM Employee AS a JOIN Employee AS b
+     ON a.ManagerId = b.Id
+     AND a.Salary > b.Salary;
+
+182. Duplicate Emails
+
+# Write your MySQL query statement below
+SELECT Email
+FROM Person
+GROUP BY Email
+HAVING COUNT(Email) > 1;
+
+183. Customers Who Never Order
+
+# Write your MySQL query statement below
+SELECT Name AS Customers
+FROM Customers
+WHERE Customers.Id NOT IN (SELECT CustomerId
+                          FROM Orders);
