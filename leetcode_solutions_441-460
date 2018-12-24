@@ -14,4 +14,554 @@ class Solution:
             i += 1
         return count
         
+442. Find All Duplicates in an Array
+
+class Solution:
+    def findDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        aux_dict = dict()
+        for item in nums:
+            if item in aux_dict:
+                aux_dict[item] += 1
+            else:
+                aux_dict[item] = 1
+        return [k for k, v in aux_dict.items() if v==2]
+        
+class Solution:
+    def findDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        output = []
+        d = set()
+        for num in nums:
+            if num not in d:
+                d.add(num)
+            else:
+                output.append(num)
+        return output
+        
+443. String Compression
+
+class Solution:
+    def compress(self, chars):
+        """
+        :type chars: List[str]
+        :rtype: int
+        """
+        n = len(chars)
+        i, count = 0, 1
+        for j in range(1, n+1):
+            if j < n and chars[j] == chars[j-1]:
+                count += 1
+            else:
+                chars[i] = chars[j-1]
+                i += 1
+                if count > 1:
+                    for d in str(count):
+                        chars[i] = d
+                        i += 1
+                count = 1
+        return i
+        
+ 445. Add Two Numbers II
+ 
+ # Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        s1 = ""
+        while l1:
+            s1 += str(l1.val)
+            l1 = l1.next
+        int1 = int(s1)
+        
+        s2 = ''
+        while l2:
+            s2 += str(l2.val)
+            l2 = l2.next
+        int2 = int(s2)
+        
+        s = int1 + int2
+        dummy = ListNode("j")
+        cur = dummy
+        aux_list = list(str(s)[::-1])
+        while aux_list:
+            node = ListNode(int(aux_list.pop()))
+            cur.next = node
+            cur = cur.next
+        cur.next = None
+        return dummy.next
+        
+ class Solution:
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        num1 = 0
+        while l1:
+            num1 = num1*10 + l1.val
+            l1 = l1.next
+        num2 = 0
+        while l2:
+            num2 = num2*10 + l2.val
+            l2 = l2.next
+        total = num1 + num2
+        
+        dummy = ListNode('yao')
+        cur = dummy
+        aux_list = list(str(total))[::-1]
+        while aux_list:
+            node = ListNode(int(aux_list.pop()))
+            cur.next = node
+            cur = cur.next
+        cur.next = None
+        return dummy.next
+        
+class Solution:
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        num1 = 0
+        while l1:
+            num1 = num1*10 + l1.val
+            l1 = l1.next
+        num2 = 0
+        while l2:
+            num2 = num2*10 + l2.val
+            l2 = l2.next
+        total = num1 + num2
+        
+        dummy = ListNode('yao')
+        cur = dummy
+        aux_list = list(str(total))[::-1]
+        while aux_list:
+            node = ListNode(int(aux_list.pop()))
+            cur.next = node
+            cur = cur.next
+        cur.next = None
+        return dummy.next
+        
+ 447. Number of Boomerangs
+ 
+ class Solution:
+    def numberOfBoomerangs(self, points):
+        """
+        :type points: List[List[int]]
+        :rtype: int
+        """
+        ans = 0
+        cnt = collections.defaultdict(list)
+        for i in range(len(points)-1):
+            for j in range(i+1, len(points)):
+                dist = (points[i][0] - points[j][0])**2 + (points[i][1] - points[j][1])**2
+                cnt[dist].append(set([i, j]))
+        for same in cnt.values():
+            for i in range(len(same)-1):
+                for j in range(i+1, len(same)):
+                    if same[i] & same[j]:
+                        ans += 2
+        return ans
+     
+    def d(self, point1, point2):
+        return abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
+        
+448. Find All Numbers Disappeared in an Array
+
+class Solution:
+    def findDisappearedNumbers(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        
+        """
+        nums_to_set = set(nums)
+        full_set = set(list(range(1, len(nums) + 1)))
+        tmp = full_set - nums_to_set
+        
+        return list(tmp)
+        
+450. Delete Node in a BST
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def deleteNode(self, root, key):
+        """
+        :type root: TreeNode
+        :type key: int
+        :rtype: TreeNode
+        """
+        if not root:
+            return root
+        else:
+            c, p, d = self.find(root, key)
+            if not c:
+                return root
+            elif not p:
+                root = self.modify(c)
+                return root
+            else:
+                t = self.modify(c)
+                if d == 'l':
+                    p.left = t
+                else:
+                    p.right = t
+                return root
+    
+    
+    
+    
+    
+    def find(self, root, key):
+        if not root: 
+            return (None, None, None)
+        if root.val == key:
+            return (root, None, None)
+        cur = root
+        while cur:
+            
+            if key < cur.val:
+                if cur.left and cur.left.val == key:
+                    return (cur.left, cur, 'l')
+                else:
+                    cur = cur.left
+            elif key > cur.val:
+                if cur.right and cur.right.val == key:
+                    return (cur.right, cur, 'r')
+                else:
+                    cur = cur.right
+        return (None, None, None)
+    
+    def modify(self, root):
+        if not root: return None
+        elif not root.left and not root.right:
+            return None
+        elif root.left and not root.right:
+            return root.left
+        elif not root.left and root.right:
+            return root.right
+        elif root.left and root.right:
+            l = root.left
+            r = root.right
+            cur = r
+            while cur.left:
+                cur = cur.left
+            cur.left = l
+            return r
+            
+class Solution:
+    def deleteNode(self, root, key):
+        """
+        :type root: TreeNode
+        :type key: int
+        :rtype: TreeNode
+        """
+        if not root: return root
+        c, p, d = self.find(root, key)
+        if not c:
+            return root
+        elif not p:
+            return self.modify_2(c)
+        else:
+            if d == 'l':
+                p.left = self.modify_2(c)
+            else:
+                p.right = self.modify_2(c)
+            return root
+class Solution:
+    def deleteNode(self, root, key):
+        """
+        :type root: TreeNode
+        :type key: int
+        :rtype: TreeNode
+        """
+        if not root: return root
+        c, p, d = self.find(root, key)
+        if not c:
+            return root
+        elif not p:
+            return self.modify_1(c)
+        else:
+            if d == 'l':
+                p.left = self.modify_1(c)
+            else:
+                p.right = self.modify_1(c)
+            return root
+
+451. Sort Characters By Frequency
+
+class Solution:
+    def frequencySort(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        if not s:
+            return s
+        aux_dict = dict()
+        for char in s:
+            if char not in aux_dict:
+                aux_dict[char] = 1
+            else:
+                aux_dict[char] += 1
+        
+        aux_list = sorted(aux_dict.items(), key=lambda x:-x[1])
+        to_join = [x[0]*x[1] for x in aux_list]
+        return "".join(to_join)
+        
+class Solution:
+    def frequencySort(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        aux_dict = collections.Counter(s)
+        
+        aux_list = sorted(aux_dict.items(), key=lambda x:-x[1])
+        to_join = [x[0]*x[1] for x in aux_list]
+        return "".join(to_join)
+         
+class Solution:
+    def frequencySort(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        aux_dict = collections.Counter(s)
+        
+        aux_list = sorted(aux_dict.items(), key=lambda x:-x[1])
+        to_join = [x[0]*x[1] for x in aux_list]
+        return "".join(to_join)
+        
+453. Minimum Moves to Equal Array Elements
+
+class Solution(object):
+    def minMoves(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        low = min(nums)
+        res = 0
+        for num in nums:
+            res += num-low
+        return res
+        
+class Solution(object):
+    def minMoves(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        return sum(nums) - len(nums)*min(nums)
+        
+454. 4Sum II
+
+class Solution:
+    def fourSumCount(self, A, B, C, D):
+        """
+        :type A: List[int]
+        :type B: List[int]
+        :type C: List[int]
+        :type D: List[int]
+        :rtype: int
+        """
+        d1 = collections.Counter()
+        d2 = collections.Counter()
+        
+        for a in A:
+            for b in B:
+                d1[a+b] += 1
+                
+        for c in C:
+            for d in D:
+                d2[c+d] += 1
+                
+        res = collections.Counter()
+        for k in d1:
+            if -k in d2:
+                res[k] += d1[k]*d2[-k]
+        return sum([val for val in res.values()])
+        
+class Solution:
+    def fourSumCount(self, A, B, C, D):
+        """
+        :type A: List[int]
+        :type B: List[int]
+        :type C: List[int]
+        :type D: List[int]
+        :rtype: int
+        """
+        AB = collections.Counter(a+b for a in A for b in B)
+        return sum(AB[-c-d] for c in C for d in D)
+        
+class Solution:
+    def fourSumCount(self, A, B, C, D):
+        """
+        :type A: List[int]
+        :type B: List[int]
+        :type C: List[int]
+        :type D: List[int]
+        :rtype: int
+        """
+        rec = dict()
+        N = len(A)
+        if N == 0: return 0
+        
+        for i in range(N):
+            for j in range(N):
+                sum2 = A[i] + B[j]
+                if sum2 not in rec:
+                    rec[sum2] = 1
+                else:
+                    rec[sum2] += 1
+                    
+        res = 0
+        for i in range(N):
+            for j in range(N):
+                sum2 = C[i] + D[j]
+                if -sum2 in rec:
+                    res += rec[-sum2]
+        return res
+        
+class Solution:
+    def fourSumCount(self, A, B, C, D):
+        """
+        :type A: List[int]
+        :type B: List[int]
+        :type C: List[int]
+        :type D: List[int]
+        :rtype: int
+        """
+        d1 = collections.Counter()
+        d2 = collections.Counter()
+        
+        for a in A:
+            for b in B:
+                d1[a+b] += 1
+        
+        for c in C:
+            for d in D:
+                d2[c+d] += 1
+                
+        res = 0
+        
+        for k in d1:
+            if -k in d2:
+                res += d1[k]*d2[-k]
+                
+        return res
+        
+455. Assign Cookies
+
+class Solution:
+    def findContentChildren(self, g, s):
+        """
+        :type g: List[int]
+        :type s: List[int]
+        :rtype: int
+        """
+        g_aux = sorted(g, reverse=True)
+        s_aux = sorted(s, reverse=True)
+        res = 0
+        while g_aux and s_aux:
+            if g_aux[-1] <= s_aux[-1]:
+                res += 1
+                g_aux.pop()
+                s_aux.pop()
+
+            else:
+                s_aux.pop()
+        return res
+        
+458. Poor Pigs
+
+class Solution(object):
+    def poorPigs(self, buckets, minutesToDie, minutesToTest):
+        """
+        :type buckets: int
+        :type minutesToDie: int
+        :type minutesToTest: int
+        :rtype: int
+        """
+        num_of_tests = minutesToTest//minutesToDie + 1
+        if num_of_tests == 0:
+            return
+        return int(math.ceil(math.log(buckets, num_of_tests)))
+        
+class Solution(object):
+    def poorPigs(self, buckets, minutesToDie, minutesToTest):
+        """
+        :type buckets: int
+        :type minutesToDie: int
+        :type minutesToTest: int
+        :rtype: int
+        """
+        num_of_tests = minutesToTest//minutesToDie + 1
+        if num_of_tests == 0:
+            return
+        return int(math.ceil(math.log(buckets, num_of_tests)))
+        
+459. Repeated Substring Pattern
+
+class Solution:
+    def repeatedSubstringPattern(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        n = len(s)
+        m = len(set(s))
+        if m == n:
+            return False
+        found = False
+        j = m
+        while j < n//2+1 and not found:
+            if n % j != 0:
+                j += 1
+            else:
+                temp = s[:j]
+                repeat = n//j
+                if temp*repeat == s:
+                    found = True
+                else:
+                    j += 1
+        return found
+        
+class Solution:
+    def repeatedSubstringPattern(self, s):
+        length = len(s)
+        if length <= 1:
+            return False
+        for i in range(1, int(length/2) + 1):
+            if length % i == 0:
+                str = s[i:] + s[0:i]
+                if str == s:
+                    return True
+        return False
+        
         
