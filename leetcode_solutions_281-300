@@ -1,0 +1,197 @@
+283. Move Zeroes
+
+class Solution:
+    def moveZeroes(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        """
+        ls = len(nums)
+        
+        pos = 0
+        for i in range(ls):
+            if nums[i]!=0:
+                nums[pos], nums[i] = nums[i], nums[pos]
+                pos += 1
+                
+284. Peeking Iterator
+
+# Below is the interface for Iterator, which is already defined for you.
+#
+# class Iterator(object):
+#     def __init__(self, nums):
+#         """
+#         Initializes an iterator object to the beginning of a list.
+#         :type nums: List[int]
+#         """
+        
+#
+#     def hasNext(self):
+#         """
+#         Returns true if the iteration has more elements.
+#         :rtype: bool
+#         """
+#
+#     def next(self):
+#         """
+#         Returns the next element in the iteration.
+#         :rtype: int
+#         """
+
+class PeekingIterator(object):
+    def __init__(self, iterator):
+        """
+        Initialize your data structure here.
+        :type iterator: Iterator
+        """
+        self.iter = iterator
+        self.peek_item = None
+        self.peek_called = False
+        
+
+    def peek(self):
+        """
+        Returns the next element in the iteration without advancing the iterator.
+        :rtype: int
+        """
+        if not self.peek_called:
+            self.peek_item = self.iter.next()
+            self.peek_called = True
+        return self.peek_item
+        
+
+    def next(self):
+        """
+        :rtype: int
+        """
+        if self.peek_called:
+            self.peek_called = False
+        else:
+            self.peek_item = self.iter.next()
+        return self.peek_item
+        
+
+    def hasNext(self):
+        """
+        :rtype: bool
+        """
+        if self.peek_called and not self.iter.hasNext():
+            return True
+        else:
+            return self.iter.hasNext()
+        
+
+# Your PeekingIterator object will be instantiated and called as such:
+# iter = PeekingIterator(Iterator(nums))
+# while iter.hasNext():
+#     val = iter.peek()   # Get the next element but not advance the iterator.
+#     iter.next()         # Should return the same value as [val].
+
+287. Find the Duplicate Number
+
+class Solution(object):
+    def findDuplicate(self, nums):
+        low = 0
+        high = len(nums) - 1
+        mid = (high + low) // 2
+        while high - low > 1:
+            count = 0
+            for k in nums:
+                if mid < k <= high:
+                    count += 1
+            if count > high - mid:
+                low = mid
+            else:
+                high = mid
+            mid = (high + low) // 2
+        return high
+        
+290. Word Pattern
+
+class Solution:
+    def wordPattern(self, pattern, string):
+        """
+        :type pattern: str
+        :type str: str
+        :rtype: bool
+        """
+        pattern_length = len(pattern)
+        string_list = string.split()
+        string_length = len(string_list)
+        if pattern_length != string_length:
+            return False
+        pattern_dict = {}
+        string_dict = {}
+        for i in range(pattern_length):
+            if pattern[i] not in pattern_dict:
+                pattern_dict[pattern[i]] = [i]
+            else:
+                pattern_dict[pattern[i]].append(i)
+            if string_list[i] not in string_dict:
+                string_dict[string_list[i]] = [i]
+            else:
+                string_dict[string_list[i]].append(i)
+        p_d = {tuple(v):k for k, v in pattern_dict.items()}
+        s_d = {tuple(v):k for k, v in string_dict.items()}
+        
+        return set(p_d.keys()) == set(s_d.keys())
+        
+ 292. Nim Game
+ 
+ class Solution:
+    def canWinNim(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        if n % 4 == 0:
+            return False
+        else:
+            return True
+            
+ class Solution:
+    def canWinNim(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        return False if n % 4 == 0 else True
+        
+300. Longest Increasing Subsequence
+
+class Solution(object):
+    def lengthOfLIS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        tails = [0] * len(nums)
+        size = 0
+        for x in nums:
+            i, j = 0, size
+            while i != j:
+                m = (i + j) / 2
+                if tails[m] < x:
+                    i = m + 1
+                else:
+                    j = m
+            tails[i] = x
+            size = max(i + 1, size)
+        return size
+        
+class Solution:
+    def lengthOfLIS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        f = [1]*len(nums)
+        for i in range(1, len(nums)):
+            try:
+                f[i] = max(1+f[j] for j in range(i) if nums[i] > nums[j])
+            except:
+                f[i] = 1
+        return max(f)
+                
