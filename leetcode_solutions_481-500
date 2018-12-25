@@ -58,4 +58,117 @@ class Solution:
                 if len(res) % (K+1) == K:
                     res.append('-')
                 res.append(c.upper())
-        return "".join(r for r in reversed(res))            
+        return "".join(r for r in reversed(res))   
+        
+485. Max Consecutive Ones
+
+class Solution:
+    def findMaxConsecutiveOnes(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        pre = 0
+        cn = 0
+        for i in range(len(nums)):
+            if nums[i] == 1:
+                cn += 1
+                pre = max(cn, pre)    
+            else:
+                cn = 0
+        return pre
+        
+492. Construct the Rectangle
+
+class Solution:
+    def constructRectangle(self, area):
+        """
+        :type area: int
+        :rtype: List[int]
+        """
+        from math import sqrt
+        n=int(sqrt(area))
+        while area % n != 0:
+            n -= 1
+        return [area//n, n]
+        
+import math
+class Solution:
+    def constructRectangle(self, area):
+        """
+        :type area: int
+        :rtype: List[int]
+        """
+        s = int(math.sqrt(area))
+        while area % s != 0:
+            s -= 1
+        return [area//s, s]
+        
+495. Teemo Attacking
+
+class Solution:
+    def findPoisonedDuration(self, timeSeries, duration):
+        """
+        :type timeSeries: List[int]
+        :type duration: int
+        :rtype: int
+        """
+        ls = len(timeSeries)
+        
+        if ls == 0:
+            return 0
+        if ls == 1:
+            return duration
+        
+        count = 0
+        for i in range(0, ls-1):
+            if timeSeries[i+1] - timeSeries[i] > duration:
+                count += duration
+            else:
+                count += (timeSeries[i+1] - timeSeries[i])
+        return count + duration
+        
+496. Next Greater Element I
+
+class Solution:
+    def nextGreaterElement(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        res = []
+        for i in range(len(nums1)):
+            temp = -1
+            index = nums2.index(nums1[i])
+            if index >= len(nums2)-1:
+                res.append(temp)
+            else:
+                found = False
+                j = index + 1
+                while j < len(nums2) and not found:
+                    if nums2[j] > nums1[i]:
+                        temp = nums2[j]
+                        found = True
+                    j += 1
+                res.append(temp)
+        return res
+        
+500. Keyboard Row
+
+class Solution:
+    def findWords(self, words):
+        """
+        :type words: List[str]
+        :rtype: List[str]
+        """
+        set1 = {"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"}
+        set2 = {"A", "S", "D", "F", "G", "H", "J", "K", "L"}
+        set3 = {"Z", "X", "C", "V", "B", "N", "M"}
+        
+        res = []
+        for word in words:
+            test_set = set(word.upper())
+            if test_set.issubset(set1) or test_set.issubset(set2) or test_set.issubset(set3):
+                res.append(word)
+        return res
