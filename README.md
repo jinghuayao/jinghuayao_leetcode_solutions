@@ -1,6 +1,6 @@
 ## Programming and Coding Practice
 
-To keep and improve coding ability, it is crucial to do practice continuously. There are various ways to practice, direct or indirect.
+To keep and improve coding ability, it is crucial to practice continuously. There are various ways to practice, direct or indirect.
 
 ### jinghuayao solutions to leetcode problems
 
