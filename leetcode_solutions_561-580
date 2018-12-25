@@ -1,0 +1,185 @@
+561. Array Partition I
+
+class Solution(object):
+    def arrayPairSum(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        nums.sort()
+        total = 0
+        for i in range(0, len(nums), 2):
+            total += nums[i]
+        return total
+        
+ 563. Binary Tree Tilt
+ 
+ # Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def findTilt(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+    def findTilt(self, root):
+        self.ans = 0
+        def _sum(node):
+            if not node: return 0
+            left, right = _sum(node.left), _sum(node.right)
+            self.ans += abs(left - right)
+            return node.val + left + right
+        _sum(root)
+        return self.ans 
+        
+class Solution:
+    def findTilt(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        output = [0]
+        
+        def helper(node):
+            left_sum = 0 if not node.left else helper(node.left)
+            right_sum = 0 if not node.right else helper(node.right)
+            output[0] += abs(right_sum - left_sum)
+            return (right_sum + left_sum + node.val)
+        
+        if root:
+            helper(root)
+        return output[0]
+        
+ 566. Reshape the Matrix
+ 
+ class Solution(object):
+    def matrixReshape(self, nums, r, c):
+        """
+        :type nums: List[List[int]]
+        :type r: int
+        :type c: int
+        :rtype: List[List[int]]
+        """
+        m = len(nums)
+        n = len(nums[0])
+        if m*n != r*c:
+            return nums
+        
+        aux_res = []
+        for item in nums:
+            aux_res.extend(item)
+            
+        res = []
+        for i in range(r):
+            res.append(aux_res[i*c:(i+1)*c])
+        return res
+        
+567. Permutation in String
+
+class Solution(object):
+    def checkInclusion(self, s1, s2):
+        """
+        :type s1: str
+        :type s2: str
+        :rtype: bool
+        """
+        
+        m = len(s1); n = len(s2)
+        if n < m:
+            return False
+        dic1 = [0]*26
+        dic2 = [0]*26
+        for i in range(m):
+            dic1[ord(s1[i])-ord('a')] += 1
+            dic2[ord(s2[i])-ord('a')] += 1
+        if dic1 == dic2:
+            return True
+        else:
+            for i in range(1, n-m+1):
+                dic2[ord(s2[i-1])-ord("a")] -= 1
+                dic2[ord(s2[i+m-1])-ord("a")] += 1
+                if dic1 == dic2:
+                    return True
+        return False
+        
+572. Subtree of Another Tree
+
+class Solution:
+    def isSubtree(self, s, t):
+        """
+        :type s: TreeNode
+        :type t: TreeNode
+        :rtype: bool
+        """
+        stack = [s]
+        while stack:
+            node = stack.pop()
+            if node.val == t.val and self.check(node, t):
+                return True
+            if node.left:
+                stack.append(node.left)
+            if node.right:
+                stack.append(node.right)
+        return False
+    
+    def check(self, s1, s2):
+        if s1 and s2 and s1.val == s2.val:
+            if self.check(s1.left, s2.left) and self.check(s1.right, s2.right):
+                return True
+        if s1 is None and s2 is None:
+            return True
+            
+class Solution:
+    def isSubtree(self, s, t):
+        """
+        :type s: TreeNode
+        :type t: TreeNode
+        :rtype: bool
+        """
+        def isSame(s, t):
+            if not s and not t:
+                return True
+            elif not s or not t:
+                return False
+            return s.val == t.val and isSame(s.left, t.left) and isSame(s.right, t.right)
+        
+        def traverse(s, t):
+            if not s and not t:
+                return True
+            elif not s or not t:
+                return False
+            else:
+                if s.val != t.val:
+                    return traverse(s.left, t) or traverse(s.right, t)
+                else:
+                    if traverse(s.left, t) or traverse(s.right, t):
+                        return True
+                    else:
+                        return isSame(s, t)
+        return traverse(s, t)
+        
+class Solution:
+    def isSubtree(self, s, t):
+        samestructure = lambda na, nb: True if not na and not nb \
+                         else False if na and not nb or not na and nb \
+                         else na.val == nb.val and samestructure(na.left, nb.left) and samestructure(na.right, nb.right)
+        def dfs(s, t):
+            return samestructure(s, t) or s and any((dfs(s.left, t), dfs(s.right, t)))
+        return dfs(s,t)
+        
+575. Distribute Candies
+
+class Solution(object):
+    def distributeCandies(self, candies):
+        """
+        :type candies: List[int]
+        :rtype: int
+        """
+        return min(len(candies)//2, len(set(candies)))
+        
+        
