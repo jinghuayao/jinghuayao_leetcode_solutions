@@ -1,0 +1,427 @@
+501. Find Mode in Binary Search Tree
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def findMode(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        aux_dict = collections.Counter(self.inorder_traversal(root))
+            
+        m = max(v for v in aux_dict.values())
+        
+        return [k for k, v in aux_dict.items() if v==m]
+ 
+    def inorder_traversal(self, root):
+        if not root:
+            return []
+        res = [root.val]
+        stack = [root]
+        while stack:
+            stack = [child for parent in stack for child in (parent.left, parent.right) if child]
+            res += [x.val for x in stack]
+        return res
+        
+class Solution(object):
+    def findMode(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        count = collections.Counter()
+        stack = [root]
+        while stack:
+            cur = stack.pop()
+            if not cur:
+                continue
+            count[cur.val] += 1
+            
+            stack.append(cur.left)
+            stack.append(cur.right)
+        max_number = max(count.itervalues())
+        
+        return [k for k, v in count.items() if v == max_number]
+        
+ class Solution(object):
+    def findMode(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        counts = collections.Counter(self.inorder_traversal(root))
+        max_count = max(v for v in counts.values())
+        return [k for k, v in counts.items() if v == max_count]
+    
+    def inorder_traversal(self, root):
+        if not root:
+            return []
+        else:
+            return self.inorder_traversal(root.left) + [root.val] + self.inorder_traversal(root.right)
+            
+class Solution(object):
+    def findMode(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        counts = collections.Counter(self.inorder_traversal(root))
+        max_count = max(v for v in counts.values())
+        return [k for k, v in counts.items() if v == max_count]
+    
+    def inorder_traversal(self, root):
+        if not root:
+            return []
+        else:
+            return self.inorder_traversal(root.left) + [root.val] + self.inorder_traversal(root.right)
+            
+ 504. Base 7
+ 
+ class Solution(object):
+    def convertToBase7(self, num):
+        """
+        :type num: int
+        :rtype: str
+        """
+        
+        lst = []
+        sign = ""
+        if num == 0:
+            return '0'
+        if num < 0:
+            sign = '-'
+            num = - num
+        while num > 0:
+            lst.append(num%7)
+            num //= 7
+        res_list = lst[::-1]
+        
+        
+        for i in range(len(res_list)):
+            sign += str(res_list[i])
+        return sign
+        
+ class Solution:
+    def convertToBase7(self, num):
+        """
+        :type num: int
+        :rtype: str
+        """
+        if num == 0:
+            return "0"
+        sign = (num > 0)
+        num = abs(num)
+        string = ""
+        while num > 0:
+            string += str(num % 7)
+            num //= 7
+        string = string[::-1]
+        
+        if sign:
+            return string
+        else:
+            return "-" + string
+            
+506. Relative Ranks
+
+class Solution:
+    def findRelativeRanks(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[str]
+        """
+        
+        aux_list = list(enumerate(nums))
+        sorted_aux_list = sorted(aux_list, key=lambda x: -x[1])
+        indices = [x[0] for x in sorted_aux_list]
+        
+        res = [0]*len(nums)
+        
+        for i in range(len(indices)):
+            res[indices[i]] = str(i + 1)
+            
+        if "1" in res:
+            res[res.index("1")] = "Gold Medal"
+        if "2" in res:
+            res[res.index("2")] = "Silver Medal"
+        if "3" in res:
+            res[res.index("3")] = "Bronze Medal"
+            
+        return res
+        
+507. Perfect Number
+
+class Solution:
+    def checkPerfectNumber(self, num):
+        """
+        :type num: int
+        :rtype: bool
+        """
+        if num <= 1:
+            return False
+        
+        aux_set = set([1])
+        for i in range(2, int(math.sqrt(num) + 1)):
+            if num % i == 0:
+                aux_set.add(i)
+                aux_set.add(num//i)
+        return sum(aux_set) == num
+        
+508. Most Frequent Subtree Sum
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def findFrequentTreeSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        
+        res = []
+        queue = [root]
+        
+        while queue:
+            res += [self.tree_sum(x) for x in queue]
+            queue = [child for parent in queue for child in (parent.left, parent.right) if child]
+        aux_dict = dict()
+        for ele in res:
+            if ele not in aux_dict:
+                aux_dict[ele] = 1
+            else:
+                aux_dict[ele] += 1
+        m = max(aux_dict.values())
+        
+        
+        return [k for k in aux_dict if aux_dict[k]==m]
+            
+            
+    def tree_sum(self, root):
+        
+        if not root:
+            return 0
+        res = 0
+        stack = [root]
+        while stack:
+            res += sum([x.val for x in stack])
+            stack = [child for parent in stack for child in (parent.left, parent.right) if child]
+        return res
+        
+class Solution:
+    # Recursive solution
+    def findFrequentTreeSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        
+        
+        dic = {}; max_ = 0; res = []
+        self.search(root, dic)
+        for i in dic:
+            if dic[i] > max_:
+                max_ = dic[i]
+                res = [i]
+            elif max_ == dic[i]:
+                res.append(i)
+        return res
+    
+    def add_dic(self, value, dic):
+        if value not in dic:
+            dic[value] = 1
+        else:
+            dic[value] += 1
+        
+    def search(self, root, dic):
+        if root:
+            tmp = root.val
+            if root.left:                    
+                tmp += self.search(root.left, dic)
+            if root.right:
+                tmp += self.search(root.right, dic)
+            self.add_dic(tmp, dic)
+            return tmp
+        else:
+            return 0
+            
+class Solution:
+    # Recursive solution
+    def findFrequentTreeSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        
+        if not root:
+            return []
+        self.ans, self.alreadySeen, self.count = [], {}, 0
+        
+        def getAns(root):
+            if not root:
+                return 0
+            now = root.val + getAns(root.left) + getAns(root.right)
+            if now in self.alreadySeen:
+                self.alreadySeen[now] += 1
+            else:
+                self.alreadySeen[now] = 1
+            if self.alreadySeen[now] > self.count:
+                self.ans = [now]
+                self.count += 1
+            elif self.alreadySeen[now] == self.count:
+                self.ans.append(now)
+            return now
+        
+        getAns(root)
+        return self.ans
+        
+513. Find Bottom Left Tree Value
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def findBottomLeftValue(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return root
+        stack = [root]
+        res = []
+        while stack:
+            res = stack
+            stack = [child for parent in stack for child in(parent.left, parent.right) if child]
+            
+        return res[0].val
+        
+516. Longest Palindromic Subsequence
+
+class Solution:
+    def longestPalindromeSubseq(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        
+        if not s:
+            return 0
+        if s == s[::-1]:
+            return len(s)
+        ls = len(s)
+        f = [[0]*ls for _ in range(ls)]
+        for i in range(ls):
+            f[i][i] = 1
+        for d in range(1, ls):
+            for i in range(ls - d):
+                if s[i] == s[i+d]:
+                    f[i][i+d] = 2 + f[i+1][i+d-1]
+                else:
+                    f[i][i+d] = max(f[i+1][i+d], f[i][i+d-1])
+        return f[0][ls-1]
+        
+class Solution:
+    def longestPalindromeSubseq(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        
+        if not s:
+            return 0
+        if s == s[::-1]:
+            return len(s)
+        ls = len(s)
+        f = [[0]*ls for _ in range(ls)]
+        for i in range(ls):
+            f[i][i] = 1
+        for d in range(1, ls):
+            for i in range(ls - d):
+                if s[i] == s[i+d]:
+                    f[i][i+d] = 2+ f[i+1][i+d-1]
+                else:   
+                    f[i][i+d] = max(f[i+1][i+d], f[i][i+d-1])
+        return f[0][ls-1]
+        
+518. Coin Change 2
+
+class Solution(object):
+    def change(self, amount, coins):
+        """
+        :type amount: int
+        :type coins: List[int]
+        :rtype: int
+        """
+        coins.sort()
+        if amount == 0: return 1
+        if not coins: return 0
+        f = [[0]*(amount+1) for _ in range(len(coins))]
+        for j in range(1, amount+1):
+            if j % coins[0] == 0:
+                f[0][j] = 1
+        for i in range(len(coins)):
+            f[i][0] = 1
+        
+        for i in range(1, len(coins)):
+            for j in range(1, amount+1):
+                if j < coins[i]:
+                    f[i][j] = f[i-1][j]
+                else:
+                    f[i][j] = f[i-1][j] + f[i][j-coins[i]]
+        return f[-1][-1]
+        
+class Solution(object):
+    def change(self, amount, coins):
+        """
+        :type amount: int
+        :type coins: List[int]
+        :rtype: int
+        """
+        record = [1] + [0]*amount
+        for coin in coins:
+            for val in range(amount+1):
+                if record[val] != 0 and val+coin <= amount:
+                    record[val+coin] += record[val]
+        return record[amount]  
+        
+520. Detect Capital
+
+class Solution(object):
+    def detectCapitalUse(self, word):
+        """
+        :type word: str
+        :rtype: bool
+        """
+        upper = word.upper()
+        lower = word.lower()
+        title = word.title()
+        
+        lst = [upper, lower, title]
+        
+        return word in lst
+        
