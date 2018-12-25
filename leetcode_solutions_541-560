@@ -1,0 +1,291 @@
+541. Reverse String II
+
+class Solution(object):
+    def reverseStr(self, s, k):
+        """
+        :type s: str
+        :type k: int
+        :rtype: str
+        """
+        ls = len(s)
+        
+        res = ""
+        
+        if ls < k:
+            res =  s[::-1]
+        
+        elif ls <= 2*k:
+            res = s[:k][::-1] + s[k:]
+        else:
+            quo = ls // (2*k)
+            rem = ls % (2*k)
+            for i in range(quo):
+                res += s[2*k*i:2*k*i+k][::-1]
+                res += s[2*k*i+k:2*k*i+2*k]
+            res += self.reverseStr(s[-rem:], k)
+            
+        return res
+        
+class Solution:
+    def reverseStr(self, s, k):
+        
+        n = len(s) // (2*k)
+        m = len(s) % (2*k)
+        
+        if n == 0:
+            return self.partial_reverse(s, k)
+        else:
+            res = ""
+            for i in range(n):
+                res += self.partial_reverse(s[i*2*k:(i+1)*2*k], k)
+                
+            if m == 0:
+                return res
+            else:
+            
+                res += self.partial_reverse(s[-m:], k)
+                return res
+ 
+    def partial_reverse(self, piece, k):
+        ls = len(piece)
+        
+        if ls == 0:
+            return ""
+        elif ls <= k:
+            return piece[::-1]
+        else:
+            return piece[:k][::-1] + piece[k:]   
+            
+class Solution:
+    def reverseStr(self, s, k):
+        
+        n = len(s) // (2*k)
+        
+        res = ""
+        for i in range(n+1):
+            res += s[2*i*k:2*i*k+k][::-1] + s[2*i*k+k : 2*(i+1)*k]
+        return res
+        
+543. Diameter of Binary Tree
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def diameterOfBinaryTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.ans = 0
+        
+        def depth(p):
+            if not p:
+                return 0
+            left, right = depth(p.left), depth(p.right)
+            self.ans = max(self.ans, left + right)
+            return 1 + max(left, right)
+        depth(root)
+        
+        return self.ans
+        
+546. Remove Boxes
+
+class Solution:
+    def removeBoxes(self, boxes):
+        """
+        :type boxes: List[int]
+        :rtype: int
+        """
+        A = boxes
+        N = len(A)
+        memo = [[[0]*N for _ in range(N) ] for _ in range(N) ]
+    
+        def dp(i, j, k):
+            if i > j: return 0
+            if not memo[i][j][k]:
+                m = i
+                while m+1 <= j and A[m+1] == A[i]:
+                    m += 1
+                i, k = m, k + m - i
+                ans = dp(i+1, j, 0) + (k+1) ** 2
+                for m in range(i+1, j+1):
+                    if A[i] == A[m]:
+                        ans = max(ans, dp(i+1, m-1, 0) + dp(m, j, k+1))
+                memo[i][j][k] = ans
+            return memo[i][j][k]
+    
+        return dp(0, N-1, 0)
+        
+ 551. Student Attendance Record I
+ 
+ class Solution:
+    def checkRecord(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        if s.count('A') < 2 and not self.check_L(s):
+            return True
+        return False
+
+    def check_L(self, s):
+        if len(s) < 3 or s.count('L') < 3:
+            return False
+        
+        ls = len(s)
+        i = 0
+        found = False
+        while i < ls - 2 and not found:
+            piece = s[i:i+3]
+            if piece == 'LLL':
+                found = True
+            i += 1
+        return found
+        
+557. Reverse Words in a String III
+
+class Solution:
+    def reverseWords(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        aux_list = [item[::-1] for item in s.split()]
+        return " ".join(aux_list)
+        
+class Solution:
+    def reverseWords(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        return " ".join([item[::-1] for item in s.split()])
+        
+558. Quad Tree Intersection
+
+"""
+# Definition for a QuadTree node.
+class Node:
+    def __init__(self, val, isLeaf, topLeft, topRight, bottomLeft, bottomRight):
+        self.val = val
+        self.isLeaf = isLeaf
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomLeft = bottomLeft
+        self.bottomRight = bottomRight
+"""
+class Solution:
+    def intersect(self, quadTree1, quadTree2):
+        """
+        :type quadTree1: Node
+        :type quadTree2: Node
+        :rtype: Node
+        """
+        
+        
+        if quadTree1.isLeaf:
+            if quadTree1.val:
+                return quadTree1
+            else:
+                return quadTree2
+            
+        if quadTree2.isLeaf:
+            if quadTree2.val:
+                return quadTree2
+            else:
+                return quadTree1
+            
+        tl = self.intersect(quadTree1.topLeft, quadTree2.topLeft)
+        tr = self.intersect(quadTree1.topRight, quadTree2.topRight)
+        bl = self.intersect(quadTree1.bottomLeft, quadTree2.bottomLeft)
+        br = self.intersect(quadTree1.bottomRight, quadTree2.bottomRight)
+        
+        if all([a.isLeaf for a in (tl, tr, bl, br)]):
+            if all([a.val for a in [tl, tr, bl, br]]) or all([not a.val for a in [tl, tr, bl, br]]):
+                return tl
+        return Node(False, False, tl, tr, bl, br)
+        
+ class Solution:
+    def intersect(self, quadTree1, quadTree2):
+        if quadTree1.isLeaf:
+            return quadTree1 if quadTree1.val else quadTree2
+        if quadTree2.isLeaf:
+            return quadTree2 if quadTree2.val else quadTree1
+
+        topLeft = self.intersect(quadTree1.topLeft, quadTree2.topLeft)
+        topRight = self.intersect(quadTree1.topRight, quadTree2.topRight)
+        bottomLeft = self.intersect(quadTree1.bottomLeft, quadTree2.bottomLeft)
+        bottomRight = self.intersect(quadTree1.bottomRight, quadTree2.bottomRight)
+
+        children = [topLeft, topRight, bottomLeft, bottomRight]
+        values = [child.val for child in children]
+        leaves = [child.isLeaf for child in children]
+
+        if all(leaves) and (sum(values) == 0 or sum(values) == 4):
+            return Node(topLeft.val, True, None, None, None, None)
+
+        # non-leaf must have False val
+        else:
+            return Node(False, False, topLeft, topRight, bottomLeft, bottomRight)
+
+559. Maximum Depth of N-ary Tree
+
+"""
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, children):
+        self.val = val
+        self.children = children
+"""
+class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: Node
+        :rtype: int
+        """
+        if not root:
+            return 0
+        if not root.children:
+            return 1
+        lengths = []
+        for child in root.children:
+            lengths.append(self.maxDepth(child))
+        return max(lengths) + 1
+        
+class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: Node
+        :rtype: int
+        """
+        if not root:
+            return 0
+        if not root.children:
+            return 1
+        goal = - float('inf')
+        for child in root.children:
+            length = self.maxDepth(child)
+            if length > goal:
+                goal = length
+        return goal + 1
+        
+ class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: Node
+        :rtype: int
+        """
+        depth = 0
+        if root:
+            for child in root.children:
+                tmp = self.maxDepth(child)
+                depth = max(tmp, depth)
+            return depth + 1   
+        else:
+            return 0
+                   
