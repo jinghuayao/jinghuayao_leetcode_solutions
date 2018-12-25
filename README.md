@@ -1,3 +1,7 @@
+## Programming and Coding Practice
+
+To keep and improve coding ability, it is crucial to do practice continuously. There are various ways to practice, direct or indirect.
+
 ### jinghuayao solutions to leetcode problems
 
 My python solutions to leetcode problems. The leetcode webpage is https://leetcode.com/.
