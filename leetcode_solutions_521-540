@@ -1,0 +1,452 @@
+521. Longest Uncommon Subsequence I
+
+class Solution(object):
+    def findLUSlength(self, a, b):
+        """
+        :type a: str
+        :type b: str
+        :rtype: int
+        """
+        m = len(a); n = len(b)
+        if m != n:
+            return max(m, n)
+        else:
+            if a == b:
+                return -1
+            else:
+                return m
+                
+ 522. Longest Uncommon Subsequence II
+ 
+ class Solution(object):
+    def findLUSlength(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: int
+        """
+        def is_sub(str1, str2):
+            i = 0
+            for char in str2:
+                if str1[i] == char:
+                    i += 1
+                    if i == len(str1):
+                        return True
+            return False
+        
+        dic = collections.Counter(strs)
+        dic = sorted(dic.items(), key=lambda x: -len(x[0]))
+        for i in range(len(dic)):
+            if dic[i][1] == 1:
+                flag = True
+                for j in range(i-1, -1, -1):
+                    if len(dic[j][0]) > len(dic[i][0]) and is_sub(dic[i][0], dic[j][0]):
+                        flag = False
+                if flag:
+                    return len(dic[i][0])
+        return -1
+        
+class Solution(object):
+    def isSubseq(self, a, b):
+        i = j = 0
+        while i < len(a) and j < len(b):
+            if a[i] == b[j]:
+                i += 1
+                j += 1
+            else:
+                i += 1
+        
+        return j == len(b)
+    
+    def findLUSlength(self, strs):
+        d = {}
+        for s in strs:
+            if s not in d:
+                d[s] = 1
+            else:
+                d[s] += 1
+        
+        arr = []
+        for key in d:
+            arr.append((d[key], key))
+        arr.sort(key = lambda x: -len(x[1]))
+        
+        print(arr)
+        eliminated = set()
+        
+        for i in range(len(arr)):
+            if arr[i][0] != 1:
+                eliminated.add(arr[i][1])
+            
+            else:
+                isSubstr = False
+                for key in eliminated:
+                    if self.isSubseq(key, arr[i][1]):
+                        isSubstr = True
+
+                if not isSubstr:
+                    return len(arr[i][1])
+                else:
+                    eliminated.add(arr[i][1])
+        
+        return -1
+        
+class Solution(object):
+    def isSubseq(self, a, b): # check if b is subsequence of a
+        i = 0; j = 0
+        while (i < len(a)) & (j < len(b)):
+            if a[i] == b[j]:
+                i += 1; j += 1
+            else:
+                i += 1
+        
+        return j == len(b)
+    
+    def findLUSlength(self, strs):
+        d = {}
+        for s in strs:
+            if s not in d:
+                d[s] = 1
+            else:
+                d[s] += 1
+        
+        arr = []
+        for key in d:
+            arr.append((d[key], key))
+        arr.sort(key = lambda x: -len(x[1]))
+        
+        print(arr)
+        eliminated = set()
+        
+        for i in range(len(arr)):
+            if arr[i][0] != 1:
+                eliminated.add(arr[i][1])
+            
+            else:
+                isSubstr = False
+                for key in eliminated:
+                    if self.isSubseq(key, arr[i][1]):
+                        isSubstr = True
+
+                if not isSubstr:
+                    return len(arr[i][1])
+                else:
+                    eliminated.add(arr[i][1])
+        
+        return -1
+        
+ class Solution(object):
+    def isSubseq(self, a, b): # check if b is subsequence of a
+        i = 0; j = 0
+        while (i < len(a)) & (j < len(b)):
+            if a[i] == b[j]:
+                i += 1; j += 1
+            else:
+                i += 1
+        
+        return j == len(b)
+    
+    def findLUSlength(self, strs):
+        d = {}
+        for s in strs:
+            if s not in d:
+                d[s] = 1
+            else:
+                d[s] += 1
+        
+        arr = []
+        for key in d:
+            arr.append((d[key], key))
+        arr.sort(key = lambda x: -len(x[1]))
+        
+        print(arr)
+        eliminated = set()
+        
+        for i in range(len(arr)):
+            if arr[i][0] != 1:
+                eliminated.add(arr[i][1])
+            
+            else:
+                isSubstr = False
+                for key in eliminated:
+                    if self.isSubseq(key, arr[i][1]):
+                        isSubstr = True
+
+                if not isSubstr:
+                    return len(arr[i][1])
+                else:
+                    eliminated.add(arr[i][1])
+        
+        return -1
+        
+524. Longest Word in Dictionary through Deleting
+
+class Solution(object):
+    def findLongestWord(self, s, d):
+        """
+        :type s: str
+        :type d: List[str]
+        :rtype: str
+        """
+        res = []
+        for word in d:
+            if self.is_subsequence(word, s):
+                res.append(word)
+        if res == []:
+            return ""
+        else:
+            max_len = max([len(x) for x in res])
+            aux_list = [x for x in res if len(x)==max_len]
+            aux_list = sorted(aux_list)
+            return aux_list[0]
+        
+        
+        
+    def is_subsequence(self, word, s):
+        if s == "": return word == ""
+        if word == "": return True
+        i, j = 0, 0
+        while i < len(word) and j < len(s):
+            if word[i] == s[j]:
+                i, j = i+1, j+1
+            else:
+                j += 1
+        return i == len(word)
+        
+ class Solution(object):
+    def findLongestWord(self, s, d):
+        """
+        :type s: str
+        :type d: List[str]
+        :rtype: str
+        """
+        res = []
+        for word in d:
+            if self.is_subsequence(word, s):
+                res.append(word)
+        if res == []:
+            return ""
+        else:
+            max_len = max([len(x) for x in res])
+            aux_list = [x for x in res if len(x)==max_len]
+            aux_list = sorted(aux_list)
+            return aux_list[0]
+        
+        
+        
+    def is_subsequence(self, word, s):
+        for i, char in enumerate(word):
+            if char not in s:
+                return False
+            else:
+                ind = s.index(char)
+                s = s[ind+1:]
+        return True
+        
+  class Solution(object):
+    def findLongestWord(self, s, d):
+        """
+        :type s: str
+        :type d: List[str]
+        :rtype: str
+        """
+        def is_subsequence(word, text):
+            j = 0
+            for i, char in enumerate(text):
+                if char == word[j]:
+                    j += 1
+                    if j == len(word):
+                        return True
+            return False
+        
+        max_len = 0
+        longest = ""
+        for word in d:
+            if is_subsequence(word, s) and len(word) > max_len:
+                max_len = len(word)
+                longest = word
+            elif is_subsequence(word, s) and len(word) == max_len:
+                longest = min(longest, word)
+        return longest
+        
+ 530. Minimum Absolute Difference in BST
+ 
+ # Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def getMinimumDifference(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return
+        res = [root.val]
+        stack = [root]
+        while stack:
+            stack = [child for parent in stack for child in (parent.left, parent.right) if child]
+            res += [x.val for x in stack]
+        res.sort()
+        diff = [abs(res[i+1]-res[i]) for i in range(0, len(res)-1)]
+        return min(diff)
+        
+class Solution(object):
+    def getMinimumDifference(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        aux_list = self.inorder(root)
+        
+        return min([aux_list[i+1]-aux_list[i] for i in range(0, len(aux_list)-1)])
+    
+    
+    
+    def inorder(self, root):
+        if not root:
+            return []
+        else:
+            return self.inorder(root.left) + [root.val] + self.inorder(root.right)
+
+532. K-diff Pairs in an Array
+
+class Solution(object):
+    def findPairs(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        
+        count=0
+        list_nums = set(nums)
+        if k == 0:
+            for each in list_nums:
+                if nums.count(each)>1:
+                    count+=1
+            return count
+        elif k < 0:
+            return 0
+        elif k > 0:
+            for i in list_nums:
+                if i+k in list_nums:
+                    count+=1
+        return count
+        
+class Solution(object):
+    def findPairs(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        
+        count=0
+        list_nums = set(nums)
+        if k == 0:
+            for each in list_nums:
+                if nums.count(each)>1:
+                    count+=1
+            return count
+        elif k < 0:
+            return 0
+        elif k > 0:
+            for i in list_nums:
+                if i- k in list_nums:
+                    count+=1
+        return count
+        
+538. Convert BST to Greater Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+# By Yao: note that "return" and "return []" are different.
+class Solution:
+    def convertBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        self.rec = 0
+        
+        def visit(r):
+            if not r:
+                return
+            visit(r.right)
+            temp = r.val
+            r.val += self.rec
+            self.rec += temp
+            visit(r.left)
+        
+        visit(root)
+        return root
+        
+class Solution:
+    def convertBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        self.rec = 0
+        
+        stack = []
+        trav = root
+        rec = 0
+        while trav or stack:
+            if trav:
+                stack.append(trav)
+                trav = trav.right
+            else:
+                u = stack.pop()
+                tmp = u.val
+                u.val += rec
+                rec += tmp
+                trav = u.left
+        return root
+        
+539. Minimum Time Difference
+
+class Solution:
+    def findMinDifference(self, timePoints):
+        """
+        :type timePoints: List[str]
+        :rtype: int
+        """
+        timePoints = map(self.to_minutes, timePoints)
+        timePoints = sorted(timePoints)
+        timePoints.append(timePoints[0]+24*60)
+        
+        res = float('inf')
+        for i in range(1, len(timePoints)):
+            res = min(res, timePoints[i]-timePoints[i-1])
+        return res
+        
+        
+    def to_minutes(self, timePoint):
+        aux_list = timePoint.split(":")
+        return int(aux_list[0])*60 + int(aux_list[1])
+  
+class Solution:
+    def findMinDifference(self, timePoints):
+        """
+        :type timePoints: List[str]
+        :rtype: int
+        """
+        timePoints = map(lambda x: int(x.split(":")[0])*60 + int(x.split(":")[1]), timePoints)
+        timePoints = sorted(timePoints)
+        timePoints.append(timePoints[0]+24*60)
+        res = float('inf')
+        for i in range(1, len(timePoints)):
+            res = min(res, timePoints[i]-timePoints[i-1])
+        return res
+        
+        
