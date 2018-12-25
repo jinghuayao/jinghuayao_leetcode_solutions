@@ -1,0 +1,263 @@
+583. Delete Operation for Two Strings
+
+class Solution:
+    def minDistance(self, word1, word2):
+        """
+        :type word1: str
+        :type word2: str
+        :rtype: int
+        """
+        m = len(word1); n = len(word2)
+        dp = [[0]*(n+1) for i in range(m+1)]
+        for i in range(m+1):
+            dp[i][0] = i
+        for j in range(n+1):
+            dp[0][j] = j
+        
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                if word1[i-1] == word2[j-1]:
+                    dp[i][j] = dp[i-1][j-1]
+                else:
+                    dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1])
+        return dp[-1][-1]
+        
+589. N-ary Tree Preorder Traversal
+ 
+ """
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, children):
+        self.val = val
+        self.children = children
+"""
+class Solution(object):
+    def preorder(self, root):
+        """
+        :type root: Node
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        
+        res = [root.val]
+        if root.children:
+            for child in root.children:
+                res.extend(self.preorder(child))
+        return res
+        
+ class Solution(object):
+    def preorder(self, root):
+        """
+        :type root: Node
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        
+        res = []
+        stack = [root]
+        
+        while stack:
+            u = stack.pop()
+            res.append(u.val)
+            if u.children:
+                for c in u.children[::-1]:
+                    stack.append(c)
+        return res
+        
+ class Solution(object):
+    def preorder(self, root):
+        """
+        :type root: Node
+        :rtype: List[int]
+        """
+        ret, q = [], root and [root]
+        
+        while q:
+            node = q.pop()
+            ret.append(node.val)
+            q += [child for child in node.children[::-1] if child]
+        return ret
+        
+ class Solution(object):
+    def preorder(self, root):
+        """
+        :type root: Node
+        :rtype: List[int]
+        """
+        res = []
+        
+        if root:
+            q = [root]
+            while q:
+                cur = q.pop(0)
+                res.append(cur.val)
+                q = cur.children + q
+                
+        return res
+        
+ 590. N-ary Tree Postorder Traversal
+ 
+ """
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, children):
+        self.val = val
+        self.children = children
+"""
+class Solution(object):
+    def postorder(self, root):
+        """
+        :type root: Node
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        res = []
+        if root.children:
+            for child in root.children:
+                res += self.postorder(child)
+        res += [root.val]
+        
+        return res
+        
+ class Solution(object):
+    def postorder(self, root):
+        """
+        :type root: Node
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        res = collections.deque()
+        stack = [root]
+        while stack:
+            u = stack.pop()
+            res.appendleft(u.val)
+            for c in u.children:
+                stack.append(c)
+        return list(res)
+        
+  class Solution(object):
+    def postorder(self, root):
+        """
+        :type root: Node
+        :rtype: List[int]
+        """
+        if not root:
+            return []
+        res = []
+        stack = [root]
+        while stack:
+            u = stack.pop()
+            res.append(u.val)
+            for c in u.children:
+                stack.append(c)
+        return res[::-1]
+        
+  594. Longest Harmonious Subsequence
+  
+  class Solution:
+    def findLHS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        dp = dict()
+        res = 0
+        for x in nums:
+            dp[x] = dp.get(x, 0) + 1
+            if x+1 in dp:
+                res = max(res, dp[x]+dp[x+1])
+            if x-1 in dp:
+                res = max(res, dp[x]+dp[x-1])
+        return res
+        
+  class Solution:
+    def findLHS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        res = 0
+        nums.sort()
+        ct = collections.Counter(nums)
+        elements = sorted(list(set(nums)))
+        
+        for i in range(len(elements)-1):
+            if elements[i+1] - elements[i] == 1:
+                res = max(ct[elements[i+1]]+ct[elements[i]], res)
+            
+        return res
+        
+class Solution:
+    def findLHS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        res = 0
+        
+        ct = collections.Counter(nums)
+        elements = sorted(list(set(nums)))
+        
+        for i in range(len(elements)-1):
+            if elements[i+1] - elements[i] == 1:
+                res = max(ct[elements[i+1]]+ct[elements[i]], res)
+            
+        return res
+        
+ class Solution:
+    def findLHS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        dic = dict()
+        for num in nums:
+            if num not in dic:
+                dic[num] = 1
+            else:
+                dic[num] += 1
+        
+        aux_list = sorted(set(nums))
+        ls = len(aux_list)
+        
+        res = 0
+        for i in range(1, ls):
+            if aux_list[i] - aux_list[i-1] == 1:
+                res = max(res, dic[aux_list[i]] + dic[aux_list[i-1]])
+        return res
+        
+599. Minimum Index Sum of Two Lists
+
+class Solution:
+    def findRestaurant(self, list1, list2):
+        """
+        :type list1: List[str]
+        :type list2: List[str]
+        :rtype: List[str]
+        """
+        # find the common restaurants
+        common = [item for item in list1 if item in list2]
+        
+        dc = {}
+        
+        if common == []:
+            return []
+        
+        
+        for key in common:
+            index_1 = list1.index(key)
+            index_2 = list2.index(key)
+            value = index_1 + index_2
+            dc[key] = value
+        
+        min_value =  min([value for value in dc.values()])
+        
+        res = [key for key, value in dc.items() if value == min_value]
+        
+        return res
+        
+        
