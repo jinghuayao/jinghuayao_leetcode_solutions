@@ -1,4 +1,4 @@
-# jinghuayao_leetcode_solutions
+### jinghuayao solutions to leetcode problems
 
 My python solutions to leetcode problems. The leetcode webpage is https://leetcode.com/.
 At the time of this writing, I solved about half of the total number of problems (not
