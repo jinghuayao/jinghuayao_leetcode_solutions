@@ -1,0 +1,553 @@
+701. Insert into a Binary Search Tree
+
+class Solution(object):
+    def insertIntoBST(self, root, val):
+        """
+        :type root: TreeNode
+        :type val: int
+        :rtype: TreeNode
+        """
+        if not root:
+            return TreeNode(val)
+        if root.val < val:
+            root.right = self.insertIntoBST(root.right, val)
+        else:
+            root.left = self.insertIntoBST(root.left, val)
+            
+        return root
+        
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def insertIntoBST(self, root, val):
+        """
+        :type root: TreeNode
+        :type val: int
+        :rtype: TreeNode
+        """
+        if not root:
+            return TreeNode(val)
+        
+        if root.val < val:
+            if not root.right:
+                t = TreeNode(val)
+                root.right = t
+            else:
+                root.right = self.insertIntoBST(root.right, val)
+        else:
+            if not root.left:
+                t = TreeNode(val)
+                root.left = t
+            else:
+                root.left = self.insertIntoBST(root.left, val)
+        return root
+        
+class Solution(object):
+    def insertIntoBST(self, root, val):
+        """
+        :type root: TreeNode
+        :type val: int
+        :rtype: TreeNode
+        """
+        if not root:
+            return TreeNode(val)
+        
+        if root.val < val:
+            if not root.right:
+                t = TreeNode(val)
+                root.right = t
+            else:
+                root.right = self.insertIntoBST(root.right, val)
+        else:
+            if not root.left:
+                t = TreeNode(val)
+                root.left = t
+            else:
+                root.left = self.insertIntoBST(root.left, val)
+        return root
+        
+703. Kth Largest Element in a Stream
+
+class KthLargest:
+
+    def __init__(self, k, nums):
+        """
+        :type k: int
+        :type nums: List[int]
+        """
+        self.pool = nums
+        self.k = k
+        heapq.heapify(self.pool)
+        while len(self.pool) > k:
+            heapq.heappop(self.pool)
+        
+
+    def add(self, val):
+        """
+        :type val: int
+        :rtype: int
+        """
+        if len(self.pool) < self.k:
+            heapq.heappush(self.pool, val)
+        elif val > self.pool[0]:
+            heapq.heapreplace(self.pool, val)
+        return self.pool[0]
+        
+
+
+# Your KthLargest object will be instantiated and called as such:
+# obj = KthLargest(k, nums)
+# param_1 = obj.add(val)
+
+704. Binary Search
+
+class Solution:
+    def search(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        if nums == []:
+            return -1
+        if len(nums) == 1:
+            if nums[0] == target:
+                return 0
+            else:
+                return -1
+        begin = 0
+        end = len(nums) - 1
+        while begin <= end:
+            mid = (begin + end)//2
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] < target:
+                begin = mid + 1
+            else:
+                end = mid - 1
+        return -1
+        
+class Solution:
+    def search(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        
+        begin = 0
+        end = len(nums) - 1
+        while begin <= end:
+            mid = (begin + end)//2
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] < target:
+                begin = mid + 1
+            else:
+                end = mid - 1
+        return -1
+        
+705. Design HashSet
+
+class MyHashSet(object):
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.table = [-1] * 1000000
+
+    def add(self, key):
+        """
+        :type key: int
+        :rtype: void
+        """
+        self.table[key] = 1
+
+    def remove(self, key):
+        """
+        :type key: int
+        :rtype: void
+        """
+        self.table[key] = -1
+
+    def contains(self, key):
+        """
+        Returns true if this set contains the specified element
+        :type key: int
+        :rtype: bool
+        """
+        if self.table[key] == 1:
+            return True
+        else:
+            return False
+        
+
+
+# Your MyHashSet object will be instantiated and called as such:
+# obj = MyHashSet()
+# obj.add(key)
+# obj.remove(key)
+# param_3 = obj.contains(key)
+
+class MyHashSet(object):
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.data = [None]*1000001
+        
+
+    def add(self, key):
+        """
+        :type key: int
+        :rtype: void
+        """
+        self.data[key] = 1
+        
+
+    def remove(self, key):
+        """
+        :type key: int
+        :rtype: void
+        """
+        
+        self.data[key] = None
+        
+
+    def contains(self, key):
+        """
+        Returns true if this set contains the specified element
+        :type key: int
+        :rtype: bool
+        """
+        if self.data[key] == 1:
+            return True
+        else:
+            return False
+        
+        
+
+
+# Your MyHashSet object will be instantiated and called as such:
+# obj = MyHashSet()
+# obj.add(key)
+# obj.remove(key)
+# param_3 = obj.contains(key)
+
+706. Design HashMap
+
+class MyHashMap:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.key = []
+        self.value = []
+        
+
+    def put(self, key, value):
+        """
+        value will always be non-negative.
+        :type key: int
+        :type value: int
+        :rtype: void
+        """
+        if key in self.key:
+            self.value[self.key.index(key)] = value
+        else:
+            self.key.append(key)
+            self.value.append(value)
+        
+
+    def get(self, key):
+        """
+        Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key
+        :type key: int
+        :rtype: int
+        """
+        if key in self.key:
+            return self.value[self.key.index(key)]
+        else:
+            return -1
+        
+
+    def remove(self, key):
+        """
+        Removes the mapping of the specified value key if this map contains a mapping for the key
+        :type key: int
+        :rtype: void
+        """
+        if key in self.key:
+            temp = self.key
+            ind = self.key.index(key)
+            temp.remove(key)
+            self.key = temp
+            aux = self.value
+            aux.pop(ind)
+            self.value = aux
+        
+
+
+# Your MyHashMap object will be instantiated and called as such:
+# obj = MyHashMap()
+# obj.put(key,value)
+# param_2 = obj.get(key)
+# obj.remove(key)
+
+707. Design Linked List
+
+class Node(object):
+
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+
+
+class MyLinkedList(object):
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.head = None
+        self.size = 0
+
+    def get(self, index):
+        """
+        Get the value of the index-th node in the linked list. If the index is invalid, return -1.
+        :type index: int
+        :rtype: int
+        """
+        if index < 0 or index >= self.size:
+            return -1
+
+        if self.head is None:
+            return -1
+
+        curr = self.head
+        count = 0
+        while count < index:
+            curr = curr.next
+            count += 1
+        return curr.val
+
+    def addAtHead(self, val):
+        """
+        Add a node of value val before the first element of the linked list.
+        After the insertion, the new node will be the first node of the linked list.
+        :type val: int
+        :rtype: void
+        """
+        node = Node(val)
+        node.next = self.head
+        self.head = node
+
+        self.size += 1
+
+    def addAtTail(self, val):
+        """
+        Append a node of value val to the last element of the linked list.
+        :type val: int
+        :rtype: void
+        """
+        curr = self.head
+        if curr is None:
+            self.head = Node(val)
+        else:
+            while curr.next is not None:
+                curr = curr.next
+            curr.next = Node(val)
+
+        self.size += 1
+
+    def addAtIndex(self, index, val):
+        """
+        Add a node of value val before the index-th node in the linked list.
+        If index equals to the length of linked list, the node will be appended to the end of linked list.
+        If index is greater than the length, the node will not be inserted.
+        :type index: int
+        :type val: int
+        :rtype: void
+        """
+        if index < 0 or index > self.size:
+            return
+
+        if index == 0:
+            self.addAtHead(val)
+        else:
+            curr = self.head
+            for i in range(index - 1):
+                curr = curr.next
+            node = Node(val)
+            node.next = curr.next
+            curr.next = node
+
+            self.size += 1
+
+    def deleteAtIndex(self, index):
+        """
+        Delete the index-th node in the linked list, if the index is valid.
+        :type index: int
+        :rtype: void
+        """
+        if index < 0 or index >= self.size:
+            return
+
+        curr = self.head
+        if index == 0:
+            self.head = curr.next
+        else:
+            for i in range(index - 1):
+                curr = curr.next
+            curr.next = curr.next.next
+
+        self.size -= 1
+        
+        
+
+
+# Your MyLinkedList object will be instantiated and called as such:
+# obj = MyLinkedList()
+# param_1 = obj.get(index)
+# obj.addAtHead(val)
+# obj.addAtTail(val)
+# obj.addAtIndex(index,val)
+# obj.deleteAtIndex(index)
+
+709. To Lower Case
+
+class Solution:
+    def toLowerCase(self, str):
+        """
+        :type str: str
+        :rtype: str
+        """
+        return str.lower()
+        
+713. Subarray Product Less Than K
+
+class Solution(object):
+    def numSubarrayProductLessThanK(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        if not nums: return 0
+        count = 0
+        j = 0
+        res = 1
+        for i in range(len(nums)):
+            res *= nums[i]
+            if res >= k:
+                while j <= i and res >= k:
+                    res /= nums[j]
+                    j += 1
+            count += i - j + 1
+        return count
+        
+class Solution(object):
+    def numSubarrayProductLessThanK(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        l, res, cur = 0, 0, 1
+        for i in range(len(nums)):
+            cur *= nums[i]
+            while cur >= k and l <= i:
+                cur, l = cur//nums[l], l+1
+            res += i - l + 1
+        return res
+        
+717. 1-bit and 2-bit Characters
+
+class Solution:
+    def isOneBitCharacter(self, bits):
+        """
+        :type bits: List[int]
+        :rtype: bool
+        """
+        if bits == [0]:
+            return True
+        if bits == [1, 0]:
+            return False
+        if bits == [0, 0]:
+            return True
+        
+        if bits[0] == 0:
+            return self.isOneBitCharacter(bits[1:])
+        else:
+            return self.isOneBitCharacter(bits[2:])
+            
+720. Longest Word in Dictionary
+
+class Solution:
+    def longestWord(self, words):
+        """
+        :type words: List[str]
+        :rtype: str
+        """
+        aux_dict = dict()
+        for item in words:
+            if len(item) not in aux_dict.keys():
+                aux_dict[len(item)] = [item]
+            else:
+                aux_dict[len(item)].append(item)
+        
+        aux = {k:sorted(v) for k, v in aux_dict.items()}
+        keys = sorted([k for k, v in aux.items()], reverse=True)
+        hold = False
+        j = 0
+        while j < len(keys) and not hold:
+            key = keys[j]
+            value_list = aux[key]
+            ls = len(value_list)
+            i = 0
+            stop = False
+            while i < ls and not stop:
+                item = value_list[i]
+                if self.check_chain(item, words):
+                    stop = True
+                else:
+                    i += 1
+            if stop:
+                hold = True
+                return item
+            else:
+                j += 1
+        return ""
+ 
+    def check_chain(self, word, words):
+        found = False
+        ls = len(word)
+        i = ls
+        while i > 0 and not found:
+            temp = word[:i]
+            if temp in words:
+                i -= 1
+            else:
+                found = True
+        return not found
+        
+class Solution(object):
+    def longestWord(self, words):
+        words.sort()
+        words_set, longest_word = set(['']), ''
+        for word in words:
+            if word[:-1] in words_set:
+                words_set.add(word)
+                if len(word) > len(longest_word):
+                    longest_word = word
+        return longest_word
+        
+        
