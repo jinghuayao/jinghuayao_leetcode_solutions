@@ -1,1 +1,352 @@
 
+781. Rabbits in Forest
+
+class Solution(object):
+    def numRabbits(self, answers):
+        """
+        :type answers: List[int]
+        :rtype: int
+        """
+        min_rabbits = 0
+        
+        if not answers:
+            return min_rabbits
+        
+        freq_map = {}
+        
+        for answer in answers:
+            if answer not in freq_map:
+                freq_map[answer] = 0
+            freq_map[answer] += 1
+            if freq_map[answer] == answer + 1:
+                min_rabbits += answer + 1
+                freq_map[answer] = 0
+        
+        for answer in freq_map:
+            if freq_map[answer] != 0:
+                min_rabbits += answer + 1
+        
+        return min_rabbits
+        
+783. Minimum Distance Between BST Nodes
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def minDiffInBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        def to_list(root):
+            if not root:
+                return []
+            return [root.val] + to_list(root.left) + to_list(root.right)
+        tmp = to_list(root)
+        aux_list = sorted(tmp)
+        
+        if len(aux_list) < 2:
+            return
+        increments = []
+        for i in range(1, len(aux_list)):
+            increments.append(aux_list[i]-aux_list[i-1])
+        return min(increments)
+        
+class Solution(object):
+    def minDiffInBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        def to_list(root):
+            if not root:
+                return []
+            return to_list(root.left) + [root.val] + to_list(root.right)
+        
+        aux_list = to_list(root)
+        
+        if len(aux_list) < 2:
+            return
+        increments = []
+        for i in range(1, len(aux_list)):
+            increments.append(aux_list[i]-aux_list[i-1])
+        return min(increments)
+        
+784. Letter Case Permutation
+
+class Solution:
+    def letterCasePermutation(self, S):
+        """
+        :type S: str
+        :rtype: List[str]
+        """
+        def case_permute(pos, so_far):
+            if pos == len(S):
+                res.append("".join(so_far))
+            else:
+                if S[pos] in "0123456789":
+                    so_far.append(S[pos])
+                    case_permute(pos+1, so_far)
+                    so_far.pop()
+                else:
+                    so_far.append(S[pos].lower())
+                    case_permute(pos+1, so_far)
+                    so_far.pop()
+                    
+                    so_far.append(S[pos].upper())
+                    case_permute(pos+1, so_far)
+                    so_far.pop()
+        res = []
+        case_permute(0, [])
+        return res
+        
+class Solution:
+    def letterCasePermutation(self, S):
+        """
+        :type S: str
+        :rtype: List[str]
+        """
+        l = [S]
+        for i, s in enumerate(S):
+            if ord(s) < 65:
+                continue
+            l_new = []
+            for strings in l:
+                swap_str = (strings[:i] + strings[i].swapcase() + strings[i+1:])
+                l_new.append(swap_str)
+            l.extend(l_new)
+        return l
+        
+class Solution(object):
+    def letterCasePermutation(self, S):
+        """
+        :type S: str
+        :rtype: List[str]
+        """
+        S = list(S)
+        solutions = ['']
+        while S:
+            last = S.pop()
+            if last.isalpha():
+                solutions = [last.lower() + x for x in solutions] + [last.upper() + x for x in solutions]
+            else:
+                solutions = [last + x for x in solutions]
+        return solutions
+        
+785. Is Graph Bipartite?
+
+class Solution:
+    def isBipartite(self, graph):
+        """
+        :type graph: List[List[int]]
+        :rtype: bool
+        """
+        color = {}
+        for i in range(len(graph)):
+            if i not in color:
+                color[i] = 0
+                if not self.dfs(i, graph, color):
+                    return False
+        return True
+
+    def dfs(self, i, graph, color={}):
+        for n in graph[i]:
+            if n in color:
+                if color[n] != (color[i] + 1)%2:
+                    return False
+            else:
+                color[n] = (color[i] + 1) %2
+                if not self.dfs(n, graph, color):
+                    return False
+        return True
+        
+class Solution:
+    def isBipartite(self, graph):
+        """
+        :type graph: List[List[int]]
+        :rtype: bool
+        """
+        if not graph:
+            return False
+        color = {}
+        for i in range(len(graph)):
+            if i not in color:
+                color[i] = 0
+                stack = [(i, 0)]
+                while stack:
+                    vertex, paint = stack.pop()
+                    for adj in graph[vertex]:
+                        if adj in color:
+                            if color[adj] != (paint+1)%2:
+                                return False
+                        else:
+                            stack.append((adj, (paint+1)%2))
+                            color[adj] = (paint+1)%2
+        return True
+        
+class Solution:
+    def isBipartite(self, graph):
+        """
+        :type graph: List[List[int]]
+        :rtype: bool
+        """
+        if not graph:
+            return False
+        color = {}
+        for i in range(len(graph)):
+            if i not in color:
+                color[i] = 0
+                stack = [(i, 0)]
+                while stack:
+                    vertex, paint = stack.pop()
+                    for adj in graph[vertex]:
+                        if adj in color:
+                            if color[adj] != (paint+1)%2:
+                                return False
+                        else:
+                            stack.append((adj, (paint+1)%2))
+                            color[adj] = (paint+1)%2
+        return True
+    
+# Remark: bfs --- queue; dfs --- stack
+
+788. Rotated Digits
+
+class Solution:
+    def rotatedDigits(self, N):
+        """
+        :type N: int
+        :rtype: int
+        """
+        count = 0
+        for i in range(1, N + 1):
+            if self.check_valid(i):
+                if self.check_good(i):
+                    count += 1
+        return count
+        
+        
+        
+        
+        
+        
+    def check_valid(self, num):
+        aux = str(num)
+        
+        check = "347"
+        
+        return not ("3" in aux or "4" in aux or "7" in aux)
+    
+    def check_good(self, num):
+        if not self.check_valid(num):
+            return False
+        else:
+            aux = str(num)
+            string = ""
+            dic = {'0':'0', '1':"1", "8":'8', "2":"5", "5":"2", "6":"9", "9":"6"}
+            for item in aux:
+                string += dic[item]
+            return not (string == aux)
+            
+class Solution:
+    def rotatedDigits(self, N):
+        """
+        :type N: int
+        :rtype: int
+        """
+       
+        cn = 0
+    
+        dic = {1: '1', 0: '0', 8: '8', 2: '5', 5: '2', 6: '9', 9: '6', 3: False, 4: False, 7: False}
+        for ele in range(1, N+1):
+            lst = []
+            for i in str(ele):
+                lst.append(dic[int(i)])
+            if False not in lst:
+                if ''.join(lst) != str(ele):
+                    cn += 1
+                    
+        
+        return cn
+        
+792. Number of Matching Subsequences
+
+class Solution:
+    def numMatchingSubseq(self, S, words):
+        """
+        :type S: str
+        :type words: List[str]
+        :rtype: int
+        """
+        candidates = [word for word in words if len(word) <= len(S)]
+        count = 0
+        for word in words:
+            if self.is_subsequence(word, S):
+                count += 1
+        return count
+        
+        
+        
+        
+    def is_subsequence(self, word, S):
+        stack = list(word[::-1])
+        while stack:
+            char = stack.pop()
+            if char not in S:
+                return False
+            ind = S.index(char)
+            S = S[ind+1:]
+        return True
+        
+class Solution:
+    def numMatchingSubseq(self, S, words):
+        """
+        :type S: str
+        :type words: List[str]
+        :rtype: int
+        """
+        waiting = collections.defaultdict(list)
+        for w in words:
+            waiting[w[0]].append(iter(w[1:]))
+        for c in S:
+            for it in waiting.pop(c, ()):
+                waiting[next(it, None)].append(it)
+        return len(waiting[None])
+        
+796. Rotate String
+
+class Solution(object):
+    def rotateString(self, A, B):
+        """
+        :type A: str
+        :type B: str
+        :rtype: bool
+        """
+        if len(A) != len(B):
+            return False
+        if A == "" and B =="":
+            return True
+        if len(A) == 1:
+            if A == B:
+                return True
+            else:
+                return False
+        
+        str_A = [letter for letter in A]
+        str_B = [letter for letter in B]
+        i = 0
+        stop = False
+        while i < len(A) - 1 and not stop:
+            tmp = str_A.pop(0)
+            str_A.append(tmp)
+            if str_A == str_B:
+                stop = True
+            i += 1
+        return stop
+        
+        
