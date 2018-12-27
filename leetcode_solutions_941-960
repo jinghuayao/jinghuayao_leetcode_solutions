@@ -1,0 +1,571 @@
+941. Valid Mountain Array
+
+class Solution:
+    def validMountainArray(self, A):
+        """
+        :type A: List[int]
+        :rtype: bool
+        """
+        ls = len(A)
+        if ls < 3:
+            return False
+        l, r = 0, len(A)-1
+        while l + 1 < ls and A[l] < A[l+1]:
+            l += 1
+        while r-1 > 0 and A[r] < A[r-1]:
+            r -= 1
+        return 0 < l == r < ls - 1
+        
+class Solution:
+    def validMountainArray(self, A):
+        """
+        :type A: List[int]
+        :rtype: bool
+        """
+        ls = len(A)
+        l, r = 0, ls-1
+        while l + 1 < ls and A[l] < A[l+1]:
+            l += 1
+        while r-1 > 0 and A[r] < A[r-1]:
+            r -= 1
+        return 0 < l == r < ls - 1
+        
+942. DI String Match
+
+class Solution:
+    def diStringMatch(self, S):
+        """
+        :type S: str
+        :rtype: List[int]
+        """
+        ls = len(S)
+        res = [None]*(ls+1)
+        I = [i for i, v in enumerate(S[:ls]) if v == 'I']
+        D = [i for i, v in enumerate(S[:ls]) if v == 'D']
+        if I == []:
+            return list(range(ls, -1, -1))
+        if D == []:
+            return list(range(0, ls+1))
+        
+        if S[-1] == "I":
+            res[-1] = ls
+            for i in range(len(D)):
+                res[D[i]] = ls - 1 - i
+            for j in range(len(I)):
+                res[I[j]] = j
+        else:
+            
+            res[-1] = 0
+            for i in range(len(D)):
+                res[D[i]] = ls - i
+            for j in range(len(I)):
+                res[I[j]] = j + 1
+        return res
+        
+class Solution:
+    def diStringMatch(self, S):
+        """
+        :type S: str
+        :rtype: List[int]
+        """
+        res = []
+        left, right = 0, len(S)
+        for char in S:
+            if char == "I":
+                res.append(left)
+                left += 1
+            else:
+                res.append(right)
+                right -= 1
+        return res + [left]
+        
+944. Delete Columns to Make Sorted
+
+class Solution:
+    def minDeletionSize(self, A):
+        """
+        :type A: List[str]
+        :rtype: int
+        """
+        D = 0
+        for i in range(len(A[0])):
+            tmp = [x[i] for x in A]
+            if not tmp == sorted(tmp):
+                D += 1
+        return D
+        
+class Solution:
+    def minDeletionSize(self, A):
+        """
+        :type A: List[str]
+        :rtype: int
+        """
+        return sum(list(col) != sorted(col) for col in zip(*A))
+        
+946. Validate Stack Sequences
+
+class Solution:
+    def validateStackSequences(self, pushed, popped):
+        """
+        :type pushed: List[int]
+        :type popped: List[int]
+        :rtype: bool
+        """
+        if len(pushed) != len(popped):
+            return False
+        stack = []
+        popped = popped[::-1]
+        for i in range(len(pushed)):
+            stack.append(pushed[i])
+            while stack and stack[-1] == popped[-1]:
+                stack.pop()
+                popped.pop()
+        return stack == []
+        
+class Solution:
+    def validateStackSequences(self, pushed, popped):
+        """
+        :type pushed: List[int]
+        :type popped: List[int]
+        :rtype: bool
+        """
+        stack = []
+        idx = 0
+        for i in range(len(pushed)):
+            stack.append(pushed[i])
+            while stack and stack[-1] == popped[idx]:
+                stack.pop()
+                idx += 1
+        return stack == []
+        
+947. Most Stones Removed with Same Row or Column
+
+from collections import defaultdict, deque
+
+class Solution:
+    def removeStones(self, stones):
+        """
+        :type stones: List[List[int]]
+        :rtype: int
+        """
+        stone_id = set()
+        x_map = defaultdict(list)
+        y_map = defaultdict(list)
+        stone_map = {}
+        for i, (x, y) in enumerate(stones):
+            stone_map[i] = (x, y)
+            x_map[x].append(i)
+            y_map[y].append(i)
+            stone_id.add(i)
+        
+        ans = 0
+        while len(stone_id) > 0:
+            stack = deque()
+            stack.append(stone_id.pop())
+            nums = 0
+            while len(stack) > 0:
+                idx = stack.popleft()
+                nums += 1
+                x, y = stone_map[idx]
+                for i in x_map[x]:
+                    if i in stone_id:
+                        stack.append(i)
+                        stone_id.remove(i)
+                for j in y_map[y]:
+                    if j in stone_id:
+                        stack.append(j)
+                        stone_id.remove(j)
+            ans += nums-1
+        return ans
+       
+from collections import defaultdict, deque
+class Solution:
+    def removeStones(self, stones):
+        """
+        :type stones: List[List[int]]
+        :rtype: int
+        """
+        rows = defaultdict(set)
+        cols = defaultdict(set)
+        for (i, j) in stones:
+            rows[i].add(j)
+            cols[j].add(i)
+            
+        def dfsRow(i):
+            seenR.add(i)
+            for j in rows[i]:
+                if j not in seenC:
+                    dfsCol(j)
+        
+        def dfsCol(j):
+            seenC.add(j)
+            for i in cols[j]:
+                if i not in seenR:
+                    dfsRow(i)
+        
+        seenR, seenC = set(), set()
+        islands = 0
+        for (i, j) in stones:
+            if i not in seenR:
+                islands += 1
+                dfsRow(i)
+                dfsCol(j)
+        return len(stones) - islands  
+        
+class Solution:
+    
+    def removeStones(self, points):
+        UF = {}
+        def find(x):
+            if x != UF[x]:
+                UF[x] = find(UF[x])
+            return UF[x]
+        def union(x, y):
+            UF.setdefault(x, x)
+            UF.setdefault(y, y)
+            UF[find(x)] = find(y)
+
+        for i, j in points:
+            union(i, ~j)
+        return len(points) - len({find(x) for x in UF})
+        
+949. Largest Time for Given Digits
+
+class Solution:
+    def largestTimeFromDigits(self, A):
+        """
+        :type A: List[int]
+        :rtype: str
+        """
+        return max(["%d%d:%d%d" % t for t in itertools.permutations(A) if t[:2] < (2, 4) and t[2] < 6] or [""])
+        
+ import itertools
+class Solution:
+    def largestTimeFromDigits(self, A):
+        """
+        :type A: List[int]
+        :rtype: str
+        """
+        p = list(itertools.permutations(A))
+        res = []
+        for x in p:
+            hour, minute = x[0]*10 + x[1], x[2]*10 + x[3]
+            if hour in range(24) and minute in range(60):
+                res.append((hour, minute))
+        if not res: return ""
+        res.sort(key=lambda y: (-y[0], -y[1]))
+        hour, minute = str(res[0][0]), str(res[0][1])
+        if len(hour) == 1:
+            hour = '0' + hour
+        if len(minute) == 1:
+            minute = '0' + minute
+        return hour + ":" + minute
+        
+951. Flip Equivalent Binary Trees
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def flipEquiv(self, root1, root2):
+        """
+        :type root1: TreeNode
+        :type root2: TreeNode
+        :rtype: bool
+        """
+        if (not root1) and (not root2): return True
+        if (root1 and not root2) or (root2 and not root1): return False
+        if root1.val != root2.val:
+            return False
+        set1, set2 = set(), set()
+        if root1.left:
+            set1.add(root1.left.val)
+        if root1.right:
+            set1.add(root1.right.val)
+        if root2.left:
+            set2.add(root2.left.val)
+        if root2.right:
+            set2.add(root2.right.val)
+            
+        if set1 != set2:
+            return False
+        else:
+            if len(set1) == 2:
+                if root1.left.val == root2.left.val:
+                    return self.flipEquiv(root1.left, root2.left) and self.flipEquiv(root1.right, root2.right)
+                else:
+                    return self.flipEquiv(root1.left, root2.right) and self.flipEquiv(root1.right, root2.left)
+            elif len(set1) == 1:
+                if root1.left:
+                    if root2.left:
+                        return self.flipEquiv(root1.left, root2.left)
+                    else:
+                        return self.flipEquiv(root1.left, root2.right)
+                else:
+                    if root2.left:
+                        return self.flipEquiv(root1.right, root2.left)
+                    else:
+                        return self.flipEquiv(root1.right, root2.right)
+            else:
+                return True
+                
+class Solution(object):
+    def flipEquiv(self, root1, root2):
+        """
+        :type root1: TreeNode
+        :type root2: TreeNode
+        :rtype: bool
+        """
+        if not root1 and not root2:
+            return True
+        elif not root1 or not root2:
+            return False
+        if root1.val != root2.val:
+            return False
+        else:
+            if self.flipEquiv(root1.left, root2.left) and self.flipEquiv(root1.right, root2.right):
+                return True
+            elif self.flipEquiv(root1.left, root2.right) and self.flipEquiv(root1.right, root2.left):
+                return True
+            return False
+            
+952. Largest Component Size by Common Factor
+
+class UnionFind(object):
+    def uf(self, n):  
+        self.uf = [i for i in range(n)]
+        self.size = [1] * n
+        
+    def find(self, x):  
+        while x != self.uf[x]:
+            self.uf[x] = self.uf[self.uf[x]]
+            x = self.uf[x]
+        return self.uf[x]
+
+    def union(self, x, y):  
+        x_root = self.find(x)
+        y_root = self.find(y)
+        if x_root == y_root:
+            return
+        self.uf[x_root] = y_root
+        self.size[y_root] += self.size[x_root]
+        self.size[x_root] = 0
+
+
+class Solution(object):
+    def largestComponentSize(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        
+        
+        uf = UnionFind()
+        uf.uf(len(A))
+        
+        primeToIndex = {} 
+        for i,a in enumerate(A):
+            primes = self.primeFactors(a)
+            for p in primes:
+                if p in primeToIndex:
+                    uf.union(i, primeToIndex[p][-1])
+                primeToIndex[p] = [i]
+                
+        return max(uf.size)
+    
+    def primeFactors(self, n):  # Prime factor decomposition
+            out = set()
+            t = int(math.sqrt(n)) + 1
+            for i in range(2, t+1):
+                if n % i == 0:
+                    out.add(i)
+                    while n % i == 0:
+                        n //= i
+            if n != 1:
+                out.add(n)
+            return out
+            
+class UnionFind(object):
+    def __init__(self, n):
+        self.uf = list(range(n))
+        self.size = [1] * n
+        
+    def find(self, x):  
+        while x != self.uf[x]:
+            self.uf[x] = self.uf[self.uf[x]]
+            x = self.uf[x]
+        return self.uf[x]
+
+    def union(self, x, y):  
+        x_root = self.find(x)
+        y_root = self.find(y)
+        if x_root == y_root:
+            return
+        self.uf[x_root] = y_root
+        self.size[y_root] += self.size[x_root]
+        self.size[x_root] = 0
+
+
+class Solution(object):
+    def largestComponentSize(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        
+    
+        uf = UnionFind(len(A))
+        
+        primeToIndex = {} 
+        for i,a in enumerate(A):
+            primes = self.primeFactors(a)
+            for p in primes:
+                if p in primeToIndex:
+                    uf.union(i, primeToIndex[p])
+                    
+                primeToIndex[p] = i
+                
+        return max(uf.size)
+    
+    def primeFactors(self, n):  # Prime factor decomposition
+            out = set()
+            t = int(math.sqrt(n)) + 1
+            for i in range(2, t+1):
+                if n % i == 0:
+                    out.add(i)
+                    while n % i == 0:
+                        n //= i
+            if n != 1:
+                out.add(n)
+            return out
+            
+953. Verifying an Alien Dictionary
+
+class Solution:
+    def isAlienSorted(self, words, order):
+        """
+        :type words: List[str]
+        :type order: str
+        :rtype: bool
+        """
+        sorted_words = sorted(words, key=lambda x: self.word_to_vector(x, order))
+        return sorted_words == words
+          
+    def word_to_vector(self, word, order):
+        d = dict()
+        for i, char in enumerate(order, 1):
+            d[char] = i
+        vector = [0]*100
+        for i in range(len(word)):
+            vector[i] = d[word[i]]
+        return vector
+        
+954. Array of Doubled Pairs
+
+class Solution:
+    def canReorderDoubled(self, A):
+        """
+        :type A: List[int]
+        :rtype: bool
+        """
+        cnt = collections.Counter(A)
+        sorted_cnt = sorted(cnt.keys(), key=abs)
+        for n in sorted_cnt:
+            if (n==0 and cnt[n]%2) or (cnt[2*n] < cnt[n]):
+                return False
+            else:
+                cnt[2*n] -= cnt[n]
+        return True
+        
+958. Check Completeness of a Binary Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def isCompleteTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        h = self.height(root)
+        if h == 1:
+            return True
+        if h == 2:
+            if root.left:
+                return True
+            else:
+                return False
+        
+        left_height = self.height(root.left)
+        right_height = self.height(root.right)
+        if left_height < right_height:
+            return False
+        elif left_height - right_height > 1:
+            return False
+        elif left_height == right_height:
+            return self.full(root.left) and self.isCompleteTree(root.right)
+        elif left_height == right_height + 1:
+            return self.isCompleteTree(root.left) and self.full(root.right)
+        
+        
+        
+    def height(self, root):
+        if not root:
+            return 0
+        else:
+            return 1 + max(self.height(root.left), self.height(root.right))
+    
+    def full(self, root):
+        if not root:
+            return True
+        h = self.height(root)
+        seq = [root]
+        for i in range(h-1):
+            if len(seq) != 2**i:
+                return False
+            seq = [node for parent in seq for node in (parent.left, parent.right) if node]
+        if len(seq) != 2**(h-1):
+            return False
+        return True
+        
+class Solution:
+    def isCompleteTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        bfs_queue = [root]
+        i = 0
+        while bfs_queue[i]:
+            bfs_queue.append(bfs_queue[i].left)
+            bfs_queue.append(bfs_queue[i].right)
+            i += 1
+        return not any(bfs_queue[i:])
+        
+class Solution:
+    def isCompleteTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        bfs_queue = [root]
+        i = 0
+        while bfs_queue[i]:
+            bfs_queue.append(bfs_queue[i].left)
+            bfs_queue.append(bfs_queue[i].right)
+            i += 1
+        if any(bfs_queue[i:]):
+            return False
+        else:
+            return True
+            
+            
