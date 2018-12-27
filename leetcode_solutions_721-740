@@ -1,0 +1,144 @@
+724. Find Pivot Index
+
+class Solution:
+    def pivotIndex(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums: return -1
+        total, l = sum(nums), 0
+        for i, num in enumerate(nums):
+            if total - num == 2*l:
+                return i
+            else:
+                l += num
+        return -1
+        
+class Solution:
+    def pivotIndex(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums: return -1
+        left, right = 0, sum(nums)
+        for i, v in enumerate(nums):
+            right -= v
+            if left == right:
+                return i
+            left += v
+        return -1
+            
+728. Self Dividing Numbers
+
+class Solution(object):
+    def selfDividingNumbers(self, left, right):
+        """
+        :type left: int
+        :type right: int
+        :rtype: List[int]
+        """
+        count = []
+        for i in range(left, right + 1):
+            if self.check(i):
+                count.append(i)
+        return count
+
+    def check(self, num):
+        string = str(num)
+        if '0' in string:
+            return False
+        else:
+            hold = True
+            for item in string:
+                if num % int(item) != 0:
+                    hold = False
+            return hold
+            
+733. Flood Fill
+
+class Solution:
+    def floodFill(self, image, sr, sc, newColor):
+        """
+        :type image: List[List[int]]
+        :type sr: int
+        :type sc: int
+        :type newColor: int
+        :rtype: List[List[int]]
+        """
+        old_color, m, n = image[sr][sc], len(image), len(image[0])
+        if old_color != newColor:
+            queue = [(sr, sc)]
+            while queue:
+                x, y = queue.pop(0)
+                image[x][y] = newColor
+                for index in [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]:
+                    if 0<=index[0]< m and 0<=index[1]< n and image[index[0]][index[1]] == old_color:
+                        queue.append(index)
+            
+        return image
+        
+class Solution:
+    def floodFill(self, image, sr, sc, newColor):
+        """
+        :type image: List[List[int]]
+        :type sr: int
+        :type sc: int
+        :type newColor: int
+        :rtype: List[List[int]]
+        """
+        old, m, n = image[sr][sc], len(image), len(image[0])
+        if old != newColor:
+            q = collections.deque([(sr, sc)])
+            while q:
+                i, j = q.popleft()
+                image[i][j] = newColor
+                for x, y in ((i-1, j), (i+1, j), (i, j-1), (i, j+1)):
+                    if x in range(m) and y in range(n) and image[x][y] == old:
+                        q.append((x, y))
+        return image
+        
+class Solution:
+    def floodFill(self, image, sr, sc, newColor):
+        """
+        :type image: List[List[int]]
+        :type sr: int
+        :type sc: int
+        :type newColor: int
+        :rtype: List[List[int]]
+        """
+        def dfs(i, j):
+            image[i][j] = newColor
+            for x, y in [(i-1, j), (i, j-1), (i, j+1), (i+1, j)]:
+                if x in range(m) and y in range(n) and image[x][y] == old:
+                    dfs(x, y)
+        old, m, n = image[sr][sc], len(image), len(image[0])
+        if old != newColor:
+            dfs(sr, sc)
+        return image
+        
+738. Monotone Increasing Digits
+
+class Solution:
+    def monotoneIncreasingDigits(self, N):
+        """
+        :type N: int
+        :rtype: int
+        """
+        digits = 1
+        s = str(N)
+        init = N%10
+        i = len(s) - 2
+        while i >= 0:
+            if int(s[i]) > init//10**(digits-1):
+                init = int(s[i])*10**digits - 1
+            else:
+                init += int(s[i]) * 10 ** digits
+            
+            digits += 1
+            i -= 1
+        return init
+        
+        
+            
