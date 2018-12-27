@@ -1,0 +1,458 @@
+682. Baseball Game
+
+class Solution:
+    def calPoints(self, ops):
+        """
+        :type ops: List[str]
+        :rtype: int
+        """
+        res = []
+        
+        for item in ops:
+            if item == 'C':
+                res.pop()
+            elif item == 'D':
+                res.append(2*int(res[-1]))
+            elif item == '+':
+                res.append(int(res[-1] + res[-2]))
+            else:
+                res.append(int(item))
+        return sum(res)
+        
+ class Solution:
+    def calPoints(self, ops):
+        """
+        :type ops: List[str]
+        :rtype: int
+        """
+        stack = []
+        
+        for item in ops:
+            if item == 'C':
+                stack.pop()
+            elif item == 'D':
+                if stack:
+                    stack.append(2*stack[-1])
+            elif item == '+':
+                if len(stack) >= 2:
+                    stack.append(stack[-1] + stack[-2])
+            else:
+                stack.append(int(item))
+        return sum(stack)
+        
+686. Repeated String Match
+
+class Solution:
+    def repeatedStringMatch(self, A, B):
+        """
+        :type A: str
+        :type B: str
+        :rtype: int
+        """
+        size = math.ceil(len(B)/len(A))
+        return size if B in A*size else size + 1 if B in A*(size+1) else -1
+        
+class Solution:
+    def repeatedStringMatch(self, A, B):
+        """
+        :type A: str
+        :type B: str
+        :rtype: int
+        """
+        
+        C = ""
+        for i in range(len(B)//len(A) + 3): 
+            if B in C:
+                return i
+            C += A
+        return -1
+        
+687. Longest Univalue Path
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def longestUnivaluePath(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        max_path = [0]
+        
+        def helper(node):
+            left = (0, None) if node.left is None else helper(node.left)
+            right = (0, None) if node.right is None else helper(node.right)
+            
+            if node.val == left[1] and node.val == right[1]:
+                max_path[0] = max(left[0] + right[0] + 1, max_path[0])
+                current_max = max(left[0], right[0]) + 1
+            elif node.val == left[1]:
+                max_path[0] = max(left[0] + 1, max_path[0])
+                current_max = left[0] + 1
+            elif node.val == right[1]:
+                max_path[0] = max(right[0] + 1, max_path[0])
+                current_max = right[0] + 1
+            else:
+                current_max = 1
+            
+            return (current_max, node.val)
+        
+        if root:
+            _ = helper(root)
+        
+        return max_path[0] if max_path[0] == 0 else max_path[0] - 1
+        
+class Solution(object):
+    def longestUnivaluePath(self, root):
+        self.ans = 0
+
+        def arrow_length(node):
+            if not node: return 0
+            left_length = arrow_length(node.left)
+            right_length = arrow_length(node.right)
+            left_arrow = right_arrow = 0
+            if node.left and node.left.val == node.val:
+                left_arrow = left_length + 1
+            if node.right and node.right.val == node.val:
+                right_arrow = right_length + 1
+            self.ans = max(self.ans, left_arrow + right_arrow)
+            return max(left_arrow, right_arrow)
+
+        arrow_length(root)
+        return self.ans
+        
+class Solution(object):
+    def longestUnivaluePath(self, root):
+        return self.moreinfo(root)[0]
+    
+    def moreinfo(self, root):
+        if not root:
+            return (0, 0, 0)
+        Longest, Lc, Rc = 0, 0, 0
+        LongestL, LLc, LRc = self.moreinfo(root.left)
+        LongestR, RLc, RRc = self.moreinfo(root.right)
+        if root.left and root.left.val == root.val:
+            Lc = 1 + max(LLc, LRc)
+        if root.right and root.right.val == root.val:
+            Rc = 1 + max(RLc, RRc)
+        return max(Lc+Rc, LongestL, LongestR), Lc, Rc
+        
+690. Employee Importance
+
+"""
+# Employee info
+class Employee:
+    def __init__(self, id, importance, subordinates):
+        # It's the unique id of each node.
+        # unique id of this employee
+        self.id = id
+        # the importance value of this employee
+        self.importance = importance
+        # the id of direct subordinates
+        self.subordinates = subordinates
+"""
+class Solution:
+    def getImportance(self, employees, id):
+        """
+        :type employees: Employee
+        :type id: int
+        :rtype: int
+        """
+        
+        e_dict = dict()
+        for e in employees:
+            e_dict[e.id] = e
+        
+        def dfs(root, e_dict):
+            if not root:
+                return 0
+            else:
+                return root.importance + sum(dfs(e_dict[sub], e_dict) for sub in root.subordinates)
+        
+        return dfs(e_dict[id], e_dict)
+        
+class Solution:
+    def getImportance(self, employees, id):
+        """
+        :type employees: Employee
+        :type id: int
+        :rtype: int
+        """
+        
+        dic = {employee.id:employee for employee in employees}
+        def val(employee):
+            return employee.importance + sum(val(dic[sub]) for sub in employee.subordinates)
+        return val(dic[id])
+        
+class Solution:
+    def getImportance(self, employees, id):
+        """
+        :type employees: Employee
+        :type id: int
+        :rtype: int
+        """
+        
+        emps = {employee.id:employee for employee in employees}
+        dfs = lambda id: sum([dfs(sub_id) for sub_id in emps[id].subordinates]) + emps[id].importance
+        
+        return dfs(id)
+        
+692. Top K Frequent Words
+
+class Solution:
+    def topKFrequent(self, words, k):
+        """
+        :type words: List[str]
+        :type k: int
+        :rtype: List[str]
+        """
+        aux_dict = dict()
+        for item in words:
+            if item not in aux_dict:
+                aux_dict[item] = 1
+            else:
+                aux_dict[item] += 1
+        freq = sorted([v for v in aux_dict.values()], key=lambda x: -x)
+        top_k = freq[:k]
+        aux_set = set()
+        
+        res = []
+        for v in top_k:
+            
+            if v not in aux_set:
+                aux_set.add(v)
+                res += sorted([k for k, vv in aux_dict.items() if vv == v])
+        return res[:k]
+        
+class Solution:
+    def topKFrequent(self, words, k):
+        """
+        :type words: List[str]
+        :type k: int
+        :rtype: List[str]
+        """
+        aux_dict = collections.Counter()
+        for item in words:
+            aux_dict[item] += 1
+        freq = sorted([v for v in aux_dict.values()], key=lambda x: -x)
+        top_k = freq[:k]
+        aux_set = set()
+        
+        res = []
+        for v in top_k:
+            
+            if v not in aux_set:
+                aux_set.add(v)
+                res += sorted([k for k, vv in aux_dict.items() if vv == v])
+        return res[:k]
+        
+class Solution:
+    def topKFrequent(self, words, k):
+        """
+        :type words: List[str]
+        :type k: int
+        :rtype: List[str]
+        """
+        wocount = collections.Counter(words)
+        H = []
+        for word,count in wocount.items():
+            heapq.heappush(H, (-count, word))        
+        return [word for count,word in heapq.nsmallest(k, H)]
+        
+class Solution:
+    def topKFrequent(self, words, k):
+        """
+        :type words: List[str]
+        :type k: int
+        :rtype: List[str]
+        """
+        count = collections.Counter(words)
+        return heapq.nsmallest(k, count.keys(), key=lambda x: (-count[x], x))
+        
+693. Binary Number with Alternating Bits
+
+class Solution:
+    def hasAlternatingBits(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        aux_list = self.to_reverse_binary(n)
+        if len(aux_list) < 2:
+            return True
+        found = False
+        i = 0
+        while i < len(aux_list)-1 and not found:
+            if aux_list[i] == aux_list[i+1]:
+                found = True
+            else:
+                i += 1
+        return not found
+      
+    def to_reverse_binary(self, n):
+        res = []
+        while n > 0:
+            res.append(n%2)
+            n //= 2
+        return res
+                
+class Solution:
+    def hasAlternatingBits(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        cur = n % 2
+        n //= 2
+        found = False
+        while n > 0 and not found:
+            rem = n % 2
+            if rem == cur:
+                found = True
+            else:
+                cur = rem
+                n //= 2
+        return not found
+        
+697. Degree of an Array
+
+class Solution(object):
+    def findShortestSubArray(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        dictArr = dict()
+        for idx, elem in enumerate(nums):
+            if elem in dictArr.keys():
+                dictArr[elem]['freq'] += 1
+                dictArr[elem]['index'].append(idx)
+            else:
+                dictArr[elem] = {}
+                dictArr[elem]['freq'] = 1
+                dictArr[elem]['index'] = []
+                dictArr[elem]['index'].append(idx)
+        
+        maxdegree = 0
+        for key in dictArr.keys():
+            if dictArr[key]['freq'] >= maxdegree:
+                maxdegree = dictArr[key]['freq']
+                
+        smallSubArr = 50001
+        for key in dictArr.keys():
+            if dictArr[key]['freq'] == maxdegree:
+                indexlist = dictArr[key]['index']
+                ls = len(indexlist)
+                begin = indexlist[0]
+                end = indexlist[ls-1]
+                count = end - begin + 1
+                if count < smallSubArr:
+                    smallSubArr = count
+        return smallSubArr
+        
+class Solution:
+    def findShortestSubArray(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        aux_dict = dict()
+        for index, key in enumerate(nums):
+            if key not in aux_dict.keys():
+                aux_dict[key] = [index]
+            else:
+                aux_dict[key].append(index)
+        
+        max_freq = 0
+        for key in aux_dict.keys():
+            if len(aux_dict[key]) > max_freq:
+                max_freq = len(aux_dict[key])
+        
+        minlength = 50001
+        for key in aux_dict.keys():
+            if len(aux_dict[key]) == max_freq:
+                indices_list = aux_dict[key]
+                length = max(indices_list) - min(indices_list) + 1
+                if length < minlength:
+                    minlength = length
+        return minlength
+        
+class Solution:
+    def findShortestSubArray(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        # using a dict to have k:v pairs where k belongs to unique elements of nums and
+        # v is the corresponding frequency of k.
+        
+        aux_dict = dict()
+        for item in nums:
+            if item not in aux_dict:
+                aux_dict[item] = 1
+            else:
+                aux_dict[item] += 1
+        
+        max_freq = max(aux_dict.values())
+        
+        min_len = float('inf')
+        for key in aux_dict.keys():
+            if aux_dict[key] == max_freq:
+                length = (len(nums) - nums[::-1].index(key) - 1) - nums.index(key) + 1
+                min_len = min([length, min_len])
+        return min_len
+        
+  698. Partition to K Equal Sum Subsets
+  
+  class Solution:
+    def canPartitionKSubsets(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: bool
+        """
+    
+        nums.sort(reverse=True) # Game Changer 1
+        buck, kSum = [0] * k, sum(nums) // k
+        def dfs(idx):
+            if idx == len(nums): return len(set(buck)) == 1
+            for i in range(k):
+                buck[i] += nums[idx]
+                if buck[i] <= kSum and dfs(idx + 1): return True
+                buck[i] -= nums[idx]
+                if buck[i] == 0: break # Game Changer 2
+            return False
+        return dfs(0)
+        
+700. Search in a Binary Search Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def searchBST(self, root, val):
+        """
+        :type root: TreeNode
+        :type val: int
+        :rtype: TreeNode
+        """
+        trav = root
+        while trav:
+            if trav.val == val:
+                return trav
+            elif trav.val < val:
+                trav = trav.right
+            else:
+                trav = trav.left
+        return
+        
+        
