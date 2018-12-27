@@ -1,0 +1,51 @@
+961. N-Repeated Element in Size 2N Array
+
+class Solution:
+    def repeatedNTimes(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        d = collections.Counter(A)
+        n = len(A)
+        for key in d:
+            if d[key] == n//2:
+                return key
+                
+ class Solution:
+    def repeatedNTimes(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        d = dict()
+        for num in A:
+            if num not in d:
+                d[num] = 1
+            else:
+                d[num] += 1
+        for key in d:
+            if d[key] == len(A)//2:
+                return key
+                
+ class Solution:
+    def repeatedNTimes(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        return (sum(A) - sum(set(A)))//(len(A)//2 - 1)
+        
+from random import sample
+class Solution:
+    def repeatedNTimes(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        while True:
+            s = sample(A, 2)
+            if s[0] == s[1]:
+                return s[0]
+                
+                
