@@ -1,0 +1,225 @@
+821. Shortest Distance to a Character
+
+class Solution:
+    def shortestToChar(self, S, C):
+        """
+        :type S: str
+        :type C: str
+        :rtype: List[int]
+        """
+        res = []
+        index = [i for i, v in enumerate(S) if v==C]
+        for i, v in enumerate(S):
+            t = min([abs(ind-i) for ind in index])
+            res.append(t)
+        return res
+        
+class Solution:
+    def shortestToChar(self, S, C):
+        """
+        :type S: str
+        :type C: str
+        :rtype: List[int]
+        """
+        res1 = []
+        closest = -float('inf')
+        for i, char in enumerate(S):
+            if char == C:
+                closest = i
+            res1.append(i-closest)
+        
+        res2 = []
+        closest = float('inf')
+        for i in range(len(S)-1, -1, -1):
+            if S[i] == C:
+                closest = i
+            res2.insert(0, closest-i)
+            
+        return [min(res1[i], res2[i]) for i in range(len(S))]
+        
+class Solution:
+    def shortestToChar(self, S, C):
+        """
+        :type S: str
+        :type C: str
+        :rtype: List[int]
+        """
+        res1 = []
+        closest = -float('inf')
+        for i, char in enumerate(S):
+            if char == C:
+                closest = i
+            res1.append(i-closest)
+        
+        
+        closest = float('inf')
+        for i in range(len(S)-1, -1, -1):
+            if S[i] == C:
+                closest = i
+            res1[i] = min(res1[i], closest-i)
+            
+        return res1
+        
+824. Goat Latin
+
+class Solution:
+    def toGoatLatin(self, S):
+        """
+        :type S: str
+        :rtype: str
+        """
+        S_split = S.split(" ")
+        check = "aoeiuAOEIU"
+        
+        for i in range(len(S_split)):
+            if S_split[i][0] in check:
+                S_split[i] += 'ma'
+                S_split[i] += "a"*(i+1)
+                S_split[i] += " "
+            else:
+                temp = S_split[i][0]
+                S_split[i] = S_split[i][1:]
+                S_split[i] += temp
+                S_split[i] += "ma"
+                S_split[i] += "a"*(i+1)
+                S_split[i] += " "
+        string = ""
+        for item in S_split:
+            string += item
+            
+        return string.rstrip()
+        
+830. Positions of Large Groups
+
+class Solution(object):
+    def largeGroupPositions(self, S):
+        """
+        :type S: str
+        :rtype: List[List[int]]
+        """
+        if len(S) < 3:
+            return []
+        
+        lst = [[S[0], 1],]
+        for i in range(1, len(S)):
+            if S[i] == S[i-1]:
+                lst[-1][1] += 1
+            else:
+                lst.append([S[i], 1])
+        large_letters =[]
+        for index, item in enumerate(lst):
+            if item[1] >= 3:
+                large_letters.append([item, index])
+        lst_2 = []
+        for item in lst:
+            lst_2.append(item[1])
+        
+        res = []
+        for i in range(len(large_letters)):
+            res.append([sum(lst_2[:large_letters[i][1]]), sum(lst_2[:large_letters[i][1]]) 
+                + large_letters[i][0][1]-1])
+        return res
+        
+832. Flipping an Image
+
+class Solution(object):
+    def flipAndInvertImage(self, A):
+        """
+        :type A: List[List[int]]
+        :rtype: List[List[int]]
+        """
+        m = len(A)
+        n = len(A[0])
+        
+        for i in range(m):
+            A[i] = A[i][::-1]
+            tmp = [1-item for item in A[i]]
+            A[i] = tmp
+        return A
+        
+836. Rectangle Overlap
+
+class Solution:
+    def isRectangleOverlap(self, rec1, rec2):
+        """
+        :type rec1: List[int]
+        :type rec2: List[int]
+        :rtype: bool
+        """
+        
+        
+        if rec1[0] > rec2[0]:
+            rec1, rec2 = rec2, rec1
+        if rec1[2] <= rec2[0] or rec1[3] <= rec2[1]:
+            return False
+        return min(rec1[1], rec1[3]) < rec2[3]
+        
+class Solution:
+    def isRectangleOverlap(self, rec1, rec2):
+        """
+        :type rec1: List[int]
+        :type rec2: List[int]
+        :rtype: bool
+        """
+        if rec1[0] > rec2[0]:
+            rec1, rec2 = rec2, rec1
+        if rec1[2] <= rec2[0] or rec1[1] >= rec2[3] or rec1[3] <= rec2[1]:
+            return False
+        else:
+            return True
+            
+class Solution:
+    def isRectangleOverlap(self, rec1, rec2):
+        """
+        :type rec1: List[int]
+        :type rec2: List[int]
+        :rtype: bool
+        """
+        if rec1[0] > rec2[0]:
+            rec1, rec2 = rec2, rec1
+        if (rec1[2] <= rec2[0] or rec1[1] >= rec2[3] or rec1[3] <= rec2[1]):
+            return False
+        else:
+            return True
+            
+840. Magic Squares In Grid
+
+class Solution:
+    def numMagicSquaresInside(self, grid):
+        """
+        :type grid: List[List[int]]
+        :rtype: int
+        """
+        res = 0
+        m = len(grid)-3+1
+        n = len(grid[0])-3+1
+        for i in range(m):
+            for j in range(n):
+                t = [x[j:j+3] for x in grid[i:i+3]]
+                if self.checker(t):
+                    res += 1
+        return res
+        
+        
+    def checker(self, grid):
+        m = len(grid)
+        n = len(grid[0])
+        if m != n:
+            return False
+        elif m != 3:
+            return False
+        else:
+            aux_set = set(range(1, 10))
+            X = set([num for row in grid for num in row])
+            if aux_set != X:
+                return False
+            else:
+                sum_1 = sum(grid[0]); sum_2 = sum(grid[1]); sum_3 = sum(grid[2])
+                sum_4 = sum([grid[i][0] for i in range(3)])
+                sum_5 = sum([grid[i][1] for i in range(3)])
+                sum_6 = sum([grid[i][2] for i in range(3)])
+                sum_7 = sum([grid[i][i] for i in range(3)])
+                sum_8 = sum([grid[i][2-i] for i in range(3)])
+                return sum_1 == sum_2 == sum_3 == sum_4 == sum_5 == sum_6 == sum_7 == sum_8
+                
+                
