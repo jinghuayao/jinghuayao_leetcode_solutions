@@ -1,0 +1,435 @@
+921. Minimum Add to Make Parentheses Valid
+
+class Solution:
+    def minAddToMakeValid(self, S):
+        """
+        :type S: str
+        :rtype: int
+        """
+        stack = []
+        for element in S:
+            if element == "(":
+                stack.append(element)
+            else:
+                if stack and stack[-1]=="(":
+                    stack.pop()
+                else:
+                    stack.append(element)
+        return len(stack)
+        
+class Solution:
+    def minAddToMakeValid(self, S):
+        """
+        :type S: str
+        :rtype: int
+        """
+        closes = 0
+        opens = 0
+        for char in S:
+            if char == '(':
+                closes += 1
+            else:
+                closes -= 1
+                if closes < 0:
+                    opens -= closes
+                    closes = 0
+        return opens + closes
+        
+922. Sort Array By Parity II
+
+class Solution:
+    def sortArrayByParityII(self, A):
+        """
+        :type A: List[int]
+        :rtype: List[int]
+        """
+        even = [x for x in A if x%2==0]
+        odd = [x for x in A if x%2!=0]
+        res = []
+        for i in range(len(A)):
+            if i %2 == 0:
+                res.append(even.pop())
+            else:
+                res.append(odd.pop())
+        return res
+        
+class Solution:
+    def sortArrayByParityII(self, A):
+        """
+        :type A: List[int]
+        :rtype: List[int]
+        """
+        A.sort(key=lambda x: -(x%2))
+        for i in range(0, len(A)//2, 2):
+            A[i], A[-(i+1)] = A[-(i+1)], A[i]
+        return A
+        
+class Solution:
+    def sortArrayByParityII(self, A):
+        """
+        :type A: List[int]
+        :rtype: List[int]
+        """
+        A.sort(key=lambda x: (x%2))
+        for i in range(1, len(A)//2, 2):
+            A[i], A[-(i+1)] = A[-(i+1)], A[i]
+        return A
+        
+925. Long Pressed Name
+
+class Solution:
+    def isLongPressedName(self, name, typed):
+        """
+        :type name: str
+        :type typed: str
+        :rtype: bool
+        """
+        m = len(name)
+        n = len(typed)
+        
+        dp = [[False]*n for _ in range(m)]
+        dp[0][0] = (name[0] == typed[0])
+        for j in range(1, n):
+            if typed[j] == name[0]:
+                dp[0][j] = dp[0][j-1]
+        for i in range(1, m):
+            for j in range(i, n):
+                if typed[j] == name[i]:
+                    dp[i][j] = (dp[i-1][j-1] or dp[i][j-1])
+                
+        return dp[-1][-1]
+        
+ class Solution:
+    def isLongPressedName(self, name, typed):
+        """
+        :type name: str
+        :type typed: str
+        :rtype: bool
+        """
+        m = len(name)
+        n = len(typed)
+        i, j = 0, 0
+        while i < m and j < n:
+            if name[i] == typed[j]:
+                i += 1
+                j += 1
+            elif typed[j] == typed[j-1]:
+                j += 1
+            else:
+                return False
+        return True if i == m else False
+        
+class Solution:
+    def isLongPressedName(self, name, typed):
+        """
+        :type name: str
+        :type typed: str
+        :rtype: bool
+        """
+        if name[0] != typed[0]:
+            return False
+        i, j = 1, 1
+        while i < len(name) and j < len(typed):
+            if name[i] == typed[j]:
+                i, j = i+1, j+1
+            elif typed[j] == name[i-1]:
+                j += 1
+            else:
+                return False
+        if i < len(name):
+            return False
+        else:
+            for j in range(j, len(typed)):
+                if typed[j] != name[i-1]:
+                    return False
+            return True
+            
+926. Flip String to Monotone Increasing
+
+from collections import deque
+class Solution:
+    def minFlipsMonoIncr(self, S):
+        """
+        :type S: str
+        :rtype: int
+        """
+        n = len(S)
+        cnt_0 = S.count("0")
+        cnt_1 = 0
+        res = n - cnt_0
+        for i in range(n):
+            if S[i] == '0':
+                cnt_0 -= 1
+            else:
+                res = min(res, cnt_0 + cnt_1)
+                cnt_1 += 1
+        return res
+        
+from collections import deque
+class Solution:
+    def minFlipsMonoIncr(self, S):
+        """
+        :type S: str
+        :rtype: int
+        """
+        n = len(S)
+        cnt_0 = S.count("0")
+        cnt_1 = 0
+        res = n - cnt_0
+        for i in range(n):
+            if S[i] == '0':
+                cnt_0 -= 1
+            else:
+                res = min(res, cnt_0 + cnt_1)
+                cnt_1 += 1
+        return res
+        
+from collections import deque
+class Solution:
+    def minFlipsMonoIncr(self, S):
+        """
+        :type S: str
+        :rtype: int
+        """
+        n = len(S)
+        L1 = [0]*n
+        R0 = [0]*n
+        for i in range(1, n):
+            if S[i-1]=='1':
+                L1[i] = L1[i-1] + 1
+            else:
+                L1[i] = L1[i-1]
+                
+        for j in range(n-2, -1, -1):
+            if S[j+1] == '0':
+                R0[j] = R0[j+1] + 1
+            else:
+                R0[j] = R0[j+1]
+                
+        return min([a+b for a, b in zip(L1, R0)])
+        
+929. Unique Email Addresses
+
+class Solution:
+    def numUniqueEmails(self, emails):
+        """
+        :type emails: List[str]
+        :rtype: int
+        """
+        aux_set = set()
+        for email in emails:
+            address = self.genuine(email)
+            aux_set.add(address)
+        return len(aux_set)
+   
+    def genuine(self, email):
+        email_local, email_domain = email.split("@")
+        email_local = email_local.split("+")[0]
+        email_local = "".join(email_local.split("."))
+        return "".join([email_local, "@", email_domain])
+        
+class Solution(object):
+    def numUniqueEmails(self, emails):
+        """
+        :type emails: List[str]
+        :rtype: int
+        """
+        s= set()
+        for item in emails:
+            local,domain = item.split("@")
+            plus = local.find("+")
+            if plus != -1:
+                local = local[:plus]
+            local = local.replace(".","")
+            s.add(local + "@"+ domain)
+        return len(s)
+
+931. Minimum Falling Path Sum
+
+class Solution:
+    def minFallingPathSum(self, A):
+        """
+        :type A: List[List[int]]
+        :rtype: int
+        """
+        m = len(A)
+        n = len(A[0])
+        dp = [[float('inf')]*(n+2) for _ in range(m)]
+        for j in range(1, 1+n):
+            dp[0][j] = A[0][j-1]
+        for i in range(1, m):
+            for j in range(1, n+1):
+                dp[i][j] = A[i][j-1] + min(dp[i-1][j], dp[i-1][j-1], dp[i-1][j+1])
+        return min(dp[-1])
+        
+class Solution:
+    def minFallingPathSum(self, A):
+        """
+        :type A: List[List[int]]
+        :rtype: int
+        """
+        m = len(A)
+        n = len(A[0])
+        for i in range(1, m):
+            for j in range(n):
+                A[i][j] += min(A[i-1][j and j-1:j+2])
+        return min(A[-1])
+        
+933. Number of Recent Calls
+
+from collections import deque
+class RecentCounter:
+
+    def __init__(self):
+        self.pings = deque()
+    
+        
+
+    def ping(self, t):
+        """
+        :type t: int
+        :rtype: int
+        """
+        while self.pings and t - self.pings[0] > 3000:
+            self.pings.popleft()
+        self.pings.append(t)
+        return len(self.pings)
+        
+
+
+# Your RecentCounter object will be instantiated and called as such:
+# obj = RecentCounter()
+# param_1 = obj.ping(t)
+
+934. Shortest Bridge
+
+class Solution:
+    def shortestBridge(self, A):
+        """
+        :type A: List[List[int]]
+        :rtype: int
+        """
+        
+        island_1 = set()
+        island_2 = set()
+        
+        m = len(A)
+        n = len(A[0])
+        
+        done = False
+        for i in range(m):
+            for j in range(n):
+                if A[i][j] == 1:
+                    self.dfs(A, i, j, m, n, island_1, 2)
+                    done = True
+                    break
+            if done:
+                break
+                
+        done = False
+        for i in range(m):
+            for j in range(n):
+                if A[i][j] == 1 and (i, j) not in island_1:
+                    self.dfs(A, i, j, m, n, island_2, 3)
+                    done = True
+                    break
+            if done:
+                break
+                    
+        min_dist = m + n # greater than the largest possible dist
+        for p in island_1: 
+            for q in island_2:
+                if q[1] == p[1]: # cannot be both equal
+                    dist = max(abs(q[0] - p[0]) -1, 0)
+                elif q[0] == p[0]:
+                    dist = max(abs(q[1] - p[1]) -1, 0)
+                else:
+                    dist = max(abs(q[0] - p[0]) -1, 0) + max(abs(q[1] - p[1]) -1, 0) + 1
+                    
+                if dist == 1: # lucky
+                    return 1
+                min_dist = min(min_dist, dist)
+                
+        return min_dist
+    
+    def dfs(self, A, i, j, m, n, island, change):
+        # get all points belonging to one island
+        # add to the set only if they are bounadary points
+        island.add((i, j))
+        A[i][j] = change
+        count = 0
+        seen = 0
+        for (u, v) in [(i-1, j), (i, j+1), (i+1, j), (i, j-1)]:
+            if 0 <=u< m and 0 <= v < n:
+                if A[u][v] == change:
+                    seen += 1
+                if A[u][v] == 1 and (u, v) not in island:
+                    self.dfs(A, u, v, m, n, island, change)
+                    count += 1
+        if count + seen == 4: # surrounded
+            island.remove((i, j))
+            
+ 937. Reorder Log Files
+ 
+ class Solution:
+    def reorderLogFiles(self, logs):
+        """
+        :type logs: List[str]
+        :rtype: List[str]
+        """
+        digit_logs = []
+        letter_logs = []
+        for log in logs:
+            aux_list, check = self.check_letter_or_digit(log)
+            if check == True:
+                digit_logs.append(log)
+            else:
+                letter_logs.append([log, aux_list[1:] + [aux_list[0]]])
+        
+        letter_logs = sorted(letter_logs, key=lambda x:x[1])
+        
+        letter_logs = [x[0] for x in letter_logs]
+        return letter_logs + digit_logs
+        
+class Solution:
+    def reorderLogFiles(self, logs):
+        """
+        :type logs: List[str]
+        :rtype: List[str]
+        """
+        digit_logs = []
+        letter_logs = []
+        for log in logs:
+            aux_list, check = self.check_letter_or_digit(log)
+            if check == True:
+                digit_logs.append(log)
+            else:
+                letter_logs.append([log, aux_list[1:] + [aux_list[0]]])
+        
+        letter_logs = sorted(letter_logs, key=lambda x:x[1])
+        
+        letter_logs = [x[0] for x in letter_logs]
+        return letter_logs + digit_logs
+   
+    def check_letter_or_digit(self, string):
+        return string.split(), string.split()[1].isdigit()      
+        
+class Solution:
+    def reorderLogFiles(self, logs):
+        """
+        :type logs: List[str]
+        :rtype: List[str]
+        """
+        digit_logs = []
+        letter_logs = []
+        for element in logs:
+            words = element.split()
+            if words[1].isnumeric():
+                digit_logs.append(element)
+            else:
+                letter_logs.append(element)
+        letter_logs = sorted(letter_logs, key=lambda x: x[x.find(" "):])
+        
+        return letter_logs + digit_logs
+        
+
