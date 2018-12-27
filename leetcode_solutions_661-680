@@ -1,0 +1,375 @@
+661. Image Smoother
+
+class Solution:
+    def imageSmoother(self, M):
+        """
+        :type M: List[List[int]]
+        :rtype: List[List[int]]
+        """
+        m, n = len(M), len(M[0])
+        res = [[0]*n for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                tmp = M[i][j]
+                count = 1
+                indices = [(i, j-1), (i, j+1), (i-1, j), (i-1, j-1), (i-1, j+1), (i+1, j), (i+1, j-1), (i+1, j+1)]
+                for idx in indices:
+                    if idx[0] in range(m) and idx[1] in range(n):
+                        tmp += M[idx[0]][idx[1]]
+                        count += 1
+                res[i][j] = tmp//count
+        return res
+        
+662. Maximum Width of Binary Tree
+
+class Solution:
+    def widthOfBinaryTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return 0
+        q = [(root, 1)]
+        res = 1
+        
+        while q:
+            level = []
+            for i in range(len(q)):
+                node = q.pop(0)
+                if node[0].left:
+                    level.append((node[0].left, node[1]*2))
+                if node[0].right:
+                    level.append((node[0].right, node[1]*2 + 1))
+            if level:
+                res = max(res, level[-1][1]-level[0][1]+1)
+            q = level
+        return res
+        
+class Solution:
+    def widthOfBinaryTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return 0
+        queue = [(root, 1)]
+        maxwidth = 1
+        temp_queue = []
+        
+        while queue:
+            node, coord = queue.pop(0)
+            if node.left:
+                temp_queue.append((node.left, 2*coord))
+            if node.right:
+                temp_queue.append((node.right, 2*coord+1))
+            if not queue:
+                if temp_queue:
+                    width = temp_queue[-1][1] - temp_queue[0][1] + 1
+                    maxwidth = max(maxwidth, width)
+                    queue = temp_queue
+                    temp_queue = []
+        return maxwidth
+        
+class Solution(object):
+    def widthOfBinaryTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        
+        width = 0
+        level = [(1, root)]
+        while level:
+            width = max(width, level[-1][0] - level[0][0] + 1)
+            level = [kid
+                 for number, node in level
+                 for kid in enumerate((node.left, node.right), 2 * number)
+                 if kid[1]]
+        return width
+        
+ 665. Non-decreasing Array
+ 
+ class Solution:
+    def checkPossibility(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        ls = len(nums)
+        if ls <= 2:
+            return True
+        else:
+            for i in range(1, ls):
+                if nums[i] < nums[i-1]:
+                    test1 = nums[:i] + nums[i+1:]
+                    test2 = nums[:i-1] + nums[i:]
+                    if test1 == sorted(test1) or test2 == sorted(test2):
+                        return True
+                    else:
+                        return False
+        return True
+        
+669. Trim a Binary Search Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+
+    def trimBST(self, root, L, R):
+        self.L, self.R = L, R
+        conformed_root = self._conformed_node(root)
+        if not conformed_root:
+            return
+
+        unused = [conformed_root]
+        while unused:
+            node = unused.pop()
+            node.left = self._conformed_node(node.left)
+            node.right = self._conformed_node(node.right)
+            unused.extend(filter(None, [node.left, node.right]))
+        return conformed_root
+
+    def _conformed_node(self, node):
+        """find a sub root which is in [L, R]"""
+        L, R = self.L, self.R
+        while node:
+            if node.val < L:
+                node = node.right
+            elif node.val > R:
+                node = node.left
+            else:
+                return node
+                
+671. Second Minimum Node In a Binary Tree
+
+class Solution:
+    def findSecondMinimumValue(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        minimum = None
+        stack = [root]
+        while stack:
+            current = stack.pop()
+            if current.val != root.val:
+                minimum = min(minimum or current.val, current.val)
+            elif current.left:
+                stack += [current.left, current.right]
+        return minimum or -1
+        
+class Solution:
+    def findSecondMinimumValue(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        res = self.helper(root, root.val)
+        return res if res != float('inf') else -1
+    
+    def helper(self, root, prev_val):
+        if not root:
+            return float('inf')
+        if root.val > prev_val:
+            return root.val
+        
+        return min(self.helper(root.left, root.val), self.helper(root.right, root.val))
+        
+class Solution:
+    def findSecondMinimumValue(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root:
+            return -1
+        elif not root.left: # same as: not root.left and not root.right for this problem
+            return -1
+        elif root.left.val != root.right.val:
+            if root.left.val < root.right.val:
+                tmp = self.findSecondMinimumValue(root.left)
+                if tmp != -1:
+                    return min(tmp, root.right.val)
+                else:
+                    return root.right.val
+            else:
+                tmp = self.findSecondMinimumValue(root.right)
+                if tmp != -1:
+                    return min(tmp, root.left.val)
+                else:
+                    return root.left.val
+        
+        else:
+            r = self.findSecondMinimumValue(root.right)
+            l = self.findSecondMinimumValue(root.left)
+            if l == -1 and r == -1:
+                return -1
+            elif l == -1:
+                return r
+            elif r == -1:
+                return l
+            else:
+                return min(l, r)
+                
+class Solution:
+    def findSecondMinimumValue(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.m = root.val
+        self.sm = float('inf')
+        
+        def dfs(root):
+            if not root:
+                return
+            elif root.val != self.m and root.val < self.sm:
+                self.sm = root.val
+            if root.left:
+                dfs(root.left)
+                dfs(root.right)
+        dfs(root)
+        return self.sm if self.sm != float('inf') else -1
+        
+ 674. Longest Continuous Increasing Subsequence
+ 
+ class Solution:
+    def findLengthOfLCIS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        overall = 1
+        local = 1
+        i = 1
+        while i < len(nums):
+            if nums[i] > nums[i-1]:
+                local += 1    
+            else:
+                overall = max(overall, local)
+                local = 1
+            i += 1
+        return max(overall, local)
+        
+class Solution:
+    def findLengthOfLCIS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        global_length = 1
+        local_length = 1
+        i = 1
+        while i < len(nums):
+            if nums[i] > nums[i-1]:
+                local_length += 1    
+            else:
+                global_length = max(global_length, local_length)
+                local_length = 1
+            i += 1
+        return max(global_length, local_length)
+        
+678. Valid Parenthesis String
+
+class Solution:
+    def checkValidString(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        stack = []
+    
+        for i in s:
+            if i !=')':
+                stack.append(i)
+            else:
+                if '(' in stack:
+                    b = stack[::-1]
+                    b.remove('(')
+                    stack = b[::-1]
+                else:
+                    if stack == []:
+                        return False
+                    else:
+                        stack.pop()
+        if stack == []:
+            return True
+        ans = []
+        for ele in stack[::-1]:
+            if ele == '*':
+                ans.append(ele)
+            else:
+                if ans !=[]:
+                    ans.pop()
+                else: 
+                    return False
+                
+        return '(' not in ans
+        
+680. Valid Palindrome II
+
+class Solution:
+    def validPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        ls = len(s)
+        i, j = 0, ls-1
+
+        while i < j:
+            if s[i] == s[j]:
+                i += 1
+                j -= 1
+            else:
+                break
+        if i >= j:
+            return True
+        return s[i+1:j+1] == s[i+1:j+1][::-1] or s[i:j] == s[i:j][::-1]
+        
+class Solution:
+    def validPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        ls = len(s)
+        i, j = 0, ls-1
+
+        while i < j:
+            if s[i] != s[j]:
+                return s[i+1:j+1] == s[i+1:j+1][::-1] or s[i:j] == s[i:j][::-1]
+            else:
+                i, j = i+1, j-1
+        return True
+        
+ class Solution:
+    def validPalindrome(self, s, allowed_deletions=1):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        ls = len(s)
+        i, j = 0, ls-1
+        
+        while i < j:
+            if s[i] != s[j]:
+                if not allowed_deletions:
+                    return False
+                else:
+                    return self.validPalindrome(s[i:j], allowed_deletions-1) or self.validPalindrome(s[i+1:j+1], allowed_deletions-1)
+            else:
+                i, j = i+1, j-1
+        return True
+        
