@@ -1,0 +1,352 @@
+844. Backspace String Compare
+
+class Solution:
+    def backspaceCompare(self, S, T):
+        """
+        :type S: str
+        :type T: str
+        :rtype: bool
+        """
+        S_stack = []
+        T_stack = []
+        
+        for item in S:
+            if item != "#":
+                S_stack.append(item)
+            else:
+                if S_stack:
+                    S_stack.pop()
+        
+        for item in T:
+            if item != "#":
+                T_stack.append(item)
+            else:
+                if T_stack:
+                    T_stack.pop()
+        
+        return S_stack == T_stack
+        
+847. Shortest Path Visiting All Nodes
+
+from math import inf
+from collections import deque
+
+class Solution:
+    def shortestPathLength(self, graph):
+        """
+        :type graph: List[List[int]]
+        :rtype: int
+        """
+        node_count = len(graph)
+        masks = [1<<i for i in range(node_count)]
+        all_visited = (1<<node_count) - 1
+        queue = deque([(i, masks[i]) for i in range(node_count)])
+        steps = 0
+        visited_states = [{masks[i]} for i in range(node_count)]
+        while queue:
+            count = len(queue)
+            while count:
+                current_node, visited = queue.popleft()
+                if visited == all_visited:
+                    return steps
+                for nb in graph[current_node]:
+                    new_visited = visited | masks[nb]
+                    if new_visited == all_visited:
+                        return steps + 1
+                    if new_visited not in visited_states[nb]:
+                        visited_states[nb].add(new_visited)
+                        queue.append((nb, new_visited))
+                count -= 1
+            steps += 1
+        return inf
+        
+848. Shifting Letters
+
+class Solution:
+    def shiftingLetters(self, S, shifts):
+        """
+        :type S: str
+        :type shifts: List[int]
+        :rtype: str
+        """
+        string = 'abcdefghijklmnopqrstuvwxyz'
+        hash_map_1 = dict()
+        hash_map_2 = dict()
+        for i, v in enumerate(string, 1):
+            hash_map_1[i] = v
+            hash_map_2[v] = i
+        
+        aux_list = list(S)
+        
+        result_list = [0]*len(shifts)
+        result_list[-1] = hash_map_2[S[-1]] + shifts[-1]
+        for i in range(len(shifts)-2, -1, -1):
+            result_list[i] += result_list[i+1]- hash_map_2[S[i+1]] + hash_map_2[S[i]] + shifts[i]
+        result_list = map(lambda a: a%26 if a%26 != 0 else 26, result_list)
+        
+        
+        letter_list = [hash_map_1[num] for num in result_list]
+        return "".join(letter_list)
+        
+class Solution:
+    def shiftingLetters(self, S, shifts):
+        """
+        :type S: str
+        :type shifts: List[int]
+        :rtype: str
+        """
+        string = 'abcdefghijklmnopqrstuvwxyz'
+        hash_map_1 = dict()
+        hash_map_2 = dict()
+        for i, v in enumerate(string, 1):
+            hash_map_1[i] = v
+            hash_map_2[v] = i
+        
+        result_list = [0]*len(shifts)
+        result_list[-1] = hash_map_2[S[-1]] + shifts[-1]
+        for i in range(len(shifts)-2, -1, -1):
+            result_list[i] = result_list[i+1]- hash_map_2[S[i+1]] + hash_map_2[S[i]] + shifts[i]
+        result_list = map(lambda a: a%26 if a%26 != 0 else 26, result_list)
+        
+        
+        letter_list = [hash_map_1[num] for num in result_list]
+        return "".join(letter_list)
+        
+class Solution:
+    def shiftingLetters(self, S, shifts):
+        """
+        :type S: str
+        :type shifts: List[int]
+        :rtype: str
+        """
+        string = 'abcdefghijklmnopqrstuvwxyz'
+        hash_map_1 = dict()
+        hash_map_2 = dict()
+        for i, v in enumerate(string):
+            hash_map_1[i] = v
+            hash_map_2[v] = i
+        
+        result_list = [0]*len(shifts)
+        total = sum(shifts)
+        for i in range(len(shifts)):
+            tmp = hash_map_2[S[i]] + total
+            total -= shifts[i]
+            result_list[i] = hash_map_1[tmp % 26]
+        
+        return "".join(result_list)
+        
+849. Maximize Distance to Closest Person
+
+class Solution:
+    def maxDistToClosest(self, seats):
+        """
+        :type seats: List[int]
+        :rtype: int
+        """
+        seated_indices = [i for i, v in enumerate(seats) if v==1]
+        ls = len(seated_indices)
+        if ls == 1:
+            return max(seated_indices[0]-0, len(seats)-1-seated_indices[0])
+        else:
+            aux_list = [(seated_indices[i]-seated_indices[i-1])//2 for i in range(1, len(seated_indices))]
+            aux_list.append(seated_indices[0]-0)
+            aux_list.append(len(seats)-1-seated_indices[-1])
+            return max(aux_list)
+            
+class Solution:
+    def maxDistToClosest(self, seats):
+        """
+        :type seats: List[int]
+        :rtype: int
+        """
+        previous = 0
+        current = 0
+        res = 1
+        while current < len(seats):
+            if seats[current] == 0:
+                current += 1
+            else:
+                if seats[previous]== 0:
+                    res = max(res, current - previous)
+                else:
+                    res = max(res, (current - previous)//2)
+                previous = current
+                current += 1
+        return max(res, len(seats)-1-previous)
+        
+class Solution:
+    def maxDistToClosest(self, seats):
+        """
+        :type seats: List[int]
+        :rtype: int
+        """
+        seated_indices = [i for i, v in enumerate(seats) if v==1]
+        seated_indices.insert(0, 0)
+        seated_indices.append(len(seats)-1)
+        seated_indices[0] = seated_indices[1]-seated_indices[0]
+        for i in range(1, len(seated_indices)-2):
+            seated_indices[i] = (seated_indices[i+1] - seated_indices[i])//2
+        seated_indices[-2] = seated_indices[-1] - seated_indices[-2]
+        seated_indices[-1] = 0
+        return max(seated_indices)
+        
+class Solution:
+    def maxDistToClosest(self, seats):
+        """
+        :type seats: List[int]
+        :rtype: int
+        """
+        previous = 0
+        current = 0
+        res = 1
+        while current < len(seats):
+            if seats[current] == 0:
+                current += 1
+            else:
+                if seats[previous]== 0:
+                    res = max(res, current - previous)
+                else:
+                    res = max(res, (current - previous)//2)
+                previous = current
+                current += 1
+        return max(res, len(seats)-1-previous)
+        
+852. Peak Index in a Mountain Array
+
+class Solution:
+    def peakIndexInMountainArray(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        return A.index(max(A))
+        
+class Solution:
+    def peakIndexInMountainArray(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        ls = len(A)
+        
+        if ls == 0:
+            return None
+        if ls == 1:
+            return 0
+        
+        p, c = 0, 1
+        stop = False
+        while c < ls and not stop:
+            if A[p] > A[c]:
+                stop = True
+                return p
+            else:
+                p = c
+                c += 1
+        return c - 1
+        
+859. Buddy Strings
+
+class Solution:
+    def buddyStrings(self, A, B):
+        """
+        :type A: str
+        :type B: str
+        :rtype: bool
+        """
+        list_A = [item for item in A]
+        list_B = [item for item in B]
+        
+        if len(list_A) != len(list_B):
+            return False
+        
+        if set(list_A) != set(list_B):
+            return False
+        
+        indices = []
+        for i in range(len(list_A)):
+            if list_A[i] != list_B[i]:
+                indices.append(i)
+        ls = len(indices)
+        if ls > 2 or ls == 1:
+            return False
+        
+        if ls == 2:
+            list_A[indices[0]], list_A[indices[1]] = list_A[indices[1]], list_A[indices[0]]
+            return list_A == list_B
+        
+        if ls == 0:
+            if len(set(list_A)) == 1:
+                return True
+            if len(set(list_A)) < len(list_A):
+                return True
+            else:
+                return False
+                
+860. Lemonade Change
+
+class Solution(object):
+    def lemonadeChange(self, bills):
+        """
+        :type bills: List[int]
+        :rtype: bool
+        """
+        aux_dict = {5:0, 10:0, 20:0}
+        for i in range(len(bills)):
+            if bills[i] == 5:
+                aux_dict[5] += 1
+            elif bills[i] == 10:
+                if aux_dict[5] > 0:
+                    aux_dict[5] -= 1
+                    aux_dict[10] +=1
+                else:
+                    return False
+            else:
+                if aux_dict[10] > 0:
+                    if aux_dict[5] > 0:
+                        aux_dict[10] -= 1
+                        aux_dict[5] -= 1
+                        aux_dict[20] += 1
+                    else:
+                        return False
+                else:
+                    if aux_dict[5] >= 3:
+                        aux_dict[5] -= 3
+                        aux_dict[20] += 1
+                    else:
+                        return False
+        return True
+        
+class Solution(object):
+    def lemonadeChange(self, bills):
+        """
+        :type bills: List[int]
+        :rtype: bool
+        """
+        aux_dict = {5:0, 10:0, 20:0}
+        for i in range(len(bills)):
+            if bills[i] == 5:
+                aux_dict[5] += 1
+            elif bills[i] == 10:
+                if aux_dict[5] > 0:
+                    aux_dict[5] -= 1
+                    aux_dict[10] +=1
+                else:
+                    return False
+            else:
+                if aux_dict[10] > 0:
+                    if aux_dict[5] > 0:
+                        aux_dict[10] -= 1
+                        aux_dict[5] -= 1
+                        aux_dict[20] += 1
+                    else:
+                        return False
+                else:
+                    if aux_dict[5] >= 3:
+                        aux_dict[5] -= 3
+                        aux_dict[20] += 1
+                    else:
+                        return False
+        return True
+        
+        
