@@ -1,0 +1,421 @@
+643. Maximum Average Subarray I
+
+class Solution:
+    def findMaxAverage(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: float
+        """
+        s = m = sum(nums[:k])
+        f = nums[0]
+        for i in range(k, len(nums)):
+            s = s - f + nums[i]
+            f = nums[i-k+1]
+            m = max(m, s)
+        return m/k
+        
+645. Set Mismatch
+
+class Solution(object):
+    def findErrorNums(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        aux_dict = {}
+        for item in nums:
+            if item not in aux_dict:
+                aux_dict[item] = 1
+            else:
+                aux_dict[item] += 1
+        repeated_number = [k for k, v in aux_dict.items() if v > 1]
+        
+        set_1 = set(range(1, len(nums) +1))
+        set_2 = set(aux_dict.keys())
+        aux_set = set_1 - set_2
+        missing_number = [item for item in aux_set]
+        
+        return repeated_number + missing_number
+        
+class Solution(object):
+    def findErrorNums(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        aux_dict = {}
+        for item in nums:
+            if item not in aux_dict:
+                aux_dict[item] = 1
+            else:
+                aux_dict[item] += 1
+        repeated_number = [k for k, v in aux_dict.items() if v > 1]
+        
+        set_1 = set(range(1, len(nums) +1))
+        set_2 = set(aux_dict.keys())
+        aux_set = set_1 - set_2
+        missing_number = [item for item in aux_set]
+        
+        return repeated_number + missing_number
+        
+646. Maximum Length of Pair Chain
+
+class Solution:
+    def findLongestChain(self, pairs):
+        """
+        :type pairs: List[List[int]]
+        :rtype: int
+        """
+        pairs = sorted(pairs, key = lambda x: x[1])
+        cnt = 1
+        tail = pairs[0][1]
+        for i in range(1, len(pairs)):
+            pair = pairs[i]
+            if pair[0] > tail:
+                cnt += 1
+                tail = pair[1]
+        return cnt
+        
+class Solution:
+    def findLongestChain(self, pairs):
+        """
+        :type pairs: List[List[int]]
+        :rtype: int
+        """
+        pairs = sorted(pairs, key = lambda x: x[0])
+        f = [1]*len(pairs)
+        for i in range(1, len(pairs)):
+            pair = pairs[i]
+            for j in range(i):
+                if pair[0] > pairs[j][1] and f[j]+1 > f[i]:
+                    f[i] = f[j] + 1
+        return f[-1]
+        
+class Solution:
+    def findLongestChain(self, pairs):
+        """
+        :type pairs: List[List[int]]
+        :rtype: int
+        """
+        pairs.sort(key=lambda x: x[1])
+        end = float('-inf')
+        res = len(pairs)
+        for interval in pairs:
+            if interval[0] > end:
+                end = interval[1]
+            else:
+                res -= 1
+        return res
+        
+647. Palindromic Substrings
+
+class Solution(object):
+    def countSubstrings(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if not s:
+            return 1
+        n = len(s)
+        f = [[0]*n for _ in range(n)]
+        for i in range(n):
+            f[i][i] = 1
+        for i in range(n-1):
+            if s[i] == s[i+1]:
+                f[i][i+1] = 1
+        for d in range(2, n):
+            for i in range(n-d):
+                if f[i+1][i+d-1]:
+                    if s[i] == s[i+d]:
+                        f[i][i+d] = 1
+                
+        return sum([f[i][j] for i in range(n) for j in range(n)])
+        
+class Solution(object):
+    def countSubstrings(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if not s: return 1
+        N = len(s)
+        ans = 0
+        for center in range(2*N-1):
+            left = center//2
+            right = left + center%2
+            while left >= 0 and right < N and s[left] == s[right]:
+                ans += 1
+                left -= 1
+                right += 1
+        return ans
+        
+648. Replace Words
+
+class Solution:
+    def replaceWords(self, dict, sentence):
+        """
+        :type dict: List[str]
+        :type sentence: str
+        :rtype: str
+        """
+        dict.sort(key=lambda x: len(x))
+        lst = sentence.split()
+        string = ""
+        for word in lst:
+            string += " "
+            string += self.find_root(dict, word)
+        string = string.lstrip(" ")
+        return string
+ 
+    def find_root(self, dc, word):
+        dc.sort(key=lambda x:len(x))
+        if dc == []:
+            return word
+        i = 0
+        stop = False
+        while i < len(dc) and not stop:
+            ls = len(dc[i])
+            if dc[i] == word[:ls]:
+                return dc[i]
+                stop = True
+            else:
+                i += 1
+        return word
+        
+class Solution:
+    def replaceWords(self, dict, sentence):
+        """
+        :type dict: List[str]
+        :type sentence: str
+        :rtype: str
+        """
+        dict.sort(key=lambda x: len(x))
+        lst = sentence.split()
+        string = ""
+        for word in lst:
+            string += " "
+            string += self.find_root(dict, word)
+        return string.lstrip(" ")
+  
+    def find_root(self, dc, word):
+        dc.sort(key=lambda x:len(x))
+        if dc == []:
+            return word
+        i = 0
+        stop = False
+        while i < len(dc) and not stop:
+            ls = len(dc[i])
+            if dc[i] == word[:ls]:
+                return dc[i]
+                stop = True
+            else:
+                i += 1
+        return word
+        
+652. Find Duplicate Subtrees
+
+class Solution:
+    def findDuplicateSubtrees(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[TreeNode]
+        """
+        self.res = []
+        self.dic = dict()
+        self.dfs(root)
+        return self.res
+    
+    def dfs(self, root):
+        if not root:
+            return "#"
+        tree = self.dfs(root.left) + self.dfs(root.right) + str(root.val)
+        if tree in self.dic and self.dic[tree] == 1:
+            self.res.append(root)
+        self.dic[tree] = self.dic.get(tree, 0) + 1
+        return tree
+        
+class Solution:
+    def findDuplicateSubtrees(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[TreeNode]
+        """
+        self.visitedSubtrees = set()
+        self.res = {}
+        def postOrderTraverse(node):
+            order = ""
+            if node.left:
+                order = order + postOrderTraverse(node.left)
+            else:
+                order = order + "*"
+                
+            if node.right:
+                order = order + postOrderTraverse(node.right)
+            else:
+                order = order + "*"
+                
+            order = order+str(node.val)
+            if order in self.visitedSubtrees:
+                self.res[order] = node
+            self.visitedSubtrees.add(order)
+            return order
+        
+        if root == None:
+            return []
+        postOrderTraverse(root)
+        return list(self.res.values())
+        
+653. Two Sum IV - Input is a BST
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def findTarget(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: bool
+        """
+        aux_list = self.inorder_traversal(root)
+        ls = len(aux_list)
+        if ls < 2:
+            return False
+        i = 0
+        j = ls - 1
+        found = False
+        while i < j and not found:
+            if aux_list[i] + aux_list[j] == k:
+                found = True
+            elif aux_list[i] + aux_list[j] < k:
+                i += 1
+            else:
+                j -= 1
+        return found
+        
+    def inorder_traversal(self, root):
+        if not root:
+            return []
+        return self.inorder_traversal(root.left) + [root.val] + self.inorder_traversal(root.right)
+        
+class Solution(object):
+    def findTarget(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: bool
+        """
+        if not root:
+            return False
+        s = set()
+        q = collections.deque([root])
+        found = False
+        while q and not found:
+            n = q.popleft()
+            if n:
+                if k - n.val in s:
+                    found = True
+                s.add(n.val)
+                q.append(n.left)
+                q.append(n.right)
+        return found
+        
+654. Maximum Binary Tree
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def constructMaximumBinaryTree(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: TreeNode
+        """
+        if not nums:
+            return
+        idx = nums.index(max(nums))
+        l = self.constructMaximumBinaryTree(nums[:idx])
+        r = self.constructMaximumBinaryTree(nums[idx+1:])
+        node = TreeNode(max(nums))
+        node.left = l
+        node.right = r
+        return node
+        
+class Solution(object):
+    def constructMaximumBinaryTree(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: TreeNode
+        """
+        stk = []
+        for i in range(len(nums)):
+            cur = TreeNode(nums[i])
+            l = None
+            while stk!=[] and stk[-1].val < nums[i]:
+                l = stk[-1]
+                stk.pop()
+            cur.left = l
+            if stk!=[]:
+                stk[-1].right = cur
+            stk.append(cur)
+        return stk[0]
+        
+655. Print Binary Tree
+
+class Solution:
+    def printTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[str]]
+        """
+        
+        def get_height(node):
+            if not node:
+                return 0
+            else:
+                return 1 + max(get_height(node.left), get_height(node.right))
+            
+        def update_output(node, row, left, right):
+            if not node:
+                return 
+            mid = (left + right)//2
+            self.output[row][mid] = str(node.val)
+            update_output(node.left, row+1, left, mid-1)
+            update_output(node.right, row+1, mid+1, right)
+        
+        height = get_height(root)
+        width = 2**height - 1
+        self.output = [[""]*width for i in range(height)]
+        update_output(node=root, row=0, left=0, right=width-1)
+        
+        return self.output
+        
+657. Robot Return to Origin
+
+class Solution:
+    def judgeCircle(self, moves):
+        """
+        :type moves: str
+        :rtype: bool
+        """
+        original_position = [0, 0]
+        for letter in moves:
+            if letter == 'R':
+                original_position[0] += 1
+            if letter == 'L':
+                original_position[0] -= 1
+            if letter == 'U':
+                original_position[1] += 1
+            if letter == 'D':
+                original_position[1] -= 1
+        return original_position == [0, 0]        
