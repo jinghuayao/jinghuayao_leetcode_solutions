@@ -1,0 +1,47 @@
+766. Toeplitz Matrix
+
+class Solution:
+    def isToeplitzMatrix(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: bool
+        """
+        for i in range(len(matrix)-1):
+            if matrix[i][:-1] != matrix[i+1][1:]:
+                return False
+        return True
+        
+class Solution(object):
+    def isToeplitzMatrix(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: bool
+        """
+        if matrix is None:
+            return False
+        
+        for x in matrix:
+            index = matrix.index(x)
+            if index == len(matrix)-1:
+                return True
+            x.pop()
+            if x != matrix[index+1][1:]:
+                return False
+        return True
+        
+771. Jewels and Stones
+
+class Solution:
+    def numJewelsInStones(self, J, S):
+        """
+        :type J: str
+        :type S: str
+        :rtype: int
+        """
+        count = 0
+        for item in S:
+            if item in J:
+                count += 1
+        return count
+        
+        
