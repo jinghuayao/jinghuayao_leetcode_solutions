@@ -1,0 +1,253 @@
+804. Unique Morse Code Words
+
+class Solution:
+    def uniqueMorseRepresentations(self, words):
+        """
+        :type words: List[str]
+        :rtype: int
+        """
+        
+        
+        m_s = []
+        for word in words:
+            m_s.append(self.m_s_r(word))
+            
+        aux_set = set(m_s)
+        return len(aux_set)
+    
+    def m_s_r(self, word):
+        letter_str = "abcdefghijklmnopqrstuvwxyz"
+        letter_list = [item for item in letter_str]
+        morse_codes = [".-", "-...", "-.-.", "-..",".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.."]
+        
+        a = {k:v for k, v in zip(letter_list, morse_codes)}
+        res = ""
+        for letter in word:
+            res += a[letter]
+        return res
+        
+811. Subdomain Visit Count
+
+class Solution:
+    def subdomainVisits(self, cpdomains):
+        """
+        :type cpdomains: List[str]
+        :rtype: List[str]
+        """
+        aux_dict = dict()
+        for s in cpdomains:
+            count, domain = int(s.split()[0]), s.split()[1]
+            subdomains = domain.split('.')
+            length = len(subdomains)
+            for i in reversed(range(length)):
+                tmp_domain = '.'.join(subdomains[i:])
+                if tmp_domain in aux_dict:
+                    aux_dict[tmp_domain] += count
+                else:
+                    aux_dict[tmp_domain] = count
+        res = []
+        for k, v in aux_dict.items():
+            form = str(v) + ' ' + k
+            res.append(form)
+        return res
+        
+812. Largest Triangle Area
+
+class Solution:
+    def largestTriangleArea(self, points):
+        """
+        :type points: List[List[int]]
+        :rtype: float
+        """
+        area = 0
+        n = len(points)
+        for i in range(n):
+            for j in range(i+1, n):
+                for k in range(j+1, n):
+                    tmp = self.formula(points[i], points[j], points[k])
+                    area = max(area, tmp)
+        return area
+    
+    def formula(self, a, b, c):
+        return (0.5*abs((b[0]-a[0])*(c[1]-a[1]) - (b[1]-a[1])*(c[0]-a[0])))
+        
+814. Binary Tree Pruning
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def pruneTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if not root:
+            return root
+        elif root.val == 1:
+            root.left = self.pruneTree(root.left)
+            root.right = self.pruneTree(root.right)
+        else:
+            if not self.find_1(root.left) and not self.find_1(root.right):
+                return
+            else:
+                root.left = self.pruneTree(root.left)
+                root.right = self.pruneTree(root.right)
+        return root
+                
+            
+    
+    def find_1(self, node):
+        if not node:
+            return False
+        if node.val == 1:
+            return True
+        else:
+            return self.find_1(node.left) or self.find_1(node.right)
+            
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def pruneTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if not root:
+            return root
+        elif root.val == 1:
+            if root.left:
+                root.left = self.pruneTree(root.left)
+            if root.right:
+                root.right = self.pruneTree(root.right)
+        else:
+            if not root.left and not root.right:
+                return
+            else:
+                if root.left:
+                    root.left = self.pruneTree(root.left)
+                if root.right:
+                    root.right = self.pruneTree(root.right)
+                if not root.left and not root.right:
+                    return
+                
+        return root
+        
+817. Linked List Components
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def numComponents(self, head, G):
+        """
+        :type head: ListNode
+        :type G: List[int]
+        :rtype: int
+        """
+        if head is None:
+            return 0
+        c = 0
+        g = set(G)
+        found = False
+        while head:
+            if head.val in g:
+                found = True
+            elif found:
+                found = False
+                c += 1
+            head = head.next
+        if found:
+            c += 1
+        return c
+        
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def numComponents(self, head, G):
+        """
+        :type head: ListNode
+        :type G: List[int]
+        :rtype: int
+        """
+        connected = 0
+        s = set(G)
+
+        while(head is not None):
+            increment = False
+
+            while(head is not None and head.val in s):
+                increment = True
+                head = head.next
+
+            if(increment):
+                connected += 1
+            else:
+                head = head.next
+
+        return connected
+        
+class Solution:
+    def numComponents(self, head, G):
+        """
+        :type head: ListNode
+        :type G: List[int]
+        :rtype: int
+        """
+        connected = 0
+        s = set(G)
+
+        while(head is not None):
+            increment = False
+
+            while(head is not None and head.val in s):
+                increment = True
+                head = head.next
+
+            if(increment):
+                connected += 1
+            else:
+                head = head.next
+
+        return connected  
+        
+819. Most Common Word
+
+class Solution(object):
+    def mostCommonWord(self, paragraph, banned):
+        """
+        :type paragraph: str
+        :type banned: List[str]
+        :rtype: str
+        """
+        my_list = [item.lower().strip("!?',;.") for item in paragraph.split()]
+        aux_dict = {}
+        for word in my_list:
+            if word in banned:
+                continue
+            else:
+                if word not in aux_dict:
+                    aux_dict[word] = 1
+                else:
+                    aux_dict[word] += 1
+        max_freq = max([v for k, v in aux_dict.items()])
+        
+        aux_res = [k for k, v in aux_dict.items() if v==max_freq]
+        
+        return aux_res[0]
