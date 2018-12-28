@@ -48,4 +48,30 @@ class Solution:
             if s[0] == s[1]:
                 return s[0]
                 
-                
+ 962. Maximum Width Ramp
+ 
+ # Decreasing stack and binary search
+ class Solution(object):
+    def maxWidthRamp(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        stack = []
+        res = 0
+        for i, a in enumerate(A):
+            if not stack or a < stack[-1][0]:
+                stack.append((a, i))   
+            res = max(res, i - self.binarySearch(stack, a))
+        return res
+    
+    def binarySearch(self, stack, target):
+            left = 0
+            right = len(stack) - 1 
+            while left <= right:
+                mid = (left + right) // 2
+                if stack[mid][0] > target:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+            return stack[left][1]
