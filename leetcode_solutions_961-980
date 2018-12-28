@@ -95,3 +95,19 @@ class Solution:
             min_idx = min(min_idx, idx_list[0])
             max_width = max(idx_list[-1] - min_idx, max_width)
         return max_width
+        
+class Solution(object):
+    def maxWidthRamp(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        aux_dict = collections.defaultdict(list)
+        for idx, num in enumerate(A):
+            aux_dict[num].append(idx)
+        min_idx = 50000
+        max_width = 0
+        for num, idx_list in sorted(aux_dict.items()):
+            min_idx = min(min_idx, idx_list[0])
+            max_width = max(idx_list[-1] - min_idx, max_width)
+        return max_width        
