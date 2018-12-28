@@ -75,3 +75,23 @@ class Solution:
                 else:
                     right = mid - 1
             return stack[left][1]
+            
+ # dict
+ class Solution(object):
+    def maxWidthRamp(self, A):
+        """
+        :type A: List[int]
+        :rtype: int
+        """
+        aux_dict = dict()
+        for idx, num in enumerate(A):
+            if num not in aux_dict:
+                aux_dict[num] = [idx]
+            else:
+                aux_dict[num].append(idx)
+        min_idx = 50000
+        max_width = 0
+        for num, idx_list in sorted(aux_dict.items()):
+            min_idx = min(min_idx, idx_list[0])
+            max_width = max(idx_list[-1] - min_idx, max_width)
+        return max_width
