@@ -230,6 +230,51 @@ class Solution:
                 res = max(res, dic[aux_list[i]] + dic[aux_list[i-1]])
         return res
         
+598. Range Addition II
+
+class Solution:
+    def maxCount(self, m, n, ops):
+        """
+        :type m: int
+        :type n: int
+        :type ops: List[List[int]]
+        :rtype: int
+        """
+        if not ops:
+            return m*n
+        min_r = min([x[0] for x in ops])
+        min_c = min([x[1] for x in ops])
+        return min_r*min_c
+        
+class Solution:
+    def maxCount(self, m, n, ops):
+        """
+        :type m: int
+        :type n: int
+        :type ops: List[List[int]]
+        :rtype: int
+        """
+        r = m
+        c = n
+        for array in ops:
+            r = min(r, array[0])
+            c = min(c, array[1])
+        return r*c
+
+# zip(*a_sequence)
+class Solution:
+    def maxCount(self, m, n, ops):
+        """
+        :type m: int
+        :type n: int
+        :type ops: List[List[int]]
+        :rtype: int
+        """
+        if not ops:
+            return m*n
+        X = list(zip(*ops))
+        return min(X[0])*min(X[1])        
+        
 599. Minimum Index Sum of Two Lists
 
 class Solution:
