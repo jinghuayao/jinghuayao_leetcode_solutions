@@ -17,8 +17,34 @@ class Solution:
             minutes_group = [x+y for x in get_hours for y in get_minutes]
             res += ['{:d}:{:0>2d}'.format(sum(g)//60, sum(g)%60) for g in minutes_group]
         return res
-
-
+        
+# DFS 
+class Solution(object):
+        
+    def readBinaryWatch(self, num):
+        """
+        :type num: int
+        :rtype: List[str]
+        """
+        
+        hours, minutes, result = [1, 2, 4, 8], [1, 2, 4, 8, 16 ,32], []
+        self.dfs(num, hours, minutes, 0, 0, result)
+        return result
+    
+    def dfs(self, num, hours, minutes, hour_try, min_try, result):
+        if hour_try >= 12 or min_try >= 60:
+            return
+        if num == 0:
+            minutes = hour_try * 60 + min_try
+            result.append("%d:%02d" %(minutes // 60, minutes % 60))
+            return
+        if hours:
+            self.dfs(num, hours[1:], minutes, hour_try, min_try, result) # hours[0] is not selected
+            self.dfs(num - 1, hours[1:], minutes, hour_try + hours[0], min_try, result) # hours[0] is selected
+        elif minutes:
+            self.dfs(num, hours, minutes[1:], hour_try, min_try, result) # minutes[0] is not selected
+            self.dfs(num - 1, hours, minutes[1:], hour_try, min_try + minutes[0], result) # minutes[0] is selected.
+        return
 
 404. Sum of Left Leaves
 
