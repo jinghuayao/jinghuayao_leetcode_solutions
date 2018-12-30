@@ -18,7 +18,7 @@ class Solution:
             res += ['{:d}:{:0>2d}'.format(sum(g)//60, sum(g)%60) for g in minutes_group]
         return res
         
-# DFS 
+# Recursive DFS 
 class Solution(object):
         
     def readBinaryWatch(self, num):
