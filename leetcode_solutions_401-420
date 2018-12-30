@@ -1,3 +1,25 @@
+401 Binary Watch
+
+# Use itertools.combinations
+from itertools import combinations
+class Solution:
+    def readBinaryWatch(self, num):
+        """
+        :type num: int
+        :rtype: List[str]
+        """
+        hours = list(map(lambda x: x*60, (1, 2, 4, 8)))
+        minutes = (1, 2, 4, 8, 16, 32)
+        res = []
+        for i in range(num+1):
+            get_hours = [x for x in list(combinations(hours, i)) if sum(x) < 12*60]
+            get_minutes = [y for y in list(combinations(minutes, num-i)) if sum(y) < 60]
+            minutes_group = [x+y for x in get_hours for y in get_minutes]
+            res += ['{:d}:{:0>2d}'.format(sum(g)//60, sum(g)%60) for g in minutes_group]
+        return res
+
+
+
 404. Sum of Left Leaves
 
 # Definition for a binary tree node.
