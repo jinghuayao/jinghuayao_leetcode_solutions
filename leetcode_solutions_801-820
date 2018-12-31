@@ -25,6 +25,44 @@ class Solution:
         for letter in word:
             res += a[letter]
         return res
+
+806. Number of Lines To Write String
+
+class Solution:
+    def numberOfLines(self, widths, S):
+        """
+        :type widths: List[int]
+        :type S: str
+        :rtype: List[int]
+        """
+        letters = "abcdefghijklmnopqrstuvwxyz"
+        d = dict()
+        for k, v in zip(letters, widths):
+            d[k] = v
+        line_number, width = 1, 0
+        for c in S:
+            w = d[c]
+            width += w
+            if width > 100:
+                line_number += 1
+                width = w
+        return line_number, width
+
+class Solution:
+    def numberOfLines(self, widths, S):
+        """
+        :type widths: List[int]
+        :type S: str
+        :rtype: List[int]
+        """
+        line_number, width = 1, 0
+        for c in S:
+            w = widths[ord(c) - ord('a')]
+            width += w
+            if width > 100:
+                line_number += 1
+                width = w
+        return line_number, width
         
 811. Subdomain Visit Count
 
