@@ -110,4 +110,69 @@ class Solution(object):
         for num, idx_list in sorted(aux_dict.items()):
             min_idx = min(min_idx, idx_list[0])
             max_width = max(idx_list[-1] - min_idx, max_width)
-        return max_width        
+        return max_width
+
+965. Univalued Binary Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+# Traversal, sort of brute force
+class Solution:
+    def isUnivalTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        return len(set(self.inorder(root))) == 1
+       
+    def inorder(self, root):
+        if not root:
+            return []
+        else:
+            return self.inorder(root.left) + [root.val] + self.inorder(root.right)
+            
+# Use set and traversal
+class Solution:
+    def isUnivalTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        aux_set = set()
+        queue = [root]
+        while queue:
+            node = queue.pop(0)
+            aux_set.add(node.val)
+            if len(aux_set)>1:
+                return False
+            else:
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+        return True 
+ 
+ # BFS
+ class Solution:
+    def isUnivalTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        value = root.val
+        queue = [root]
+        while queue:
+            node = queue.pop(0)
+            if node.val != value:
+                return False
+            else:
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+        return True
