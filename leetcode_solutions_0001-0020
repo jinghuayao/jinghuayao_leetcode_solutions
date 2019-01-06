@@ -1,0 +1,591 @@
+1. Two sum
+
+class Solution:
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        aux_list = {(k, v) for k, v in enumerate(nums)}
+        aux_list = sorted(aux_list, key=lambda x:x[1])
+        begin = 0
+        end = len(nums) - 1
+        while begin < end:
+            if aux_list[begin][1] + aux_list[end][1] == target:
+                return [aux_list[begin][0], aux_list[end][0]]
+            elif aux_list[begin][1] + aux_list[end][1] < target:
+                begin += 1
+            else:
+                end -= 1
+
+class Solution:
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        aux_dic = {k:v for k, v in enumerate(nums)}
+        nums.sort()
+        ls = len(nums)
+        found = False
+        i = 0
+        j = ls - 1
+        
+        while i < j and not found:
+            temp = nums[i] + nums[j]
+            if temp == target:
+                
+                
+                found = True
+            elif temp < target:
+                i += 1
+            else:
+                j -= 1
+        find_key = [k for k, v in aux_dic.items() if v == nums[i] or v ==nums[j]]
+        
+        return find_key
+        
+2. Add two numbers
+
+class Solution:
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        
+        dummy = cur = ListNode(0)
+        carry = 0
+        while l1 or l2 or carry:
+            if l1:
+                carry += l1.val
+                l1 = l1.next
+            
+            if l2:
+                carry += l2.val
+                l2 = l2.next
+            
+            cur.next = ListNode(carry%10)
+            cur = cur.next
+            carry //= 10
+        return dummy.next
+        
+ 3. Longest Substring without repeating charaters
+ 
+ class Solution:
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        ls = len(s)
+        if ls < 2:
+            return ls
+        else:
+            m = len(set(s))
+            stop = False
+            while m > 0 and not stop:
+                if self.search(s, m):
+                    stop = True
+                    return m
+                m -= 1
+            return max(m, 1)
+    
+    def search(self, s, k):
+        n = len(s) - k + 1
+        for i in range(n):
+            if len(set(s[i:i+k])) == k:
+                return True
+        return False
+        
+4. Median of two sorted arrays
+
+class Solution:
+    def findMedianSortedArrays(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: float
+        """
+        if nums1 == []:
+            nums = nums2
+        if nums2 == []:
+            nums = nums1
+        nums = []
+        i = 0
+        j = 0
+        while i < len(nums1) and j < len(nums2):
+            if nums1[i] <= nums2[j]:
+                nums.append(nums1[i])
+                i += 1
+            else:
+                nums.append(nums2[j])
+                j += 1
+        if i < len(nums1):
+            k = i
+            while k < len(nums1):
+                nums.append(nums1[k])
+                k += 1
+                
+        if j < len(nums2):
+            k = j
+            while k < len(nums2):
+                nums.append(nums2[k])
+                k += 1
+        ls = len(nums)
+        if ls % 2 == 1:
+            return nums[ls//2]
+        else:
+            return (nums[ls//2] + nums[ls//2-1])/2
+            
+5. Longest palindromic substring
+
+class Solution(object):
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        if (not s) or s == s[::-1]:
+            return s
+        p = s[0]
+        for i in range(len(s)):
+            if i+1 < len(s) and s[i] == s[i+1]:
+                tmp = self.grow(s, i, i+1)
+                p = tmp if len(tmp) > len(p) else p
+            if i+2 < len(s) and s[i] == s[i+2]:
+                tmp = self.grow(s, i, i+2)
+                p = tmp if len(tmp) > len(p) else p
+        return p
+        
+    def grow(self, s, i, j):
+        while i >=0 and j < len(s) and s[i] == s[j]:
+            p = s[i:j+1]
+            i, j = i-1, j+1
+        return p
+        
+6. ZigZag Conversion
+
+class Solution(object):
+    def convert(self, s, numRows):
+        """
+        :type s: str
+        :type numRows: int
+        :rtype: str
+        """
+        if numRows == 1:
+            return s
+        # calculate period
+        p = 2*(numRows-1)
+
+        res = [""] * numRows
+        for i in range(len(s)):
+            floor = i%p
+            if floor >= p//2:
+                floor = p - floor
+            res[floor] += s[i]
+        return "".join(res)
+        
+ 7. Reverse Integer
+ 
+ class Solution:
+    
+    def reverse(self, x):
+        # Note that in Python -1 / 10 = -1
+        res, isPos = 0, 1
+        if x < 0:
+            isPos = -1
+            x = -1 * x
+        while x != 0:
+            res = res * 10 + x % 10
+            if res > 2147483647:
+                return 0
+            x //= 10
+        return res * isPos
+        
+ 8. String to Integer (atoi)
+ 
+ class Solution:
+    def myAtoi(self, str):
+        """
+        :type str: str
+        :rtype: int
+        """
+        import re
+        
+        pattern = r"[\s]*[+-]?[\d]+"
+        match = re.match(pattern, str)
+        if match:
+            res = int(match.group(0))
+            if res > 2 ** 31 - 1:
+                res = 2 ** 31 -1
+            if res < - 2 ** 31:
+                res = - 2 ** 31
+        else:
+            res = 0
+        return res
+        
+9. Palindrome Number
+
+class Solution:
+    def isPalindrome(self, x):
+        """
+        :type x: int
+        :rtype: bool
+        """
+        if x < 0:
+            return False
+        a = list(str(x))
+        ls = len(a)
+        if ls < 2:
+            return True
+        check = ls//2
+        found = True
+        i = 0
+        while i < check and found:
+            if a[i] == a[ls-1-i]:
+                i += 1
+            else:
+                found = False
+        return found
+        
+10. Regular Expression Matching
+
+class Solution(object):
+    def isMatch(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: bool
+        """
+        # bottom up o(m*n)
+        # https://leetcode.com/discuss/93024/easy-dp-java-solution-with-detailed-explanation
+        if s == p:
+            return True
+        m, n = len(s), len(p)
+        dp = [[False] * (n + 1) for _ in range(m + 1)]
+        dp[0][0] = True
+        for j in range(1, n):
+            if p[j] == '*' and dp[0][j - 1]:
+                dp[0][j + 1] = True
+        # print dp
+        for i in range(m):
+            for j in range(n):
+                if p[j] == '.' or p[j] == s[i]:
+                    dp[i + 1][j + 1] = dp[i][j]
+                elif p[j] == '*':
+                    if p[j - 1] != s[i] and p[j - 1] != '.':
+                        dp[i + 1][j + 1] = dp[i + 1][j - 1]
+                    else:
+                        dp[i + 1][j + 1] = dp[i + 1][j] or dp[i][j + 1] or dp[i + 1][j - 1]
+        return dp[m][n]
+
+
+if __name__ == '__main__':
+    # begin
+    s = Solution()
+    print(s.isMatch("", ".*"))
+    
+11. Container With Most Water
+
+class Solution:
+    def maxArea(self, height):
+        """
+        :type height: List[int]
+        :rtype: int
+        """
+        L, R, width, res = 0, len(height) - 1, len(height) - 1, 0
+        for w in range(width, 0, -1):
+            if height[L] < height[R]:
+                res, L = max(res, height[L] * w), L + 1
+            else:
+                res, R = max(res, height[R] * w), R - 1
+        return res
+  
+  class Solution:
+    def maxArea(self, height):
+        """
+        :type height: List[int]
+        :rtype: int
+        """
+        ls = len(height)
+        
+        start = 0
+        end = ls - 1
+        bound = min(height[start], height[end])
+        area = bound * (end - start)
+        while start < end:
+            if height[start] <= height[end]:
+                start += 1
+                temp1 = min(height[start], height[end])
+                temp2 = temp1 * (end - start)
+                if temp2 >= area:
+                    area = temp2
+            else:
+                end -= 1
+                temp1 = min(height[start], height[end])
+                temp2 = temp1 * (end - start)
+                if temp2 >= area:
+                    area = temp2
+        return area
+        
+12. Integer to Roman
+
+class Solution:
+    def intToRoman(self, num):
+        """
+        :type num: int
+        :rtype: str
+        """
+        M = ["", "M", "MM", "MMM"]
+        C = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"]
+        X = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"]
+        I = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
+        return M[num//1000] + C[(num%1000)//100] + X[(num%100)//10] + I[num%10]
+        
+ 13. Roman to Integer
+ 
+ class Solution:
+    def romanToInt(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        aux_dict = {"I":1, "V":5, "X":10, "L":50, "C":100, "D":500, "M":1000}
+        
+        s = [item for item in s]
+        ls = len(s)
+        
+        res = aux_dict[s[0]]
+        for i in range(1, ls):
+            if aux_dict[s[i]] <= aux_dict[s[i-1]]:
+                res += aux_dict[s[i]]
+            else:
+                res += aux_dict[s[i]]
+                res -= 2*aux_dict[s[i-1]]
+        return res
+        
+14. Longest Common Prefix
+
+class Solution(object):
+    def longestCommonPrefix(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: str
+        """
+        if len(strs) == 0:
+            return ""
+        if len(strs) == 1:
+            return strs[0]
+        
+        minimum = min([len(x) for x in strs])
+        i = minimum
+        while i > 0 :
+            aux_set = set([x[:i] for x in strs])
+            if len(aux_set) == 1:
+                return strs[0][:i]
+            else:
+                i -= 1
+        return ""
+        
+class Solution(object):
+    def longestCommonPrefix(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: str
+        """
+        if not strs:
+            return ""
+        min_len = 2**31
+        for s in strs:
+            if len(s) < min_len:
+                min_len = len(s)
+        res = ""
+        if min_len == 0:
+            return res
+        for i in range(min_len):
+            temp_lett = strs[0][i]
+            for s in strs[1:]:
+                if s[i] != temp_lett:
+                    return res
+            res += temp_lett
+        return res
+        
+15. 3Sum
+
+class Solution:
+    def threeSum(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+    
+        res = []
+        nums.sort()
+        for i in range(len(nums)-2):
+            if i > 0 and nums[i] == nums[i-1]:
+                continue
+            l, r = i+1, len(nums)-1
+            while l < r:
+                s = nums[i] + nums[l] + nums[r]
+                if s < 0:
+                    l +=1 
+                elif s > 0:
+                    r -= 1
+                else:
+                    res.append((nums[i], nums[l], nums[r]))
+                    while l < r and nums[l] == nums[l+1]:
+                        l += 1
+                    while l < r and nums[r] == nums[r-1]:
+                        r -= 1
+                    l += 1; r -= 1
+        return res
+        
+  16. 3Sum Closest
+  
+  class Solution:
+    def threeSumClosest(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        ls = len(nums)
+        nums_sort = sorted(nums)
+        res = nums_sort[0] + nums_sort[1] + nums_sort[2]
+        for i in range(0, ls-2):
+            j, k = i+1, ls-1
+            while j < k:
+                temp = nums_sort[i] + nums_sort[j] + nums_sort[k]
+                if abs(temp - target) < abs(res - target):
+                    res = temp
+                if temp < target:
+                    j += 1
+                else:
+                    k -= 1
+        return res
+        
+17. Letter Combinations of a Phone Number
+
+dmap = {'2': 'abc',
+        '3': 'def',
+        '4': 'ghi',
+        '5': 'jkl',
+        '6': 'mno',
+        '7': 'pqrs',
+        '8': 'tuv',
+        '9': 'wxyz',
+        '0': ' ',
+        None: None}
+
+class Solution(object):
+    def letterCombinations(self, digits):
+        # DFS
+        result = []
+        ls = len(digits)
+        if ls == 0:
+            return result
+        current = digits[0]
+        posfix = self.letterCombinations(digits[1:])
+        for t in dmap[current]:
+            if len(posfix) > 0:
+                for p in posfix:
+                    temp = t + p
+                    result.append(temp)
+            else:
+                result.append(t)
+        return result
+        
+ 18. 4Sum
+ 
+ class Solution:
+    def fourSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        
+        nums.sort()
+        results = []
+        self.findNsum(nums, target, 4, [], results)
+        return results
+    
+    def findNsum(self, nums, target, N, result, results):
+        if len(nums) < N or N < 2:
+            return
+        if N == 2:
+            l, r = 0, len(nums)-1
+            while l < r:
+                if nums[l] + nums[r] == target:
+                    results.append(result+[nums[l], nums[r]])
+                    l += 1
+                    r -= 1
+                    while l < r and nums[l] == nums[l-1]:
+                        l += 1
+                    while r > l and nums[r] == nums[r+1]:
+                        r -= 1
+                elif nums[l] + nums[r] < target:
+                    l += 1
+                else:
+                    r -= 1
+        else:
+            for i in range(len(nums)-N + 1):
+                if target < sum(nums[:N]) or target > sum(nums[-N:]):
+                    break
+                if i == 0 or (i >0 and nums[i-1]!=nums[i]):
+                    self.findNsum(nums[i+1:], target-nums[i], N-1, result+[nums[i]], results)
+        return
+        
+19. Remove Nth Node From End of List
+
+class Solution:
+    def removeNthFromEnd(self, head, n):
+        """
+        :type head: ListNode
+        :type n: int
+        :rtype: ListNode
+        """
+        ls = self.find_length(head)
+        stop_index = ls - n
+        if stop_index == 0:
+            return head.next
+        p = None
+        c = head
+        count = 0
+        while count < stop_index:
+            p = c
+            c = c.next
+            count += 1
+        p.next = c.next
+        return head
+        
+        
+    
+    def find_length(self, head):
+        count = 0
+        while head:
+            count += 1
+            head = head.next
+        return count
+        
+20. Valid Parentheses
+
+class Solution:
+    # @return a boolean
+    def isValid(self, s):
+        stack = []
+        dict = {"]":"[", "}":"{", ")":"("}
+        for char in s:
+            if char in dict.values():
+                stack.append(char)
+            elif char in dict.keys():
+                if stack == [] or dict[char] != stack.pop():
+                    return False
+            else:
+                return False
+        return stack == []
+        
