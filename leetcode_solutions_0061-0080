@@ -1,0 +1,625 @@
+61. Rotate List
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def rotateRight(self, head, k):
+        """
+        :type head: ListNode
+        :type k: int
+        :rtype: ListNode
+        """
+        if head == None or head.next == None:
+            return head
+        
+        k = k % self.length(head)
+        if k == 0:
+            return head
+        
+        
+        tail = self.find_tail(head)
+        stop_index = self.length(head) - k
+        p = None
+        c = head
+        steps = 0
+        while steps < stop_index:
+            p = c
+            c = c.next
+            steps += 1
+        p.next = None
+        tail.next = head
+        return c
+        
+class Solution:
+    def rotateRight(self, head, k):
+        """
+        :type head: ListNode
+        :type k: int
+        :rtype: ListNode
+        """
+        if head == None or head.next == None:
+            return head
+        
+        k = k % self.length(head)
+        if k == 0:
+            return head
+        
+        
+        tail = self.find_tail(head)
+        stop_index = self.length(head) - k
+        p = None
+        c = head
+        steps = 0
+        while steps < stop_index:
+            p = c
+            c = c.next
+            steps += 1
+        p.next = None
+        tail.next = head
+        return c
+                
+    def length(self, head):
+        count = 0
+        while head:
+            count += 1
+            head = head.next
+        return count
+    
+    def find_tail(self, head):
+        if head == None:
+            return head
+        else:
+            while head.next:
+                head = head.next
+            return head  
+            
+62. Unique Paths
+
+class Solution(object):
+    def uniquePaths(self, m, n):
+        """
+        :type m: int
+        :type n: int
+        :rtype: int
+        """
+        dp = [[1]*n for _ in range(m)]
+        for i in range(1, m):
+            for j in range(1, n):
+                dp[i][j] = dp[i-1][j] + dp[i][j-1]
+        return dp[-1][-1]
+        
+63. Unique Paths II
+
+class Solution(object):
+    def uniquePathsWithObstacles(self, obstacleGrid):
+        """
+        :type obstacleGrid: List[List[int]]
+        :rtype: int
+        """
+        m = len(obstacleGrid)
+        n = len(obstacleGrid[0])
+        ans = [[0]*n for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                if obstacleGrid[i][j] == 1: continue
+                elif i == 0 and j == 0: ans[i][j] = 1
+                elif i == 0: ans[i][j] = ans[i][j-1]
+                elif j == 0: ans[i][j] = ans[i-1][j]
+                else: ans[i][j] = ans[i-1][j] + ans[i][j-1]
+        return ans[m-1][n-1]
+        
+class Solution(object):
+    def uniquePathsWithObstacles(self, obstacleGrid):
+        """
+        :type obstacleGrid: List[List[int]]
+        :rtype: int
+        """
+        
+        m = len(obstacleGrid)
+        n = len(obstacleGrid[0])
+        dp = [[0]*n for _ in range(m)]
+        
+        dp[0][0] = 1 - obstacleGrid[0][0]
+        for j in range(1, n):
+            if obstacleGrid[0][j]!= 1:
+                dp[0][j] = dp[0][j-1]
+            else:
+                dp[0][j] = 0
+        for i in range(1, m):
+            if obstacleGrid[i][0] != 1:
+                dp[i][0] = dp[i-1][0]
+            else:
+                dp[i][0] = 0
+            
+        for i in range(1, m):
+            for j in range(1, n):
+                if obstacleGrid[i][j]!= 1:
+                
+                    dp[i][j] = dp[i-1][j] + dp[i][j-1]
+                else:
+                    dp[i][j] = 0
+        return dp[-1][-1]
+        
+64. Minimum Path Sum
+
+class Solution(object):
+    def minPathSum(self, grid):
+        """
+        :type grid: List[List[int]]
+        :rtype: int
+        """
+        m = len(grid)
+        n = len(grid[0])
+        dp = [[0]*n for _ in range(m)]
+        dp[0][0] = grid[0][0]
+        for j in range(1, n):
+            dp[0][j] = grid[0][j] + dp[0][j-1]
+        for i in range(1, m):
+            dp[i][0] = grid[i][0] + dp[i-1][0]
+        for i in range(1, m):
+            for j in range(1, n):
+                dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])
+        return dp[-1][-1]
+        
+class Solution(object):
+    def minPathSum(self, grid):
+        """
+        :type grid: List[List[int]]
+        :rtype: int
+        """
+        m = len(grid)
+        n = len(grid[0])
+        dp = [[0]*n for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                
+                tmp = float('inf')
+                if i >= 1:
+                    tmp = min(tmp, dp[i-1][j])
+                if j >= 1:
+                    tmp = min(tmp, dp[i][j-1])
+                dp[i][j] = grid[i][j]
+                if tmp < float('inf'):
+                    dp[i][j] += tmp
+        return dp[-1][-1]
+        
+66. Plus One
+
+class Solution:
+    def plusOne(self, digits):
+        """
+        :type digits: List[int]
+        :rtype: List[int]
+        """
+        ls = len(digits)
+        n = 0
+        for i in reversed(range(ls)):
+            n += digits[i]*10**(ls-i-1)
+        res = []
+        m = n + 1
+        while m > 0:
+            res.append(m%10)
+            m //= 10
+        return res[::-1]
+        
+class Solution:
+    def plusOne(self, digits):
+        """
+        :type digits: List[int]
+        :rtype: List[int]
+        """
+        if digits == []:
+            return [1]
+        if len(digits)== 1 and 0 <= digits[0] < 9:
+            return [digits[0] + 1]
+        if len(digits)== 1 and digits[0] == 9:
+            return [1, 0]
+        
+        if digits[-1] < 9:
+            digits[-1] += 1
+            return digits
+        else:
+            return self.plusOne(digits[:-1]) + [0]
+            
+67. Add Binary
+
+class Solution:
+    def addBinary(self, a, b):
+        """
+        :type a: str
+        :type b: str
+        :rtype: str
+        """
+        if a == "0" and b == "0":
+            return '0'
+        num1 = 0
+        ls1 = len(a)
+        for i in range(ls1):
+            num1 += int(a[i])*2**(ls1-1-i)
+            
+        num2 = 0
+        ls2 = len(b)
+        for i in range(ls2):
+            num2 += int(b[i])*2**(ls2-1-i)
+            
+        num = num1 + num2
+        string = ""
+        while num > 0:
+            string += str(num%2)
+            num //= 2
+        return string[::-1]
+        
+class Solution:
+    def addBinary(self, a, b):
+        """
+        :type a: str
+        :type b: str
+        :rtype: str
+        """
+        a_list = [int(item) for item in a]
+        a_list = a_list[::-1]
+        b_list = [int(item) for item in b]
+        b_list = b_list[::-1]
+        
+        if len(a_list) < len(b_list):
+            a_list, b_list = b_list, a_list
+        for i in range(len(a_list) - len(b_list)):
+            b_list.append(0)
+              
+        res = []
+        carry = 0
+        for i in range(len(a_list)):
+            res.append((carry + a_list[i] + b_list[i])%2)
+            carry = (carry + a_list[i] + b_list[i])//2
+                
+        if carry:
+            res.append(1)
+            
+        string = ""
+        for item in res:
+            string += str(item)
+            
+        return string[::-1] 
+        
+69. Sqrt(x)
+
+class Solution(object):
+    def mySqrt(self, x):
+        """
+        :type x: int
+        :rtype: int
+        """
+        return int(x**0.5)
+
+class Solution(object):
+    def _log_time_sq_root(self, k):
+        lo, hi = 0, k
+        cand = 0
+        while lo <= hi:
+            mid = lo + (hi-lo)//2
+            if pow(mid, 2) <= k:
+                cand, lo = mid, mid+1
+            else:
+                hi = mid-1
+        return cand
+
+    def mySqrt(self, k):
+        # return _linear_time_sq_root(k)
+        return self._log_time_sq_root(k)
+        
+70. Climbing Stairs
+
+# Same as Fibonacci Sequence
+# Use DP bottom-up
+
+class Solution:
+    def climbStairs(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n < 2:
+            return 1
+        aux_list = [0]*(n+1)
+        aux_list[0] = 1
+        aux_list[1] = 1
+        for i in range(2, n+1):
+            aux_list[i] = aux_list[i-1] + aux_list[i-2]
+        return aux_list[-1]
+        
+class Solution:
+    def climbStairs(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+         
+        if n == 1:
+            return 1
+        if n == 2:
+            return 2
+        a, b = 1, 2
+        for i in range(3, n+1):
+            temp = a + b
+            a = b
+            b = temp
+        return b
+        
+72. Edit Distance
+
+class Solution:
+    def minDistance(self, word1, word2):
+        """
+        :type word1: str
+        :type word2: str
+        :rtype: int
+        """
+        rows = len(word1) + 1
+        cols = len(word2) + 1
+        dp = [ [ 0 for i in range(cols) ] for i in range(rows) ]
+        dp[0] = [ i for i in range(cols) ]
+        
+        for i in range(rows):
+            dp[i][0] = i
+        
+        for i in range(1, rows):
+            for j in range(1, cols):
+                if word1[i-1] == word2[j-1]:
+                    dp[i][j] = dp[i-1][j-1]
+                else:
+                    dp[i][j] = 1 + min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1])
+        
+        return dp[rows-1][cols-1]
+        
+class Solution:
+    def minDistance(self, word1, word2):
+        """
+        :type word1: str
+        :type word2: str
+        :rtype: int
+        """
+        m = len(word1); n = len(word2)
+        table = [[0]*(n+1) for _ in range(m+1)]
+        
+        for i in range(m+1):
+            table[i][0] = i
+        
+        for j in range(n+1):
+            table[0][j] = j
+            
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                if word1[i-1] == word2[j-1]:
+                    table[i][j] = table[i-1][j-1]
+                else:
+                    table[i][j] = 1 + min(table[i][j-1], table[i-1][j], table[i-1][j-1])
+        return table[-1][-1]
+        
+ 73. Set Matrix Zeroes
+ 
+ class Solution(object):
+    def setZeroes(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: void Do not return anything, modify matrix in-place instead.
+        """
+        res = []
+        m = len(matrix)
+        n = len(matrix[0])
+        for i in range(m):
+            for j in range(n):
+                if matrix[i][j] == 0:
+                    res.append([i, j])
+        for x in res:
+            for j in range(n):
+                matrix[x[0]][j] = 0
+            for i in range(m):
+                matrix[i][x[1]] = 0
+                
+ class Solution(object):
+    def setZeroes(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: void Do not return anything, modify matrix in-place instead.
+        """
+        res = []
+        m = len(matrix)
+        n = len(matrix[0])
+        for i in range(m):
+            for j in range(n):
+                if matrix[i][j] == 0:
+                    res.append([i, j])
+        for x in res:
+            for j in range(n):
+                matrix[x[0]][j] = 0
+            for i in range(m):
+                matrix[i][x[1]] = 0
+                
+74. Search a 2D Matrix
+
+class Solution:
+    def searchMatrix(self, matrix, target):
+        """
+        :type matrix: List[List[int]]
+        :type target: int
+        :rtype: bool
+        """
+        
+        m = len(matrix)
+    
+        if m == 0:
+            return False
+        n = len(matrix[0])
+        if n == 0:
+            return False
+        
+        
+        res = []
+        for i in range(m):
+            res.append(matrix[i][0])
+        if self.bs(res, target):
+            return True
+        else:
+            mark = self.bs(res, target, 1)
+            return self.bs(matrix[mark], target)
+               
+    def bs(self, a_list, target, index=0):
+        
+        ls = len(a_list)
+        begin = 0
+        end = ls - 1
+        found = False
+        while begin <= end and not found:
+            mid = (begin + end)//2
+            if a_list[mid] == target:
+                found = True
+            elif a_list[mid] < target:
+                begin = mid + 1
+            else:
+                end = mid - 1
+        if index == 0:
+            return found
+        else:
+            return end
+            
+ 75. Sort Colors
+ 
+ class Solution(object):
+    def sortColors(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        """
+        for i in range(len(nums)-1):
+            nums = self.move(nums)
+    
+    def move(self, nums):
+        if len(nums) <= 1:
+            return nums
+        for i in range(len(nums)-1):
+            if nums[i] > nums[i+1]:
+                nums[i], nums[i+1] = nums[i+1], nums[i]
+        return nums
+        
+76. Minimum Window Substring
+
+class Solution:
+    def minWindow(self, s, t):
+        need, missing = collections.Counter(t), len(t)
+        i = I = J = 0
+        for j, c in enumerate(s, 1):
+            missing -= need[c] > 0
+            need[c] -= 1
+            if not missing:
+                while i < j and need[s[i]] < 0:
+                    need[s[i]] += 1
+                    i += 1
+                if not J or j - i <= J - I:
+                    I, J = i, j
+        return s[I:J]
+        
+77. Combinations
+
+from itertools import combinations
+class Solution:
+    def combine(self, n, k):
+        """
+        :type n: int
+        :type k: int
+        :rtype: List[List[int]]
+        """
+        it = combinations(list(range(1, n+1)), k)
+        return sorted(it)
+        
+78. Subsets
+
+import itertools
+class Solution:
+    def subsets(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        
+        it = itertools.product((0, 1), repeat=len(nums))
+        return [[nums[i] for i, on in enumerate(t) if on] for t in it]
+        
+from itertools import combinations
+class Solution:
+    def subsets(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        a = len(nums)
+        aux_list = list()
+        while a > -1:
+            temp = combinations(nums, a)
+            for p in temp:
+                kn = sorted(p)
+                aux_list.append(p)
+            a -= 1
+        
+        return aux_list
+        
+79. Word Search
+
+class Solution:
+    def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+        if not board:
+            return False
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if self.dfs(board, i, j, word):
+                    return True
+        return False
+    
+    def dfs(self, board, i, j, word):
+        if len(word) == 0:
+            return True
+        if i <0 or i >= len(board) or j < 0 or j >= len(board[0]) or word[0] != board[i][j]:
+            return False
+        tmp = board[i][j]
+        board[i][j] = "#"
+        res = self.dfs(board, i+1, j, word[1:]) or self.dfs(board, i-1, j, word[1:]) or self.dfs(board, i, j+1, word[1:]) or\
+        self.dfs(board, i, j-1, word[1:])
+        board[i][j] = tmp
+        
+        return res
+        
+class Solution:
+    def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+        if not board:
+            return False
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if self.dfs(board, i, j, word):
+                    return True
+        return False
+    
+    def dfs(self, board, i, j, word):
+        if len(word) == 0:
+            return True
+        if i <0 or i >= len(board) or j < 0 or j >= len(board[0]) or word[0] != board[i][j]:
+            return False
+        tmp = board[i][j]
+        board[i][j] = "#"
+        res = self.dfs(board, i+1, j, word[1:]) or self.dfs(board, i-1, j, word[1:]) or self.dfs(board, i, j+1, word[1:]) or self.dfs(board, i, j-1, word[1:])
+        board[i][j] = tmp
+        
+        return res        
+        
