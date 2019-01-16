@@ -243,6 +243,34 @@ class Solution:
         """
         return sorted(points, key=lambda P: P[0]**2 + P[1]**2)[:K]
         
+class Solution:
+    def kClosest(self, points, K):
+        """
+        :type points: List[List[int]]
+        :type K: int
+        :rtype: List[List[int]]
+        """
+        h = []
+        for p in points:
+            heapq.heappush(h, (p[0]**2 + p[1]**2, p))
+        
+        return [x[1] for x in heapq.nsmallest(K, h)]
+        
+class Solution:
+    def kClosest(self, points, K):
+        """
+        :type points: List[List[int]]
+        :type K: int
+        :rtype: List[List[int]]
+        """
+        h = []
+        for p in points:
+            heapq.heappush(h, (p[0]**2 + p[1]**2, p))
+        res = []
+        for i in range(K):
+            res.append(heapq.heappop(h)[1])
+        return res        
+        
 976. Largest Perimeter Triangle
 
 class Solution:
