@@ -230,4 +230,15 @@ class Solution:
                 test = x**i + y**j
                 if test <= bound:
                     aux_set.add(test)
-        return list(aux_set)        
+        return list(aux_set)  
+        
+973. K Closest Points to Origin
+
+class Solution:
+    def kClosest(self, points, K):
+        """
+        :type points: List[List[int]]
+        :type K: int
+        :rtype: List[List[int]]
+        """
+        return sorted(points, key=lambda P: P[0]**2 + P[1]**2)[:K]
