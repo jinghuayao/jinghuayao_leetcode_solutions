@@ -1,3 +1,53 @@
+762. Prime Number of Set Bits in Binary Representation
+
+# Brute force
+from math import sqrt
+class Solution:
+    def countPrimeSetBits(self, L, R):
+        """
+        :type L: int
+        :type R: int
+        :rtype: int
+        """
+        total = 0
+        for num in range(L, R+1):
+            if self.is_prime(self.to_binary(num)):
+                total += 1
+        return total
+ 
+    def to_binary(self, num): # count the number of set bits for num
+        count = 0
+        while num > 0:
+            if num % 2 == 1:
+                count += 1
+            num //= 2
+        return count
+    
+    def is_prime(self, num): # check if num is prime
+        if num == 1:
+            return False
+        for i in range(2, int(sqrt(num))+1):
+            if num % i == 0:
+                return False
+        return True
+        
+# With some analysis: log(10**6, 2) is in the interval (19, 20).
+class Solution:
+    def countPrimeSetBits(self, L, R):
+        """
+        :type L: int
+        :type R: int
+        :rtype: int
+        """
+        # log(10**6, 2) is large than 19, less that 20
+        prime_set = {2, 3, 5, 7, 11, 13, 17, 19}
+        total = 0
+        for num in range(L, R+1):
+            if bin(num).count("1") in prime_set:
+                total += 1
+        return total
+
+
 766. Toeplitz Matrix
 
 class Solution:
