@@ -79,6 +79,54 @@ class Solution:
             i += 1
         return check
         
+916. Word Subsets
+
+from collections import Counter
+class Solution:
+    def wordSubsets(self, A, B):
+        """
+        :type A: List[str]
+        :type B: List[str]
+        :rtype: List[str]
+        """
+        if not A:
+            return []
+        
+        c = Counter()
+        for word in B:
+            c |= Counter(word)
+        
+        res = []
+        for word in A:
+            tmp = Counter()
+            tmp |= c
+            for char in word:
+                if tmp[char] != 0:
+                    tmp[char] -= 1
+            if sum(tmp.values()) == 0:
+                res.append(word)
+        
+        return res
+        
+class Solution:
+    def wordSubsets(self, A, B):
+        """
+        :type A: List[str]
+        :type B: List[str]
+        :rtype: List[str]
+        """
+        B_counter = collections.Counter()
+        for b in B:
+            for c, n in collections.Counter(b).items():
+                B_counter[c] = max(B_counter[c], n)
+        
+        res = []
+        for a in A:
+            count = collections.Counter(a)
+            if all(count[c]>=B_counter[c] for c in B_counter):
+                res.append(a)
+        return res        
+        
  917. Reverse Only Letters
  
  class Solution(object):
