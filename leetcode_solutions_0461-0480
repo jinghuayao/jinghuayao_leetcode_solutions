@@ -144,5 +144,40 @@ class Solution:
             num //= 2
         return res[::-1]
         
+477. Total Hamming Distance
+
+class Solution:
+    def totalHammingDistance(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        f = [[0]*30 for i in range(len(nums))] # log(10**9, 2) = 29.9
+        for i in range(len(nums)):
+            num = nums[i]
+            aux_list =[]
+            while num > 0:
+                aux_list.append(num%2)
+                num //= 2
+            for j in range(len(aux_list)):
+                f[i][j] = aux_list[j]
+        res = 0
+        for j in range(30):
+            aux_col = [f[i][j] for i in range(len(nums))]
+            if 0 < aux_col.count(1) < len(nums):
+                res += aux_col.count(1) * (len(nums) - aux_col.count(1))
+        return res
         
+class Solution:
+    def totalHammingDistance(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        bits = [[0,0] for _ in range(30)]
+        for x in nums:
+            for i in range(30):
+                bits[i][x%2] += 1
+                x //= 2
+        return sum( x*y for x, y in bits )        
         
