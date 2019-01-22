@@ -460,6 +460,22 @@ class Solution(object):
             pos[1] = pos[1] + move[1]
         return res
         
+60. Permutation Sequence
+
+# Use iterator
+class Solution:
+    def getPermutation(self, n, k):
+        """
+        :type n: int
+        :type k: int
+        :rtype: str
+        """
+        aux_list = itertools.permutations(range(1, n+1))
+        for i in range(k):
+            tmp = next(aux_list)
+        return "".join([str(x) for x in tmp])
+
+
 61. Rotate List
 
 # Definition for singly-linked list.
