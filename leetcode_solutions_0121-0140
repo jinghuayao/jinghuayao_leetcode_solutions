@@ -57,6 +57,59 @@ class Solution:
                 profit += (prices[i] - prices[i-1])
         return profit
         
+124. Binary Tree Maximum Path Sum
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def maxPathSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.M = root.val
+        self.helper(root)
+        return self.M
+    
+    def helper(self, root):
+        if not root:
+            return 0
+        rl = max(self.helper(root.left), 0)
+        rr = max(self.helper(root.right), 0)
+        self.M = max(self.M, root.val + rl + rr)
+        return max(root.val + rl, root.val + rr)
+        
+class Solution:
+    def maxPathSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        def dfs(root):
+            if not root:
+                return 0
+            l_max = dfs(root.left)
+            r_max = dfs(root.right)
+            if l_max < 0:
+                l_max = root.val
+            else:
+                l_max += root.val
+            if r_max < 0:
+                r_max = root.val
+            else:
+                r_max += root.val
+            self.maximum = max(self.maximum, l_max + r_max - root.val)
+            return max(l_max, r_max)
+        
+        self.maximum = -float('inf')
+        dfs(root)
+        return self.maximum        
+        
 125. Valid Palindrome
 
 class Solution:
