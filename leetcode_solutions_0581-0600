@@ -272,6 +272,32 @@ class Solution(object):
                 stack.append(c)
         return res[::-1]
         
+  593. Valid Square
+  
+  class Solution:
+    def validSquare(self, p1, p2, p3, p4):
+        """
+        :type p1: List[int]
+        :type p2: List[int]
+        :type p3: List[int]
+        :type p4: List[int]
+        :rtype: bool
+        """
+        aux_set = set()
+        aux_list = [p1, p2, p3, p4]
+
+        for i in range(3):
+            for j in range(i+1, 4):
+                aux_set.add(self.d_2(aux_list[i], aux_list[j]))
+        to_list = list(aux_set)
+        if len(to_list) != 2:
+            return False
+        else:
+            return to_list[0] == 2*to_list[1] or to_list[1] == 2*to_list[0]
+       
+    def d_2(self, p1, p2):
+        return (p1[0] - p2[0])**2 + (p1[1] - p2[1])**2
+        
   594. Longest Harmonious Subsequence
   
   class Solution:
