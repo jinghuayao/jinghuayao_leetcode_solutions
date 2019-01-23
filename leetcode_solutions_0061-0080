@@ -623,3 +623,25 @@ class Solution:
         
         return res        
         
+80. Remove Duplicates from Sorted Array II
+
+class Solution:
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        count = 1
+        for i in range(len(nums)-1):
+            if nums[i+1] == nums[i]:
+                count += 1
+                if count == 3:
+                    nums[i] = 'X'
+                    count = 2
+            else:
+                count = 1
+        while 'X' in nums:
+            nums.remove('X')
+        return len(nums)
