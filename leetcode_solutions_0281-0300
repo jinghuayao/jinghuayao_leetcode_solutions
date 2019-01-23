@@ -156,6 +156,43 @@ class Solution:
         :rtype: bool
         """
         return False if n % 4 == 0 else True
+
+295. Find Median from Data Stream
+# see also: https://leetcode.com/problems/find-median-from-data-stream/solution/
+# Using bisect.insort()
+class MedianFinder:
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.lst = []
+        
+
+    def addNum(self, num):
+        """
+        :type num: int
+        :rtype: void
+        """
+        bisect.insort(self.lst, num)
+        
+
+    def findMedian(self):
+        """
+        :rtype: float
+        """
+        ls = len(self.lst)
+        if ls % 2 == 0:
+            return (self.lst[ls//2] + self.lst[ls//2 - 1])/2
+        else:
+            return self.lst[ls//2]
+        
+
+
+# Your MedianFinder object will be instantiated and called as such:
+# obj = MedianFinder()
+# obj.addNum(num)
+# param_2 = obj.findMedian()
         
 300. Longest Increasing Subsequence
 
