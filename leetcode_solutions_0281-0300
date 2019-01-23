@@ -193,6 +193,73 @@ class MedianFinder:
 # obj = MedianFinder()
 # obj.addNum(num)
 # param_2 = obj.findMedian()
+
+from heapq import heapify, heappop, heappush
+class MedianFinder:
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.left_q = []
+        self.left_q_size = 0
+        self.right_q = []
+        self.right_q_size = 0
+
+    def addNum(self, num):
+        """
+        :type num: int
+        :rtype: void
+        """
+        if self.left_q_size == 0:
+            self.add_to_left(num)
+
+        elif self.left_q_size > self.right_q_size:
+            if num < self.get_left():
+                self.add_to_right(- heappop(self.left_q))
+                self.add_to_left(num)
+                self.left_q_size -= 1
+            else:
+                self.add_to_right(num)
+        else:
+            if num < self.get_left() or num <= self.get_right():
+                self.add_to_left(num)
+            else:
+                self.add_to_left(heappop(self.right_q))
+                self.add_to_right(num)
+                self.right_q_size-= 1
+
+    def get_left(self):
+        tmp = heappop(self.left_q)
+        heappush(self.left_q, tmp)
+        return -tmp*1.0
+
+    def get_right(self):
+        tmp = heappop(self.right_q)
+        heappush(self.right_q, tmp)
+        return tmp*1.0
+
+    def add_to_left(self, num):
+        heappush(self.left_q, -num)
+        self.left_q_size += 1
+
+    def add_to_right(self, num):
+        heappush(self.right_q, num)
+        self.right_q_size += 1
+
+    def get_tot(self):
+        return self.left_q_size + self.right_q_size
+
+    def findMedian(self):
+        """
+        :rtype: float
+        """
+        if self.get_tot() % 2 == 0:
+            ans = (self.get_left() + self.get_right()) / 2.0
+            return ans
+        else:
+            ans = self.get_left()
+            return ans
         
 300. Longest Increasing Subsequence
 
