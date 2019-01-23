@@ -302,3 +302,44 @@ class Solution:
             else:
                 return A[-3] + A[-2] + A[-1]
         return 0
+        
+977. Squares of a Sorted Array
+
+# Using sorted function
+class Solution:
+    def sortedSquares(self, A):
+        """
+        :type A: List[int]
+        :rtype: List[int]
+        """
+        A = sorted(A, key=lambda x: abs(x))
+        return [x**2 for x in A]
+        
+# Using heap sort
+class Solution:
+    def sortedSquares(self, A):
+        """
+        :type A: List[int]
+        :rtype: List[int]
+        """
+        squares = [x**2 for x in A]
+        heapq.heapify(squares)
+        res = []
+        for i in range(len(A)):
+            res.append(heapq.heappop(squares))
+        return res
+        
+# Comparing abs of the two ends and use a_list[::-1] 
+class Solution:
+    def sortedSquares(self, A):
+        """
+        :type A: List[int]
+        :rtype: List[int]
+        """
+        res = []
+        while A:
+            if abs(A[0]) >= abs(A[-1]):
+                res.append(A.pop(0)**2)
+            else:
+                res.append(A.pop()**2)
+        return res[::-1]
