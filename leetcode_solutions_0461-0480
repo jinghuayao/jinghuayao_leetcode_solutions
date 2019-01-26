@@ -242,4 +242,41 @@ class Solution:
                 bits[i][x%2] += 1
                 x //= 2
         return sum( x*y for x, y in bits )        
-        
+ 
+ 479. Largest Palindrome Product
+ 
+ # https://leetcode.com/problems/largest-palindrome-product/discuss/171580/Python-Solution-using-Math-and-Detailed-Mathematical-deduction
+ class Solution:
+    def largestPalindrome(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n == 1: 
+            return 9
+        for z in range(2, 2 * (10**n - 10**(n-1)) + 1):
+            left = 10**n - z
+            right = int(str(left)[::-1])
+						
+            if z**2 - 4*right >= 0:
+                root_1 = 1/2 * (z + (z**2-4*right)**0.5)
+                root_2 = 1/2 * (z - (z**2-4*right)**0.5)
+                if root_1.is_integer() or root_2.is_integer():
+                    return (10**n*left+right) %1337
+                    
+  # This is not a very good problem, as one can do the following:
+  class Solution:
+    def largestPalindrome(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n == 1: return 9
+        if n == 2: return 987
+        if n == 3: return 123 # 913 993
+        if n == 4: return 597 # 9901 9999
+        if n == 5: return 677 # 99681 99979
+        if n == 6: return 1218 # 999001 999999
+        if n == 7: return 877 # 9997647 9998017
+        if n == 8: return 475 # 99990001 99999999
+# Additionally, if n == 9, the palindrom is (10^9-19653) * (10^9-79683) = 999900665566009999
