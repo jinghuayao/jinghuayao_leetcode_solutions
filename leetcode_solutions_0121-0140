@@ -57,6 +57,49 @@ class Solution:
                 profit += (prices[i] - prices[i-1])
         return profit
         
+ 123. Best Time to Buy and Sell Stock III
+ 
+ class Solution:
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        if len(prices) < 2:
+            return 0
+        
+        buy_1, buy_2 = -prices[0], -prices[0]
+        sell_1, sell_2 = 0, 0
+        
+        for price in prices[1:]:
+            buy_1 = max(buy_1, -price)
+            sell_1 = max(sell_1, price + buy_1)
+            
+            buy_2 = max(buy_2, sell_1 - price)
+            sell_2 = max(sell_2, price + buy_2)
+        return sell_2
+        
+# dp solution
+class Solution(object):
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        if not prices:
+            return 0
+        
+        k = 2
+        max_profit = 0
+        dp = [[0]*len(prices) for _ in range(k+1)]
+        for i in range(1, k+1):
+            tmp_max = dp[i][0] - prices[0]
+            for j in range(1, len(prices)):
+                dp[i][j] = max(dp[i][j-1], prices[j] + tmp_max)
+                tmp_max = max(tmp_max, dp[i-1][j] - prices[j])
+                max_profit = max(max_profit, dp[i][j])
+        return max_profit
+        
 124. Binary Tree Maximum Path Sum
 
 # Definition for a binary tree node.
