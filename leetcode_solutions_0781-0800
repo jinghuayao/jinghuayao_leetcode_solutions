@@ -79,6 +79,40 @@ class Solution(object):
         
 784. Letter Case Permutation
 
+# first deal with letters, then insert numbers in the proper places.
+class Solution:
+    def letterCasePermutation(self, S):
+        """
+        :type S: str
+        :rtype: List[str]
+        """
+        ans = []
+        stack = [] # record [index, digit] for digits in S
+        res = []
+        
+        for i in range(len(S)):
+            lsti = []
+            if S[i].isdigit():
+                stack.append([i, S[i]])
+            else:
+                if len(res) == 0:
+                    lsti += [S[i].lower(), S[i].upper()]
+                else:
+                    for ele in res:
+                        lsti += [ele + S[i].lower(), ele + S[i].upper()]
+                res = lsti
+        
+        if len(stack) == len(S):
+            return [S]
+        for ele in res:
+            lste = list(ele)
+            for item in stack:
+                lste.insert(item[0], item[1])
+            tmp = ''.join(lste)
+            ans.append(tmp)
+            
+        return ans
+
 class Solution:
     def letterCasePermutation(self, S):
         """
