@@ -499,6 +499,24 @@ class Solution(object):
                 result.append(t)
         return result
         
+# dict ADT and list comprehension.
+class Solution:
+    def letterCombinations(self, digits):
+        """
+        :type digits: str
+        :rtype: List[str]
+        """
+        d = {2:"abc", 3:"def", 4:"ghi", 5:"jkl", 6:"mno", 7:"pqrs", 8:"tuv", 9:"wxyz"}
+        if not digits:
+            return []
+        res = []
+        for digit in digits:
+            if not res:
+                res = [x for x in d[int(digit)]]
+            else:
+                res = [y + x for y in res for x in d[int(digit)]]
+        return res
+        
  18. 4Sum
  
  class Solution:
