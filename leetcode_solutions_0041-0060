@@ -18,6 +18,22 @@ class Solution(object):
         while res < ls and nums[res] == res + 1:
             res += 1
         return res + 1
+# Due to XYW        
+class Solution:
+    def firstMissingPositive(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        tmp = float('inf')
+        for num in nums:
+            if num > 0:
+                tmp = min(num, tmp)
+        if tmp > 1:
+            return 1
+        while tmp + 1 in nums:
+            tmp += 1
+        return tmp + 1        
         
 42. Trapping Rain Water
 
