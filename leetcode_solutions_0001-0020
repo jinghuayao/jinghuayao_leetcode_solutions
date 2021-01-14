@@ -46,6 +46,15 @@ class Solution:
         find_key = [k for k, v in aux_dic.items() if v == nums[i] or v ==nums[j]]
         
         return find_key
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        seen = {}
+        for i, num in enumerate(nums):
+            if target - num in seen:
+                return [seen[target - num], i]
+            else:
+                seen[num] = i
         
 2. Add two numbers
 
